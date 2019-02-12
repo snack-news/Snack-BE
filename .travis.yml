@@ -18,6 +18,4 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 notifications:
-  email:
-    recipients:
-      - kyoje11@gmail.com
+  slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
