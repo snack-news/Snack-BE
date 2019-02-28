@@ -29,6 +29,7 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     compileOnly 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile("org.assertj:assertj-core:3.11.1")
 }
 
 jacocoTestReport {
