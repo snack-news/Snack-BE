@@ -10,13 +10,13 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class NewsService {
-	private final NewsRepository newsRepository;
+	private final NewsRepository newsRepository2;
 
 	public List<News> getNews() {
-		return newsRepository.findAll();
+		return newsRepository2.findAll();
 	}
 
 	public void createNews(News news) {
-		newsRepository.save(news);
+		newsRepository2.save(news);
 	}
 }
