@@ -16,12 +16,12 @@ public class CorporationController {
     }
 
     @GetMapping
-    public List<Corporation> getCorporations () {
+    public List<Corporation> corporations() {
         return corporationService.getCorporation();
     }
 
     @PutMapping("/{id}")
-    public Corporation updateCorporation (Long id, @RequestBody Corporation corporation) {
+    public Corporation updateCorporation (@PathVariable("id") Long id, @RequestBody Corporation corporation) {
         return corporationService.updateCorporation(id, corporation);
     }
 
@@ -31,7 +31,7 @@ public class CorporationController {
     }
 
     @DeleteMapping("/{id}")
-    public Corporation deleteCorporation (Long id) {
+    public Corporation deleteCorporation (@PathVariable("id") Long id) {
         return corporationService.deleteCorporation(id);
     }
 }
