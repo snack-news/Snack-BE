@@ -21,3 +21,5 @@ after_success:
 
 notifications:
   slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
+
+
