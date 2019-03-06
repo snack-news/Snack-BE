@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: local
+
+
+---
+spring:
+  profiles: local
+  # 시작할때 실행시킬 script
+  #  datasource:
+  #    data: classpath:data-h2.sql
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
