@@ -1,8 +1,10 @@
 package com.snack.news.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import javax.persistence.Id;
 
 @NoArgsConstructor
 @Getter
+@ToString
+@EqualsAndHashCode
 @Entity
 public class News extends BaseTimeEntity {
 	@Id

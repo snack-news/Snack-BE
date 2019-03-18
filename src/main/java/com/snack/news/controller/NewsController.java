@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -17,6 +18,11 @@ public class NewsController {
 	@GetMapping
 	public List<News> getNews() {
 		return newsService.getNews();
+	}
+
+	@GetMapping("/id")
+	public Optional<News> getNews(@PathVariable Long id){
+		return newsService.getNews(id);
 	}
 
 	@PostMapping

@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class NewsDto {
+	private Long id;
 	private String title;
 	private String content;
 	private String link;
