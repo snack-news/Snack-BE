@@ -33,30 +33,24 @@ public class NewsServiceTest extends NewsTestCase {
 
 	@Test
 	public void 시간대_뉴스를_조회할_수_있다() {
-		//given
 		service.createNews(mockNews);
 		LocalDateTime startDateTime = LocalDateTime.now().minusHours(1);
 		LocalDateTime endDateTime = startDateTime.plusHours(1);
 
-		//when
 		List<News> result = service.getNews(startDateTime, endDateTime);
 
-		//then
 		assertThat(result.size()).isNotEqualTo(0);
 		result.forEach(news -> assertThat(news.getCreateTime()).isBetween(startDateTime, endDateTime));
 	}
 
 	@Test
 	public void 시간대_뉴스가_없다면_EmptyList를_반환한다() {
-		//given
 		service.createNews(mockNews);
 		LocalDateTime startDateTime = LocalDateTime.now().plusHours(1);
 		LocalDateTime endDateTime = startDateTime.plusHours(2);
 
-		//when
 		List<News> result = service.getNews(startDateTime, endDateTime);
 
-		//then
 		assertThat(result.size()).isEqualTo(0);
 	}
 }

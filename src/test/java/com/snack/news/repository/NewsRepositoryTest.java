@@ -33,13 +33,10 @@ public class NewsRepositoryTest extends NewsTestCase {
 
 	@Test
 	public void 뉴스를_저장하고_확인할수있다() {
-		//given
 		newsRepository.save(mockNews);
 
-		//when
 		List<News> newsList = newsRepository.findAll();
 
-		//then
 		News posts = newsList.get(0);
 		assertThat(posts.getTitle(), is(TEST_TITLE));
 		assertThat(posts.getContent(), is(TEST_CONTENT));
@@ -47,40 +44,31 @@ public class NewsRepositoryTest extends NewsTestCase {
 
 	@Test
 	public void 뉴스는_BaseTimeEntity를_상속받아_생성시간이_등록된다() {
-		//given
 		LocalDateTime now = LocalDateTime.now();
 		newsRepository.save(mockNews);
 
-		//when
 		List<News> newsList = newsRepository.findAll();
 
-		//then
 		News news = newsList.get(0);
 		assertTrue(news.getCreateTime().isAfter(now));
 	}
 
 	@Test
 	public void 뉴스ID를_통해_뉴스객체를_얻을수있다() {
-		//given
 		newsRepository.save(mockNews);
 
-		//when
 		Optional<News> result = newsRepository.findById(mockNews.getId());
 
-		//then
 		assertThat(mockNews, equalTo(result.get()));
 	}
 
 	@Test
 	public void 잘못된뉴스ID를_통해_조회하면_뉴스객체를_얻을수없다() {
-		//given
 		newsRepository.save(mockNews);
 		Long invalidId = mockNews.getId() + 1;
 
-		//when
 		Optional<News> result = newsRepository.findById(invalidId);
 
-		//then
 		assertThat(result, equalTo(Optional.empty()));
 	}
 }
