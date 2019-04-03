@@ -1,14 +1,14 @@
 spring:
   profiles:
-    active: local
+    active: dev
 
 
 ---
 spring:
-  profiles: local
+  profiles: dev
   # 시작할때 실행시킬 script
-  #  datasource:
-  #    data: classpath:data-h2.sql
+  datasource:
+    url: jdbc:h2:mem:snack
   jpa:
     show-sql: true
     hibernate:
@@ -16,3 +16,18 @@ spring:
   h2:
     console:
       enabled: true
+
+---
+spring:
+  profiles: release
+
+  datasource:
+    data:
+      url: jdbc:mysql://localhost:3306/news?serverTimezone=UTC
+      username: root
+      password:
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create

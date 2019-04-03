@@ -4,34 +4,38 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import com.snack.news.domain.News;
+import com.snack.news.dto.NewsDto;
+import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
-
-import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
 @Service
 public class NewsService {
 	private final NewsRepository newsRepository;
 
-	public List<News> getNews(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-		List<News> newsList = newsRepository.findAll();
+	@Transactional
+	public NewsDto createNews(NewsDto newsDto) {
+		News news = newsDto.toEntity();
 
-		return newsList.stream()
-				.filter(news -> news.getCreateTime().isAfter(startDateTime))
-				.filter(news -> news.getCreateTime().isBefore(endDateTime))
-				.collect(toList());
-	}
-
-	public Optional<News> getNews(Long id) {
-		return newsRepository.findById(id);
-	}
-
-	public void createNews(News news) {
 		newsRepository.save(news);
+
+		return NewsDto.builder().id(news.getId()).build();
+	}
+
+	public List<News> getNewsList(NewsDto newsDto) {
+		LocalDateTime startTime = newsDto.getStartDateTime();
+		LocalDateTime endTime = newsDto.getEndDateTime();
+
+		return newsRepository.findByCreateTimeBetween(startTime, endTime);
+	}
+
+	public News getNews(Long newsId) {
+		return newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
 	}
 }

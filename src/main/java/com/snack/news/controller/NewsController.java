@@ -3,12 +3,12 @@ package com.snack.news.controller;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,18 +22,18 @@ import com.snack.news.service.NewsService;
 public class NewsController {
 	private final NewsService newsService;
 
+	@PostMapping
+	public NewsDto createNews(@RequestBody NewsDto newsDto) {
+		return newsService.createNews(newsDto);
+	}
+
 	@GetMapping
 	public List<News> getNews(@ModelAttribute NewsDto newsDto) {
-		return newsService.getNews(newsDto.getStartDateTime(), newsDto.getEndDateTime());
+		return newsService.getNewsList(newsDto);
 	}
 
-	@GetMapping("/id")
-	public Optional<News> getNews(@PathVariable Long id){
-		return newsService.getNews(id);
-	}
-
-	@PostMapping
-	public void createNews(@ModelAttribute NewsDto newsDto) {
-		newsService.createNews(newsDto.toEntity());
+	@GetMapping("/{newsId}")
+	public News getNews(@PathVariable Long newsId) {
+		return newsService.getNews(newsId);
 	}
 }

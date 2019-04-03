@@ -1,9 +1,5 @@
 package com.snack.news.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,46 +7,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.snack.news.domain.News;
-import com.snack.news.fixture.NewsTestCase;
-import com.snack.news.repository.NewsRepository;
+import com.snack.news.dto.NewsDto;
+import com.snack.news.exception.NewsNotFoundException;
+import com.snack.news.fixture.NewsTestcase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class NewsServiceTest extends NewsTestCase {
+public class NewsServiceTest extends NewsTestcase {
 	@Autowired
-	private NewsService service;
-
-	@Autowired
-	private NewsRepository repository;
-
-	@After
-	public void cleanup() {
-		repository.deleteAll();
-	}
+	private NewsService newsService;
 
 	@Test
-	public void 시간대_뉴스를_조회할_수_있다() {
-		service.createNews(mockNews);
-		LocalDateTime startDateTime = LocalDateTime.now().minusHours(1);
-		LocalDateTime endDateTime = startDateTime.plusHours(1);
+	public void getNewsTest_News_ID로_뉴스를_조회할_수_있다() {
+		NewsDto newsDto = NewsDto.builder().title(TEST_TITLE).content(TEST_CONTENT).build();
+		NewsDto savedNews = newsService.createNews(newsDto);
+		Long id = savedNews.getId();
 
-		List<News> result = service.getNews(startDateTime, endDateTime);
+		News result = newsService.getNews(id);
 
-		assertThat(result.size()).isNotEqualTo(0);
-		result.forEach(news -> assertThat(news.getCreateTime()).isBetween(startDateTime, endDateTime));
+		assertThat(result.getId()).isEqualTo(id);
+		assertThat(result.getTitle()).isEqualTo(TEST_TITLE);
+		assertThat(result.getContent()).isEqualTo(TEST_CONTENT);
 	}
 
-	@Test
-	public void 시간대_뉴스가_없다면_EmptyList를_반환한다() {
-		service.createNews(mockNews);
-		LocalDateTime startDateTime = LocalDateTime.now().plusHours(1);
-		LocalDateTime endDateTime = startDateTime.plusHours(2);
+	@Test(expected = NewsNotFoundException.class)
+	public void getNewsTest_News_ID가_유효하지않는다면_예외를_반환한다() {
+		Long invalidNewsId = 999L;
 
-		List<News> result = service.getNews(startDateTime, endDateTime);
-
-		assertThat(result.size()).isEqualTo(0);
+		newsService.getNews(invalidNewsId);
 	}
 }
