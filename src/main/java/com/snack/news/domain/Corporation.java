@@ -27,7 +27,8 @@ public class Corporation {
 	private String image;
 
 	@Builder
-	public Corporation(String name, String image) {
+	public Corporation(Long id, String name, String image) {
+		this.id = id;
 		this.name = name;
 		this.image = image;
 	}

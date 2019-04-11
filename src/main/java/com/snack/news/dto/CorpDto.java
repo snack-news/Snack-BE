@@ -1,16 +1,19 @@
 package com.snack.news.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import com.snack.news.domain.Corporation;
 
+@Getter
 public class CorpDto {
 	private Long id;
 	private String name;
 	private String image;
 
 	@Builder
-	public CorpDto(String name, String image) {
+	public CorpDto(Long id, String name, String image) {
+		this.id = id;
 		this.name = name;
 		this.image = image;
 	}
@@ -20,8 +23,16 @@ public class CorpDto {
 		this.name = corp.getName();
 	}
 
-	public Corporation getCorpEntity() {
+	public Corporation getCorpNewEntity() {
 		return Corporation.builder()
+				.name(name)
+				.image(image)
+				.build();
+	}
+
+	public Corporation getCorpUpdateEntity() {
+		return Corporation.builder()
+				.id(id)
 				.name(name)
 				.image(image)
 				.build();
