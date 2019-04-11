@@ -34,7 +34,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 		LocalDateTime startTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plusHours(1);
 
-		List<News> newsList = newsRepository.findByCreateTimeBetween(startTime, endTime);
+		List<News> newsList = newsRepository.findByCreateAtBetween(startTime, endTime);
 
 		assertThat(newsList.size()).isEqualTo(0);
 	}
@@ -45,9 +45,9 @@ public class NewsRepositoryTest extends NewsTestcase {
 		LocalDateTime endTime = LocalDateTime.now().plusHours(1);
 		newsRepository.save(mockNews);
 
-		List<News> newsList = newsRepository.findByCreateTimeBetween(startTime, endTime);
+		List<News> newsList = newsRepository.findByCreateAtBetween(startTime, endTime);
 
 		assertThat(newsList.size()).isEqualTo(1);
-		assertThat(newsList.get(0).getCreateTime()).isBefore(endTime).isAfter(startTime);
+		assertThat(newsList.get(0).getCreateAt()).isBefore(endTime).isAfter(startTime);
 	}
 }

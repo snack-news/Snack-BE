@@ -32,7 +32,7 @@ public class NewsService {
 		LocalDateTime startTime = newsDto.getStartDateTime();
 		LocalDateTime endTime = newsDto.getEndDateTime();
 
-		return newsRepository.findByCreateTimeBetween(startTime, endTime);
+		return newsRepository.findByCreateAtBetween(startTime, endTime);
 	}
 
 	public News getNews(Long newsId) {
