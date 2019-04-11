@@ -21,6 +21,7 @@ import com.snack.news.service.CorpService;
 public class CorpController {
 	private final CorpService corpService;
 
+	// todo : Domain이 직접 노출되는 문제
 	@PostMapping
 	public Corporation createCorp(@RequestBody CorpDto corpDto) {
 		return corpService.createCorp(corpDto);

@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Corporation {
+public class Corporation extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
