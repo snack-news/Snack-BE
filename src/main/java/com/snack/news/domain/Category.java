@@ -3,7 +3,6 @@ package com.snack.news.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,11 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@NoArgsConstructor
 @Getter
-@ToString
 @Entity
-public class News extends BaseTimeEntity {
+@NoArgsConstructor
+public class Category extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -23,22 +21,8 @@ public class News extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String title;
 
-	@Column(columnDefinition = "TEXT", nullable = false)
-	private String content;
-
-	@Column
-	private String link;
-
-	@Column(nullable = false)
-	private Category category;
-
-	// todo : 다대다 관계
-	// News - Corp
-
 	@Builder
-	public News(String title, String link, String content) {
+	public Category(Long id, String title) {
 		this.title = title;
-		this.link = link;
-		this.content = content;
 	}
 }
