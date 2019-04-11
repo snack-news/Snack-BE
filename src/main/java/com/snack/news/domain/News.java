@@ -29,9 +29,8 @@ public class News extends BaseTimeEntity {
 	@Column
 	private String link;
 
-	@Column(nullable = false)
-	private Category category;
-
+	// todo
+	// News - Category
 	// todo : 다대다 관계
 	// News - Corp
 
