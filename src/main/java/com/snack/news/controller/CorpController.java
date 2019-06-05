@@ -1,15 +1,12 @@
 package com.snack.news.controller;
 
+import com.snack.news.strategy.Sorting;
 import lombok.AllArgsConstructor;
 
+import java.lang.ref.SoftReference;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.snack.news.domain.Corporation;
 import com.snack.news.dto.CorpDto;
@@ -28,8 +25,8 @@ public class CorpController {
 	}
 
 	@GetMapping
-	public List<Corporation> getCorpList() {
-		return corpService.getCorpList();
+	public List<Corporation> getCorpList(@RequestParam(defaultValue = "NAME") Sorting sorting) {
+		return corpService.getCorpList(sorting);
 	}
 
 	@PutMapping
