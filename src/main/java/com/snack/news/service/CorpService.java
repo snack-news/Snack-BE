@@ -1,26 +1,30 @@
 package com.snack.news.service;
 
-import lombok.AllArgsConstructor;
-
-import java.util.List;
-
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.snack.news.domain.Corporation;
 import com.snack.news.dto.CorpDto;
 import com.snack.news.exception.CorpNotFoundException;
 import com.snack.news.repository.CorpRepository;
+import com.snack.news.strategy.Sorting;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
 @Service
 public class CorpService {
 	private final CorpRepository corpRepository;
 
-	// todo : 항상 전체를 내려주는 것이 맞을까? 수십만개 회사가 등록되다면?
-	public List<Corporation> getCorpList() {
-		return corpRepository.findAll();
+	public List<Corporation> getCorpList(Sorting sorting) {
+		List<Corporation> corporations = corpRepository.findAll();
+
+		return corporations.stream()
+				.sorted(sorting.getOperator())
+				.collect(toList());
 	}
 
 	@Transactional
