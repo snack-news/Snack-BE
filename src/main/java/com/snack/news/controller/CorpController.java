@@ -1,16 +1,13 @@
 package com.snack.news.controller;
 
-import com.snack.news.strategy.Sorting;
-import lombok.AllArgsConstructor;
-
-import java.lang.ref.SoftReference;
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
 import com.snack.news.domain.Corporation;
 import com.snack.news.dto.CorpDto;
 import com.snack.news.service.CorpService;
+import com.snack.news.strategy.Sorting;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController

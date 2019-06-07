@@ -1,9 +1,8 @@
 package com.snack.news.dto;
 
+import com.snack.news.domain.Corporation;
 import lombok.Builder;
 import lombok.Getter;
-
-import com.snack.news.domain.Corporation;
 
 @Getter
 public class CorpDto {
