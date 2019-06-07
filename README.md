@@ -4,3 +4,8 @@
 
 ## WIKI
 - <https://github.com/snack-news/Snack-BE/wiki>
+
+## How to Run? 🚀
+```shell
+./gradlew bootRun
+```
