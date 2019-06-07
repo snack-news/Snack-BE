@@ -8,9 +8,6 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.Objects;
 
-/**
- * @author delf
- */
 @NoArgsConstructor
 @Getter
 @Entity
