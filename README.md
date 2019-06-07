@@ -7,5 +7,6 @@
 
 ## How to Run? 🚀
 ```shell
-./gradlew bootRun
+SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
+SPRING_PROFILES_ACTIVE=release ./gradlew clean bootRun # RELEASE
 ```
