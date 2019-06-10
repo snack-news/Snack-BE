@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -28,24 +29,14 @@ public class TopicServiceTest {
 	@Test
 	@Transactional
 	public void 토픽들을_토픽명순으로_조회할_수_있다() {
-
-		TopicDto firstTopicDto = TopicDto.builder()
-				.type(TEST_TOPIC_TYPE)
-				.name("애플")
-				.image(TEST_IMAGE_URL)
-				.build();
-		Topic firstCorp = topicService.createTopic(firstTopicDto);
-
-		TopicDto secondTopicDto = TopicDto.builder()
-				.type(TEST_TOPIC_TYPE)
-				.name("삼성")
-				.image(TEST_IMAGE_URL)
-				.build();
-		Topic secondCorp = topicService.createTopic(secondTopicDto);
-
 		List<Topic> topicList = topicService.getTopicList(TopicSorting.NAME);
+		assertThat(topicList.size()).as("데이터 없음").isNotZero();
 
-		assertThat(topicList).containsExactly(secondCorp, firstCorp);
+		List<Topic> originTopicList = topicService.getTopicList(TopicSorting.ID);
+		assertThat(topicList).doesNotContainSequence(originTopicList);
+
+		List<Topic> sortedTopicList = originTopicList.stream().sorted(TopicSorting.NAME.getOperator()).collect(toList());
+		assertThat(topicList).containsSequence(sortedTopicList);
 	}
 
 	@Test
