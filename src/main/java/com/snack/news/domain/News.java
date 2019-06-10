@@ -5,11 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -29,15 +26,17 @@ public class News extends BaseTimeEntity {
 	@Column
 	private String link;
 
+	@ManyToMany /*(mappedBy = "news", cascade = CascadeType.ALL, fetch = FetchType.EAGER)*/
+	private List<Topic> topics;
+
 	// todo
 	// News - Category
-	// todo : 다대다 관계
-	// News - Corp
 
 	@Builder
-	public News(String title, String link, String content) {
+	public News(String title, String link, String content, List<Topic> topics) {
 		this.title = title;
 		this.link = link;
 		this.content = content;
+		this.topics = topics;
 	}
 }

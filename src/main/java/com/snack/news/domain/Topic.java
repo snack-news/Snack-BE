@@ -3,22 +3,22 @@ package com.snack.news.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import javax.persistence.*;
 import java.util.Objects;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class Corporation extends BaseTimeEntity {
+@ToString
+public class Topic {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Enumerated(EnumType.STRING)
+	private TopicType type = TopicType.NONE;
 
 	@Column(nullable = false)
 	private String name;
@@ -27,24 +27,26 @@ public class Corporation extends BaseTimeEntity {
 	private String image;
 
 	@Builder
-	public Corporation(Long id, String name, String image) {
+	public Topic(Long id, String name, String image, String type) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
+		this.type = TopicType.valueOf(type);
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		Corporation that = (Corporation) o;
+		Topic that = (Topic) o;
 		return Objects.equals(id, that.id) &&
+				Objects.equals(type, that.type) &&
 				Objects.equals(name, that.name) &&
 				Objects.equals(image, that.image);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, image);
+		return Objects.hash(id, type, name, image);
 	}
 }
