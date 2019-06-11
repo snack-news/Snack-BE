@@ -1,6 +1,7 @@
 package com.snack.news.dto;
 
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +10,8 @@ public class TopicDto {
 	private Long id;
 	private String name;
 	private String image;
-	private String type;
+	private String type = TopicType.NONE.name();
+
 
 	@Builder
 	public TopicDto(Long id, String type, String name, String image) {

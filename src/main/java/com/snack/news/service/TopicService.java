@@ -9,8 +9,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
@@ -28,11 +32,31 @@ public class TopicService {
 	}
 
 	public List<Topic> getTopicList(TopicSorting sorting) {
-		List<Topic> Topics = topicRepository.findAll();
+		List<Topic> topics = topicRepository.findAll();
 
-		return Topics.stream()
+		return topics.stream()
 				.sorted(sorting.getOperator())
 				.collect(toList());
+	}
+
+	@Transactional
+	public List<Topic> getTopicList(String[] topics) {
+		if(Objects.isNull(topics)) {
+			return Collections.emptyList();
+		}
+
+		List<Topic> topicList = new ArrayList<>();
+		for (String topicName : topics) {
+			Topic nextTopic = topicRepository.findByName(topicName);
+			if (Objects.isNull(nextTopic)) {
+				System.out.println(topicName);
+				nextTopic = Topic.builder().name(topicName).build();
+				topicRepository.save(nextTopic);
+			}
+			topicList.add(nextTopic);
+		}
+
+		return topicList;
 	}
 
 	@Transactional

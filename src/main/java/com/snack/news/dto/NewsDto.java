@@ -1,6 +1,7 @@
 package com.snack.news.dto;
 
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,8 @@ public class NewsDto {
 	private String title;
 	private String content;
 	private String link;
-	private List<Topic> topics;
+	private String type = TopicType.NONE.name();
+	private String[] topics;
 	private LocalDateTime startDateTime;
 	private LocalDateTime endDateTime;
 
@@ -27,7 +29,15 @@ public class NewsDto {
 				.title(title)
 				.content(content)
 				.link(link)
+				.build();
+	}
+
+	public News toEntity(List<Topic> topics) {
+		return News.builder()
+				.title(title)
+				.content(content)
 				.topics(topics)
+				.link(link)
 				.build();
 	}
 }

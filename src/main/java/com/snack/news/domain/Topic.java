@@ -31,7 +31,9 @@ public class Topic {
 		this.id = id;
 		this.name = name;
 		this.image = image;
-		this.type = TopicType.valueOf(type);
+		if(Objects.nonNull(type)) {
+			this.type = TopicType.valueOf(type);
+		}
 	}
 
 	@Override
