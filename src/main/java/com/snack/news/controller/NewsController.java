@@ -29,7 +29,7 @@ public class NewsController {
 
 	@GetMapping
 	public List<News> getNews(@ModelAttribute NewsDto newsDto) {
-		return newsService.getNewsList(newsDto);
+		return newsService.getPeriodNewsList(newsDto);
 	}
 
 	@GetMapping("/{newsId}")

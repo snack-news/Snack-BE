@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
@@ -40,16 +39,15 @@ public class TopicService {
 	}
 
 	@Transactional
-	public List<Topic> getTopicList(String[] topics) {
-		if(Objects.isNull(topics)) {
+	public List<Topic> getTopicList(List<String> topicNames) {
+		if (Objects.isNull(topicNames)) {
 			return Collections.emptyList();
 		}
 
 		List<Topic> topicList = new ArrayList<>();
-		for (String topicName : topics) {
+		for (String topicName : topicNames) {
 			Topic nextTopic = topicRepository.findByName(topicName);
 			if (Objects.isNull(nextTopic)) {
-				System.out.println(topicName);
 				nextTopic = Topic.builder().name(topicName).build();
 				topicRepository.save(nextTopic);
 			}

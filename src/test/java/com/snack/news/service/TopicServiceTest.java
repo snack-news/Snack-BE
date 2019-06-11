@@ -1,6 +1,7 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.strategy.TopicSorting;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TopicServiceTest {
-	private static final String TEST_TOPIC_TYPE = "CORP";
+	private static final TopicType TEST_TOPIC_TYPE = TopicType.CORP;
 	private static final String TEST_TOPIC_NAME = "TEST_NAME";
 	private static final String TEST_IMAGE_URL = "IMAGE_URL";
 
