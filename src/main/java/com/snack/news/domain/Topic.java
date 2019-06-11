@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Optional;
 
 @NoArgsConstructor
 @Getter
@@ -18,7 +19,7 @@ public class Topic {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
-	private TopicType type = TopicType.NONE;
+	private TopicType type;
 
 	@Column(nullable = false)
 	private String name;
@@ -27,13 +28,11 @@ public class Topic {
 	private String image;
 
 	@Builder
-	public Topic(Long id, String name, String image, String type) {
+	public Topic(Long id, String name, String image, TopicType type) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
-		if(Objects.nonNull(type)) {
-			this.type = TopicType.valueOf(type);
-		}
+		this.type = Optional.ofNullable(type).orElse(TopicType.NONE);
 	}
 
 	@Override

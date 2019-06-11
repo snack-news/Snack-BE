@@ -10,11 +10,11 @@ public class TopicDto {
 	private Long id;
 	private String name;
 	private String image;
-	private String type = TopicType.NONE.name();
+	private TopicType type = TopicType.NONE;
 
 
 	@Builder
-	public TopicDto(Long id, String type, String name, String image) {
+	public TopicDto(Long id, TopicType type, String name, String image) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
