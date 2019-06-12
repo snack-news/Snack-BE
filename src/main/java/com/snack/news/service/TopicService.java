@@ -1,6 +1,7 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.repository.TopicRepository;
@@ -29,6 +30,15 @@ public class TopicService {
 		return topic; // todo : Success Response
 	}
 
+	public List<Topic> getTypeTopicList(TopicType topicType, TopicSorting sorting) {
+		List<Topic> topics = topicRepository.findAllByTypeIs(topicType);
+
+		return topics.stream()
+				.sorted(sorting.getOperator())
+				.collect(toList());
+	}
+
+
 	public List<Topic> getTopicList(TopicSorting sorting) {
 		List<Topic> topics = topicRepository.findAll();
 
@@ -42,7 +52,7 @@ public class TopicService {
 			return Collections.emptyList();
 		}
 
-		return topicRepository.findAllById(topicIds);
+		return topicRepository.findByIdIn(topicIds);
 	}
 
 

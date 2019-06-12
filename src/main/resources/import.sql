@@ -2,6 +2,7 @@
 insert into topic (id, type, name) values (1, 'CORP', '카카오');
 insert into topic (id, type, name) values (2, 'CORP', '애플');
 insert into topic (id, type, name) values (3, 'CORP', '삼성');
+insert into topic (id, type, name) values (4, 'FIELD', '블록체인');
 
 -- News 테스트 데이터
 insert into news(id, title, content) values (1, '첫 번째 뉴스 타이틀', '첫 번째 뉴스 내용입니다.');

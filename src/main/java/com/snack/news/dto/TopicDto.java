@@ -4,7 +4,9 @@ import com.snack.news.domain.Topic;
 import com.snack.news.domain.TopicType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class TopicDto {
 	private Long id;
