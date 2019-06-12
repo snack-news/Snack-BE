@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -38,24 +37,14 @@ public class TopicService {
 				.collect(toList());
 	}
 
-	@Transactional
-	public List<Topic> getTopicList(List<String> topicNames) {
-		if (Objects.isNull(topicNames)) {
+	public List<Topic> getTopicList(List<Long> topicIds) {
+		if (Objects.isNull(topicIds)) {
 			return Collections.emptyList();
 		}
 
-		List<Topic> topicList = new ArrayList<>();
-		for (String topicName : topicNames) {
-			Topic nextTopic = topicRepository.findByName(topicName);
-			if (Objects.isNull(nextTopic)) {
-				nextTopic = Topic.builder().name(topicName).build();
-				topicRepository.save(nextTopic);
-			}
-			topicList.add(nextTopic);
-		}
-
-		return topicList;
+		return topicRepository.findAllById(topicIds);
 	}
+
 
 	@Transactional
 	public Topic updateTopic(TopicDto topicDto) {

@@ -19,7 +19,7 @@ public class NewsDto {
 	private String content;
 	private String link;
 	private TopicType type;
-	private List<String> topics;
+	private List<Long> topics;
 	private LocalDateTime startDateTime;
 	private LocalDateTime endDateTime;
 

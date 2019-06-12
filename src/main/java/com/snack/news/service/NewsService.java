@@ -42,7 +42,7 @@ public class NewsService {
 
 	public List<News> getTopicNewsList(NewsDto newsDto) {
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopics());
-		return newsRepository.findAllByTopicsContains(topics);
+		return newsRepository.findByTopicsContains(topics);
 	}
 
 	public News getNews(Long newsId) {

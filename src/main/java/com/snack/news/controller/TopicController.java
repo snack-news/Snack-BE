@@ -23,6 +23,7 @@ public class TopicController {
 
 	@GetMapping
 	public List<Topic> getTopicList(@RequestParam(defaultValue = "NAME") TopicSorting sort) {
+		// todo: topic type을 받고 해당하는 topic list를 내려주기
 		return topicService.getTopicList(sort);
 	}
 
