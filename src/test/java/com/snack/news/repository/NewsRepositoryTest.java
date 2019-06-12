@@ -1,16 +1,15 @@
 package com.snack.news.repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.snack.news.domain.News;
+import com.snack.news.fixture.NewsTestcase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.snack.news.domain.News;
-import com.snack.news.fixture.NewsTestcase;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -22,10 +21,11 @@ public class NewsRepositoryTest extends NewsTestcase {
 
 	@Test
 	public void News를_저장할수있다() {
+		int size = newsRepository.findAll().size();
 		newsRepository.save(mockNews);
 
 		List<News> newsList = newsRepository.findAll();
-		assertThat(newsList.size()).isEqualTo(1);
+		assertThat(newsList.size()).isEqualTo(size + 1);
 	}
 
 	@Test

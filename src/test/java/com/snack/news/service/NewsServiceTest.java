@@ -49,18 +49,18 @@ public class NewsServiceTest extends NewsTestcase {
 
 	@Test
 	public void Topic_별로_뉴스를_조회할_수_있다() {
-		final String testTopicName = "카카오";
+		final Long testTopicId = 1L; // 카카오
 		NewsDto newsDto = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
-				.topics(Collections.singletonList(testTopicName)).build();
+				.topics(Collections.singletonList(testTopicId)).build();
 		List<News> topicNewsList = newsService.getTopicNewsList(newsDto);
 
 		List<News> totalNewsList = newsService.getNewsList();
 		int topicCnt = 0;
 		for (News news : totalNewsList) {
 			for (Topic topic : news.getTopics()) {
-				if (topic.getName().equals(testTopicName)) {
+				if (topic.getId().equals(testTopicId)) {
 					topicCnt++;
 				}
 			}
