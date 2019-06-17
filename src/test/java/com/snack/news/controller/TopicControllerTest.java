@@ -114,10 +114,4 @@ public class TopicControllerTest {
 
 		assertThat(realTopicListSize).isEqualTo(responseTopics.length);
 	}
-
-	@Test
-	public void 이름순으로_정렬된_토픽_리스트를_정상적으로_가져온다() throws Exception {
-		mockMvc.perform(get("/api/topic"))
-				.andExpect(status().isOk());
-	}
 }
