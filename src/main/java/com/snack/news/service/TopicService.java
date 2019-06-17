@@ -7,6 +7,7 @@ import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.repository.TopicRepository;
 import com.snack.news.strategy.TopicSorting;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,11 @@ public class TopicService {
 	public Topic createTopic(TopicDto topicDto) {
 		Topic topic = topicDto.getTopicNewEntity();
 
-		topicRepository.save(topic);
+		try {
+			topicRepository.save(topic);
+		} catch (DataIntegrityViolationException e) {
+			throw new TopicNotFoundException(); // 토픽 이름이 중복. todo: 예외 관리하기
+		}
 
 		return topic; // todo : Success Response
 	}
