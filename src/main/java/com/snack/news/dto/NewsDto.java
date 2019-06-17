@@ -1,14 +1,14 @@
 package com.snack.news.dto;
 
+import com.snack.news.domain.News;
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.snack.news.domain.News;
 
 @Getter
 @Setter
@@ -18,7 +18,8 @@ public class NewsDto {
 	private String title;
 	private String content;
 	private String link;
-	private List<Topic> topics;
+	private TopicType type;
+	private List<Long> topics;
 	private LocalDateTime startDateTime;
 	private LocalDateTime endDateTime;
 
@@ -27,7 +28,15 @@ public class NewsDto {
 				.title(title)
 				.content(content)
 				.link(link)
+				.build();
+	}
+
+	public News toEntity(List<Topic> topics) {
+		return News.builder()
+				.title(title)
+				.content(content)
 				.topics(topics)
+				.link(link)
 				.build();
 	}
 }

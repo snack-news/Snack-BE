@@ -1,5 +1,5 @@
 package com.snack.news.domain;
 
 public enum TopicType {
-	CORP, HUMAM, NONE;
+	CORP, PERSON, FIELD, NONE;
 }

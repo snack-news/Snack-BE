@@ -26,7 +26,10 @@ public class News extends BaseTimeEntity {
 	@Column
 	private String link;
 
-	@ManyToMany /*(mappedBy = "news", cascade = CascadeType.ALL, fetch = FetchType.EAGER)*/
+	@ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name="news_topic",
+			joinColumns = @JoinColumn(name = "news_id"),
+			inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private List<Topic> topics;
 
 	// todo

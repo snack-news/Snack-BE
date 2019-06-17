@@ -1,6 +1,7 @@
 package com.snack.news.controller;
 
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.service.TopicService;
 import com.snack.news.strategy.TopicSorting;
@@ -26,8 +27,14 @@ public class TopicController {
 		return topicService.getTopicList(sort);
 	}
 
+	@GetMapping("/{type}")
+	public List<Topic> getTopicList(@PathVariable TopicType type, @RequestParam(defaultValue = "NAME") TopicSorting sort) {
+		return topicService.getTypeTopicList(type, sort);
+	}
+
+
 	@PutMapping
-	public Topic updateTopic(TopicDto topicDto) {
+	public Topic updateTopic(@RequestBody TopicDto topicDto) {
 		return topicService.updateTopic(topicDto);
 	}
 }

@@ -1,6 +1,7 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.Topic;
+import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.repository.TopicRepository;
@@ -9,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -27,13 +30,31 @@ public class TopicService {
 		return topic; // todo : Success Response
 	}
 
-	public List<Topic> getTopicList(TopicSorting sorting) {
-		List<Topic> Topics = topicRepository.findAll();
+	public List<Topic> getTypeTopicList(TopicType topicType, TopicSorting sorting) {
+		List<Topic> topics = topicRepository.findAllByTypeIs(topicType);
 
-		return Topics.stream()
+		return topics.stream()
 				.sorted(sorting.getOperator())
 				.collect(toList());
 	}
+
+
+	public List<Topic> getTopicList(TopicSorting sorting) {
+		List<Topic> topics = topicRepository.findAll();
+
+		return topics.stream()
+				.sorted(sorting.getOperator())
+				.collect(toList());
+	}
+
+	public List<Topic> getTopicList(List<Long> topicIds) {
+		if (Objects.isNull(topicIds)) {
+			return Collections.emptyList();
+		}
+
+		return topicRepository.findByIdIn(topicIds);
+	}
+
 
 	@Transactional
 	public Topic updateTopic(TopicDto topicDto) {

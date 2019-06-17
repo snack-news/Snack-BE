@@ -5,7 +5,8 @@ import com.snack.news.domain.Topic;
 import java.util.Comparator;
 
 public enum TopicSorting {
-	NAME(Comparator.comparing(Topic::getName));
+	NAME(Comparator.comparing(Topic::getName)),
+	ID(Comparator.comparing(Topic::getId));
 
 	private Comparator<Topic> operator;
 
