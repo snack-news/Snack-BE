@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,10 +101,10 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	public void 원하는_티입의_토픽_리스트를_정상적으로_가져온다() throws Exception {
+	public void 원하는_타입의_토픽_리스트를_정상적으로_가져온다() throws Exception {
 		final TopicType testTopicType = TopicType.CORP;
 
-		int realTopicListSize = topicRepository.findAllByTypeIs(testTopicType).size();
+		List<Topic> realTopicList = topicRepository.findAllByTypeIs(testTopicType);
 
 		MvcResult mvcResult = mockMvc.perform(get("/api/topic/CORP"))
 				.andExpect(status().isOk())
@@ -112,6 +113,6 @@ public class TopicControllerTest {
 		String responseString = mvcResult.getResponse().getContentAsString();
 		Topic[] responseTopics = new Gson().fromJson(responseString, Topic[].class);
 
-		assertThat(realTopicListSize).isEqualTo(responseTopics.length);
+		assertThat(responseTopics).containsAll(realTopicList);
 	}
 }
