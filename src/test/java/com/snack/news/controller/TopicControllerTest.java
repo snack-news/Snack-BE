@@ -30,9 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class TopicControllerTest {
 
+	private final static String TOPIC_API_URL = "/api/topic";
+
 	@Autowired
 	private TopicRepository topicRepository;
-
 	@Autowired
 	private WebApplicationContext context;
 	private MockMvc mockMvc;
@@ -52,8 +53,8 @@ public class TopicControllerTest {
 		TopicDto topicDto = TopicDto.builder().name(testTopicName).type(testTopicType).build();
 		String requestJsonBody = new Gson().toJson(topicDto);
 
-		final String url = "/api/topic";
-		mockMvc.perform(post(url)
+
+		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}
@@ -66,8 +67,7 @@ public class TopicControllerTest {
 		TopicDto topicDto = TopicDto.builder().name(testTopicName).type(testTopicType).build();
 		String requestJsonBody = new Gson().toJson(topicDto);
 
-		final String url = "/api/topic";
-		mockMvc.perform(post(url)
+		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().is4xxClientError()); // todo: 자세한 오류 메시지 명시
 	}
@@ -80,8 +80,7 @@ public class TopicControllerTest {
 		TopicDto topicDto = TopicDto.builder().name(testTopicName).type(testTopicType).build();
 		String requestJsonBody = new Gson().toJson(topicDto).replace(testTopicType.name(), "WRONG_TYPE");
 
-		final String url = "/api/topic";
-		mockMvc.perform(post(url)
+		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().is4xxClientError()); // todo: 자세한 오류 메시지 명시
 	}
@@ -90,7 +89,7 @@ public class TopicControllerTest {
 	public void 토픽_리스트를_정상적으로_가져온다() throws Exception {
 		int realTopicListSize = topicRepository.findAll().size();
 
-		MvcResult mvcResult = mockMvc.perform(get("/api/topic"))
+		MvcResult mvcResult = mockMvc.perform(get(TOPIC_API_URL))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -106,7 +105,7 @@ public class TopicControllerTest {
 
 		List<Topic> realTopicList = topicRepository.findAllByTypeIs(testTopicType);
 
-		MvcResult mvcResult = mockMvc.perform(get("/api/topic/CORP"))
+		MvcResult mvcResult = mockMvc.perform(get(TOPIC_API_URL + "/CORP"))
 				.andExpect(status().isOk())
 				.andReturn();
 
