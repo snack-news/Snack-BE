@@ -32,7 +32,6 @@ public class TopicController {
 		return topicService.getTypeTopicList(type, sort);
 	}
 
-
 	@PutMapping
 	public Topic updateTopic(@RequestBody TopicDto topicDto) {
 		return topicService.updateTopic(topicDto);

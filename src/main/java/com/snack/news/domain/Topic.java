@@ -21,7 +21,7 @@ public class Topic {
 	@Enumerated(EnumType.STRING)
 	private TopicType type;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@Column
