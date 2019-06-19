@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
@@ -46,7 +47,9 @@ public class TopicControllerTest {
 	}
 
 	@Test
+	@Transactional
 	public void 토픽_생성_요청이_정상적으로_이루어진다() throws Exception {
+
 		final String testTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
 		final TopicType testTopicType = TopicType.CORP;
 
@@ -60,7 +63,8 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	public void 토픽_생성_요청이_실패한다_이름_중복() throws Exception {
+	@Transactional
+	public void 토픽_이름이_중복이라면_토픽_생성요청이_실패한다() throws Exception {
 		final String testTopicName = "삼성";
 		final TopicType testTopicType = TopicType.CORP;
 
@@ -73,7 +77,8 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	public void 토픽_생성_요청이_실패한다_타입_없음() throws Exception {
+	@Transactional
+	public void 토픽_타입이_없다면_토픽_생성요청이_실패한다() throws Exception {
 		final String testTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
 		final TopicType testTopicType = TopicType.NONE;
 
@@ -86,6 +91,7 @@ public class TopicControllerTest {
 	}
 
 	@Test
+	@Transactional
 	public void 토픽_리스트를_정상적으로_가져온다() throws Exception {
 		int realTopicListSize = topicRepository.findAll().size();
 
@@ -100,6 +106,7 @@ public class TopicControllerTest {
 	}
 
 	@Test
+	@Transactional
 	public void 원하는_타입의_토픽_리스트를_정상적으로_가져온다() throws Exception {
 		final TopicType testTopicType = TopicType.CORP;
 
@@ -114,4 +121,5 @@ public class TopicControllerTest {
 
 		assertThat(responseTopics).containsAll(realTopicList);
 	}
+
 }
