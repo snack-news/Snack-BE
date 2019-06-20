@@ -93,7 +93,7 @@ public class TopicControllerTest {
 	@Test
 	@Transactional
 	public void 토픽_리스트를_정상적으로_가져온다() throws Exception {
-		int realTopicListSize = topicRepository.findAll().size();
+		long realTopicListSize = topicRepository.count();
 
 		MvcResult mvcResult = mockMvc.perform(get(TOPIC_API_URL))
 				.andExpect(status().isOk())

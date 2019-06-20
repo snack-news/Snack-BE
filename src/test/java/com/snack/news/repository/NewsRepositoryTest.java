@@ -21,7 +21,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 
 	@Test
 	public void News를_저장할수있다() {
-		int size = newsRepository.findAll().size();
+		long size = newsRepository.count();
 		newsRepository.save(mockNews);
 
 		List<News> newsList = newsRepository.findAll();
