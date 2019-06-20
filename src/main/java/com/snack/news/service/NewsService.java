@@ -29,7 +29,7 @@ public class NewsService {
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public List<News> getPeriodNewsList(NewsDto newsDto) {
+	public List<News> getNewsList(NewsDto newsDto) {
 		LocalDateTime startTime = newsDto.getStartDateTime();
 		LocalDateTime endTime = newsDto.getEndDateTime();
 
