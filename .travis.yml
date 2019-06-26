@@ -22,4 +22,15 @@ after_success:
 notifications:
   slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
 
-
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: snack-news-deploy
+    region: ap-northeast-2 # seoul
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deployed: true
+    on:
+      repo: snack-news/Snack-BE #Github
+      branch: master
