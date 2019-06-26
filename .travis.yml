@@ -19,8 +19,10 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-notifications:
-  slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
+before_deploy:
+  - zip -r snack-news-BE *
+  - mkdir -p deploy
+  - mv snack-news-BE.zip deploy/snack-news-BE.zip
 
 deploy:
   - provider: s3
@@ -31,6 +33,10 @@ deploy:
     skip_cleanup: true
     acl: public_read
     wait-until-deployed: true
+    local_dir: deploy
     on:
       repo: snack-news/Snack-BE #Github
       branch: master
+
+notifications:
+  slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
