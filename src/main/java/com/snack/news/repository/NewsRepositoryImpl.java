@@ -7,8 +7,10 @@ import com.snack.news.dto.NewsDto;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.time.LocalDateTime;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class NewsRepositoryImpl implements NewsRepositoryCustom {
@@ -21,21 +23,23 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<News> query = builder.createQuery(News.class);
 
-		Root<News> m = query.from(News.class);
-		Join<News, Topic> join = m.join("topics");
-		query.select(m).distinct(true);
+		Root<News> nr = query.from(News.class);
+		Join<News, Topic> ntj = nr.join("topics");
 
-		Predicate periodQuery = builder.between(m.get("createAt"), newsDto.getStartDateTime(), newsDto.getEndDateTime());
-		builder.equal(m.get("topics"), newsDto.getTopicIds());
-		query.select(m)
+		query.multiselect(nr, ntj)
 				.distinct(true)
-				.where(periodQuery);
+				.select(nr)
+				.where(ntj.get("id").in(newsDto.getTopicIds()));
 
+		/*for (Long id : newsDto.getTopicIds()) {
+			cq.where(builder.equal(nr.get("id"), id));
+			 cq.where(builder.in(nr.get("id")).in(newsDto.getTopicIds()));
+		}*/
+
+		// Predicate periodQuery = builder.between(nr.get("createAt"), newsDto.getStartDateTime(), newsDto.getEndDateTime());
 
 		TypedQuery<News> typeQuery = em.createQuery(query);
 		List<News> newsList = typeQuery.getResultList();
-
-
 		return newsList;
 	}
 }

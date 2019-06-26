@@ -44,6 +44,10 @@ public class NewsService {
 		return newsRepository.findByTopicsIdIn(newsDto.getTopicIds());
 	}
 
+	public List<News> getTopicNewsListCriteria(NewsDto newsDto) {
+		return newsRepository.findByNewsDto(newsDto);
+	}
+
 	public News getNews(Long newsId) {
 		return newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
 	}
