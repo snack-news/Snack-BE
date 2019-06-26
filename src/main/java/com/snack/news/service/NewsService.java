@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -29,22 +28,18 @@ public class NewsService {
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public List<News> getNewsList(NewsDto newsDto) {
+	/*public List<News> getPeriodNewsList(NewsDto newsDto) {
 		LocalDateTime startTime = newsDto.getStartDateTime();
 		LocalDateTime endTime = newsDto.getEndDateTime();
 
 		return newsRepository.findByCreateAtBetween(startTime, endTime);
 	}
-
-	public List<News> getNewsList() {
+*/
+	public List<News> getAllNewsList() {
 		return newsRepository.findAll();
 	}
 
-	public List<News> getTopicNewsList(NewsDto newsDto) {
-		return newsRepository.findByTopicsIdIn(newsDto.getTopicIds());
-	}
-
-	public List<News> getTopicNewsListCriteria(NewsDto newsDto) {
+	public List<News> getNewsList(NewsDto newsDto) {
 		return newsRepository.findByNewsDto(newsDto);
 	}
 

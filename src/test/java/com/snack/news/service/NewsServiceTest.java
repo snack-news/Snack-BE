@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,12 +33,12 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test
 	@Transactional
 	public void 뉴스를_생성할_수_있다() {
-		int size = newsService.getNewsList().size();
+		int size = newsService.getAllNewsList().size();
 
 		NewsDto newsDto = NewsDto.builder().title(TEST_NEWS_TITLE).content(TEST_NEWS_CONTENT).build();
 		newsService.createNews(newsDto);
 
-		assertThat(size + 1).isEqualTo(newsService.getNewsList().size());
+		assertThat(size + 1).isEqualTo(newsService.getAllNewsList().size());
 	}
 
 	@Test
@@ -58,18 +58,18 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test
 	@Transactional
 	public void Topic_별로_뉴스를_조회할_수_있다() {
-		final List<Long> testTopicIds = asList(1L, 2L, 3L, 4L);
+		final List<Long> testTopicIds = asList(2L, 3L);
 		NewsDto newsDto = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.topicIds(testTopicIds).build();
 
-		List<Long> resultNewsIds = newsService.getTopicNewsListCriteria(newsDto)
+		List<Long> resultNewsIds = newsService.getNewsList(newsDto)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
 
-		List<Long> expectedResultNewsIds = newsService.getNewsList()
+		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
 				.stream()
 				.filter(topics -> topics.getTopics()
 						.stream()
@@ -123,12 +123,12 @@ public class NewsServiceTest extends NewsTestcase {
 				.topicIds(testTopicIds)
 				.build();
 
-		List<Long> actualResultNewsIds = newsService.getTopicNewsListCriteria(newsDto)
+		List<Long> actualResultNewsIds = newsService.getNewsList(newsDto)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
 
-		List<Long> expectedResultNewsIds = newsService.getNewsList()
+		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
 				.stream()
 				.filter(n -> n.getCreateAt().isBefore(end) && n.getCreateAt().isAfter(start))
 				.filter(topics -> topics.getTopics()
