@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,30 +58,7 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test
 	@Transactional
 	public void Topic_별로_뉴스를_조회할_수_있다() {
-		final List<Long> testTopicIds = asList(1L, 2L);
-		NewsDto newsDto = NewsDto.builder()
-				.title(TEST_TITLE)
-				.content(TEST_CONTENT)
-				.topicIds(testTopicIds).build();
-
-		List<Long> resultNewsIds = newsService.getTopicNewsList(newsDto)
-				.stream()
-				.map(News::getId)
-				.collect(toList());
-
-		List<Long> expectedResultNewsIds = newsService.getNewsList()
-				.stream()
-				.map(News::getId)
-				.filter(testTopicIds::contains)
-				.collect(toList());
-
-		assertThat(resultNewsIds).containsExactlyElementsOf(expectedResultNewsIds);
-	}
-
-	@Test
-	@Transactional
-	public void Criteria를_이용해_Topic_별로_뉴스를_조회할_수_있다() {
-		final List<Long> testTopicIds = asList(1L, 3L);
+		final List<Long> testTopicIds = asList(1L, 2L, 3L, 4L);
 		NewsDto newsDto = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
@@ -102,12 +79,6 @@ public class NewsServiceTest extends NewsTestcase {
 				.collect(toList());
 
 		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
-	}
-
-	private boolean isIn(List<Topic> topicList, List<Long> topicIds) {
-		return topicList.stream()
-				.map(Topic::getId)
-				.anyMatch(topicIds::contains);
 	}
 
 	@Test(expected = NewsNotFoundException.class)
@@ -137,5 +108,37 @@ public class NewsServiceTest extends NewsTestcase {
 		long newsListCountAfterJune = newsService.getNewsList(newsDtoAfterJune).size();
 
 		assertThat(newsListCountBeforeJune + newsListCountAfterJune).isEqualTo(totalNewsCount);
+	}
+
+	@Test
+	@Transactional
+	public void 원하는_Topic과_원하는_기간의_뉴스들을_조회할_수_있다() {
+		final List<Long> testTopicIds = asList(1L, 2L);
+		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
+		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
+
+		NewsDto newsDto = NewsDto.builder()
+				.startDateTime(start)
+				.endDateTime(end)
+				.topicIds(testTopicIds)
+				.build();
+
+		List<Long> actualResultNewsIds = newsService.getTopicNewsListCriteria(newsDto)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+
+		List<Long> expectedResultNewsIds = newsService.getNewsList()
+				.stream()
+				.filter(n -> n.getCreateAt().isBefore(end) && n.getCreateAt().isAfter(start))
+				.filter(topics -> topics.getTopics()
+						.stream()
+						.map(Topic::getId)
+						.anyMatch(testTopicIds::contains))
+				.map(News::getId)
+				.collect(toList());
+
+		assertThat(actualResultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+
 	}
 }
