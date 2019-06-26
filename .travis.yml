@@ -19,7 +19,38 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
+before_deploy:
+  - zip -r snack-news-BE *
+  - mkdir -p deploy
+  - mv snack-news-BE.zip deploy/snack-news-BE.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: snack-news-deploy
+    region: ap-northeast-2 # seoul
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deployed: true
+    local_dir: deploy
+    on:
+      repo: snack-news/Snack-BE #Github
+      branch: master
+
+  - provider: codedeploy
+      access_key_id: $AWS_ACCESS_KEY
+      secret_access_key: $AWS_SECRET_KEY
+      bucket: snack-news-deploy
+      key: snack-news-BE.zip # 빌드 파일을 압축해서 전달
+      bundle_type: zip
+      application: snack-news-BE # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
+      deployment_group: snack-news-BE # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+      region: ap-northeast-2
+      wait-until-deployed: true
+      on:
+        repo: snack-news/Snack-BE #Github
+        branch: master
+
 notifications:
   slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
-
-
