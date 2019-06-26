@@ -21,7 +21,7 @@ public class NewsService {
 
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) {
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopics());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
 		News news = newsDto.toEntity(topics);
 
 		newsRepository.save(news);
@@ -41,7 +41,7 @@ public class NewsService {
 	}
 
 	public List<News> getTopicNewsList(NewsDto newsDto) {
-		return newsRepository.findByTopicsIdIn(newsDto.getTopics());
+		return newsRepository.findByTopicsIdIn(newsDto.getTopicIds());
 	}
 
 	public News getNews(Long newsId) {

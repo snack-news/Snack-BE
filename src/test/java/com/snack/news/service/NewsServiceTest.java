@@ -53,7 +53,7 @@ public class NewsServiceTest extends NewsTestcase {
 		NewsDto newsDto = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
-				.topics(testTopicIds).build();
+				.topicIds(testTopicIds).build();
 
 		List<Long> resultNewsIds = newsService.getTopicNewsList(newsDto)
 				.stream()
