@@ -41,8 +41,7 @@ public class NewsService {
 	}
 
 	public List<News> getTopicNewsList(NewsDto newsDto) {
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopics());
-		return newsRepository.findByTopicsContains(topics);
+		return newsRepository.findByTopicsIdIn(newsDto.getTopics());
 	}
 
 	public News getNews(Long newsId) {
