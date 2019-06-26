@@ -19,7 +19,24 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
+before_deploy:
+  - zip -r snack-news-BE *
+  - mkdir -p deploy
+  - mv snack-news-BE.zip deploy/snack-news-BE.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: snack-news-deploy
+    region: ap-northeast-2 # seoul
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deployed: true
+    local_dir: deploy
+    on:
+      repo: snack-news/Snack-BE #Github
+      branch: master
+
 notifications:
   slack: opensourcekr:3wXZfw1QFGKrbPrNR99ZLR10
-
-

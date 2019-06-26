@@ -26,7 +26,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		query.select(m).distinct(true);
 
 		Predicate periodQuery = builder.between(m.get("createAt"), newsDto.getStartDateTime(), newsDto.getEndDateTime());
-		builder.equal(m.get("topics"), newsDto.getTopics());
+		builder.equal(m.get("topics"), newsDto.getTopicIds());
 		query.select(m)
 				.distinct(true)
 				.where(periodQuery);

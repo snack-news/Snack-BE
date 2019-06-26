@@ -1,7 +1,6 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.News;
-import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsTestcase;
@@ -14,9 +13,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -57,30 +57,30 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test
 	@Transactional
 	public void Topic_별로_뉴스를_조회할_수_있다() {
-		final Long testTopicId = 1L; // 카카오
+		final List<Long> testTopicIds = asList(1L, 2L);
 		NewsDto newsDto = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
-				.topics(Collections.singletonList(testTopicId)).build();
-		List<News> topicNewsList = newsService.getTopicNewsList(newsDto);
+				.topicIds(testTopicIds).build();
 
-		List<News> totalNewsList = newsService.getNewsList();
-		int topicCnt = 0;
-		for (News news : totalNewsList) {
-			for (Topic topic : news.getTopics()) {
-				if (topic.getId().equals(testTopicId)) {
-					topicCnt++;
-				}
-			}
-		}
-		assertThat(topicNewsList.size()).isEqualTo(topicCnt);
+		List<Long> resultNewsIds = newsService.getTopicNewsList(newsDto)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+
+		List<Long> expectedResultNewsIds = newsService.getNewsList()
+				.stream()
+				.map(News::getId)
+				.filter(testTopicIds::contains)
+				.collect(toList());
+
+		assertThat(resultNewsIds).containsAll(expectedResultNewsIds);
 	}
 
 	@Test(expected = NewsNotFoundException.class)
 	@Transactional
 	public void ID가_유효하지않는다면_예외를_반환한다() {
 		Long invalidNewsId = 999L;
-
 		newsService.getNews(invalidNewsId);
 	}
 
@@ -103,6 +103,6 @@ public class NewsServiceTest extends NewsTestcase {
 
 		long newsListCountAfterJune = newsService.getNewsList(newsDtoAfterJune).size();
 
-		 assertThat(newsListCountBeforeJune + newsListCountAfterJune).isEqualTo(totalNewsCount);
+		assertThat(newsListCountBeforeJune + newsListCountAfterJune).isEqualTo(totalNewsCount);
 	}
 }
