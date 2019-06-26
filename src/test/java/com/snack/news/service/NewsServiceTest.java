@@ -1,6 +1,7 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.News;
+import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsTestcase;
@@ -74,7 +75,39 @@ public class NewsServiceTest extends NewsTestcase {
 				.filter(testTopicIds::contains)
 				.collect(toList());
 
-		assertThat(resultNewsIds).containsAll(expectedResultNewsIds);
+		assertThat(resultNewsIds).containsExactlyElementsOf(expectedResultNewsIds);
+	}
+
+	@Test
+	@Transactional
+	public void Criteria를_이용해_Topic_별로_뉴스를_조회할_수_있다() {
+		final List<Long> testTopicIds = asList(1L, 3L);
+		NewsDto newsDto = NewsDto.builder()
+				.title(TEST_TITLE)
+				.content(TEST_CONTENT)
+				.topicIds(testTopicIds).build();
+
+		List<Long> resultNewsIds = newsService.getTopicNewsListCriteria(newsDto)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+
+		List<Long> expectedResultNewsIds = newsService.getNewsList()
+				.stream()
+				.filter(topics -> topics.getTopics()
+						.stream()
+						.map(Topic::getId)
+						.anyMatch(testTopicIds::contains))
+				.map(News::getId)
+				.collect(toList());
+
+		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+	}
+
+	private boolean isIn(List<Topic> topicList, List<Long> topicIds) {
+		return topicList.stream()
+				.map(Topic::getId)
+				.anyMatch(topicIds::contains);
 	}
 
 	@Test(expected = NewsNotFoundException.class)
