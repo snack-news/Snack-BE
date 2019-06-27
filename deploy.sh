@@ -4,8 +4,8 @@ REPOSITORY=/home/ec2-user
 cd $REPOSITORY/Snack-BE/
 
 
-echo "> 1. $HOSTNAME 소스코드를 동기화합니다. 🚥"
-git pull
+#echo "> 1. $HOSTNAME 소스코드를 동기화합니다. 🚥"
+#git pull
 
 
 echo "> 2. $HOSTNAME Build 시작합니다. 🚀"
