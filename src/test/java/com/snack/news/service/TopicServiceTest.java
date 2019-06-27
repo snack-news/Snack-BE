@@ -58,26 +58,27 @@ public class TopicServiceTest {
 				.type(TEST_TOPIC_TYPE)
 				.name(TEST_TOPIC_NAME)
 				.image(TEST_IMAGE_URL).build();
-		Topic createTopic = topicService.createTopic(topicDto);
+		Topic createdTopic = topicService.createTopic(topicDto);
 
 		TopicDto updateTopicDto = TopicDto.builder()
-				.id(createTopic.getId())
+				.id(createdTopic.getId())
 				.type(TEST_TOPIC_TYPE)
-				.name(createTopic.getName())
+				.name(createdTopic.getName())
 				.image("UPDATE_IMAGE")
 				.build();
 		topicService.updateTopic(updateTopicDto);
 
 		Topic updatedCorp = topicService.getTopic(updateTopicDto);
+
 		assertThat(updatedCorp.getImage()).isEqualTo("UPDATE_IMAGE");
 	}
 
 	@Test(expected = TopicNotFoundException.class)
 	@Transactional
 	public void 수정하려는_토픽ID가_유효하지_않는_경우_예외를_반환한다() {
-		Long invalidID = 123L;
+		Long invalidTopicId = 123L;
 		TopicDto updateTopicDto = TopicDto.builder()
-				.id(invalidID)
+				.id(invalidTopicId)
 				.type(TEST_TOPIC_TYPE)
 				.name("UPDATE_NAME")
 				.image("UPDATE_IMAGE")
