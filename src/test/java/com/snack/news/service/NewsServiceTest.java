@@ -130,7 +130,8 @@ public class NewsServiceTest extends NewsTestcase {
 
 		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
 				.stream()
-				.filter(n -> n.getCreateAt().isBefore(end) && n.getCreateAt().isAfter(start))
+				.filter(n -> n.getCreateAt().isBefore(end))
+				.filter(n -> n.getCreateAt().isAfter(start))
 				.filter(topics -> topics.getTopics()
 						.stream()
 						.map(Topic::getId)
