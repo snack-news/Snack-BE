@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NewsServiceTest extends NewsTestcase {
 	private static final String TEST_NEWS_TITLE = "test news title";
 	private static final String TEST_NEWS_CONTENT = "test news content";
+	
 	@Autowired
 	private NewsService newsService;
 
@@ -59,7 +60,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.stream()
 				.map(News::getId)
 				.collect(toList());
-		
+
 		List<Long> expectedResultNewsIds = newsService.getNewsList()
 				.stream()
 				.map(News::getId)
@@ -72,6 +73,7 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test(expected = NewsNotFoundException.class)
 	public void ID가_유효하지않는다면_예외를_반환한다() {
 		Long invalidNewsId = 999L;
+
 		newsService.getNews(invalidNewsId);
 	}
 }
