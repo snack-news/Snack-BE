@@ -26,12 +26,16 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok'
 
+    /* Spring */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    /* Database */
     runtimeOnly 'com.h2database:h2'
     runtimeOnly('mysql:mysql-connector-java')
 
+    /* Test Framework */
     testCompile("org.assertj:assertj-core:3.11.1")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
