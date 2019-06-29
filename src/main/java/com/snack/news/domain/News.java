@@ -34,9 +34,11 @@ public class News extends BaseTimeEntity {
 
 	// todo
 	// News - Category
+	@ManyToOne
+	private Category category;
 
 	@Builder
-	public News(String title, String link, String content, List<Topic> topics) {
+	public News(String title, String link, String content, Category category, List<Topic> topics) {
 		this.title = title;
 		this.link = link;
 		this.content = content;

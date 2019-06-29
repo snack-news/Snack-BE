@@ -23,6 +23,7 @@ public class Category extends BaseTimeEntity {
 
 	@Builder
 	public Category(Long id, String title) {
+		this.id = id;
 		this.title = title;
 	}
 }

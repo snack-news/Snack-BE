@@ -1,7 +1,11 @@
 package com.snack.news.dto;
 
 import com.snack.news.domain.Category;
+import lombok.Builder;
+import lombok.Getter;
 
+@Builder
+@Getter
 public class CategoryDto {
 	private Long id;
 	private String title;

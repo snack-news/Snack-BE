@@ -30,7 +30,7 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public Category updateCategory(CategoryDto categoryDto) {
+	public Category updateCategory(CategoryDto categoryDto)	{
 		Category category = categoryDto.getUpdateEntity();
 		categoryRepository.findById(category.getId()).orElseThrow(CategoryNotFoundException::new);
 
