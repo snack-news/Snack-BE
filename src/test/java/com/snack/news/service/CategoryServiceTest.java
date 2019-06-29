@@ -32,7 +32,7 @@ public class CategoryServiceTest {
 		CategoryDto categoryDto = CategoryDto.builder().title(testCategoryTitle).build();
 		Category savedCategory = categoryService.createCategory(categoryDto);
 
-		Category expectedCategory = categoryRepository.findById(savedCategory.getId()).orElseThrow(CategoryNotFoundException::new);
+		Category expectedCategory = findCategoryByIdOrElseThrowException(savedCategory.getId());
 		assertThat(expectedCategory.getTitle()).isEqualTo(testCategoryTitle);
 	}
 
@@ -48,17 +48,21 @@ public class CategoryServiceTest {
 		CategoryDto updateCategoryDto = CategoryDto.builder().id(savedCategory.getId()).title(updatedTestCategoryTitle).build();
 
 		categoryService.updateCategory(updateCategoryDto);
-		Category expectedCategory = categoryRepository.findById(savedCategory.getId()).orElseThrow(CategoryNotFoundException::new);
+		Category expectedCategory = findCategoryByIdOrElseThrowException(savedCategory.getId());
 
 		assertThat(expectedCategory.getTitle()).isEqualTo(updatedTestCategoryTitle);
 	}
 
-	@Test (expected = CategoryNotFoundException.class)
+	private Category findCategoryByIdOrElseThrowException(long id) {
+		return categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
+	}
+
+	@Test(expected = CategoryNotFoundException.class)
 	@Transactional
 	public void 카테고리_ID가_유효하지_않다면_예외를_반환한다() {
 		final long invalidId = ThreadLocalRandom.current().nextLong();
-		CategoryDto categoryDto = CategoryDto.builder().id(invalidId).build();
+		CategoryDto invalidIdDto = CategoryDto.builder().id(invalidId).build();
 
-		categoryService.updateCategory(categoryDto);
+		categoryService.updateCategory(invalidIdDto);
 	}
 }
