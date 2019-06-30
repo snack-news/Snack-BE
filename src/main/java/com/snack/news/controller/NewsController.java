@@ -20,7 +20,8 @@ public class NewsController {
 	}
 
 	@GetMapping
-	public List<News> getNewsList(@ModelAttribute NewsDto newsDto) {
+	public List<News> getNewsList(@RequestBody NewsDto newsDto) {
+		System.out.println("@#@#" + newsDto);
 		return newsService.getNewsList(newsDto);
 	}
 

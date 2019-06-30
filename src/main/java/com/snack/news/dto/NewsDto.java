@@ -3,15 +3,15 @@ package com.snack.news.dto;
 import com.snack.news.domain.News;
 import com.snack.news.domain.Topic;
 import com.snack.news.domain.TopicType;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class NewsDto {
 	private Long id;
@@ -38,5 +38,10 @@ public class NewsDto {
 				.topics(topics)
 				.link(link)
 				.build();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
 	}
 }
