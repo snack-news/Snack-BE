@@ -26,16 +26,20 @@ public class News extends BaseTimeEntity {
 	@Column
 	private String link;
 
+	@ManyToOne
+	private Category category;
+
 	@ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name="news_topic",
 			joinColumns = @JoinColumn(name = "news_id"),
 			inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private List<Topic> topics;
 
-	// todo
-	// News - Category
-	@ManyToOne
-	private Category category;
+	@ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name="news_topic",
+			joinColumns = @JoinColumn(name = "news_id"),
+			inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private List<Tag> tags;
 
 	@Builder
 	public News(String title, String link, String content, Category category, List<Topic> topics) {
