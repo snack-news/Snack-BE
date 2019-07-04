@@ -29,6 +29,7 @@ public class NewsDto {
 		return News.builder()
 				.title(title)
 				.content(content)
+				.category(category)
 				.link(link)
 				.build();
 	}
@@ -37,6 +38,7 @@ public class NewsDto {
 		return News.builder()
 				.title(title)
 				.content(content)
+				.category(category)
 				.topics(topics)
 				.link(link)
 				.build();

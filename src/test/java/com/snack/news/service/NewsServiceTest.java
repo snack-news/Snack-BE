@@ -139,7 +139,7 @@ public class NewsServiceTest extends NewsTestcase {
 
 	@Test
 	@Transactional
-	public void 중복_조건애_해당하는_뉴스를_조회할_수_있다() {
+	public void 중복_조건에_해당하는_뉴스를_조회할_수_있다() {
 		final List<Long> testTopicIds = asList(1L, 2L);
 		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
