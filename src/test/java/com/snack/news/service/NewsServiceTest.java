@@ -1,5 +1,6 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.Category;
 import com.snack.news.domain.News;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
@@ -25,9 +26,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NewsServiceTest extends NewsTestcase {
 	private static final String TEST_NEWS_TITLE = "test news title";
 	private static final String TEST_NEWS_CONTENT = "test news content";
-	
+
 	@Autowired
 	private NewsService newsService;
+
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -114,14 +116,39 @@ public class NewsServiceTest extends NewsTestcase {
 
 	@Test
 	@Transactional
-	public void 원하는_Topic과_원하는_기간의_뉴스들을_조회할_수_있다() {
+	public void 원하는_Category의_뉴스를_조회할_수_있다() {
+
+		Category category = Category.builder().id(2L).title("커머스").build();
+		NewsDto newsDto = NewsDto.builder()
+				.category(category)
+				.build();
+
+		List<Long> resultNewsIds = newsService.getNewsList(newsDto)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+
+		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
+				.stream()
+				.filter(n -> n.getCategory().equals(category))
+				.map(News::getId)
+				.collect(toList());
+
+		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+	}
+
+	@Test
+	@Transactional
+	public void 중복_조건에_해당하는_뉴스를_조회할_수_있다() {
 		final List<Long> testTopicIds = asList(1L, 2L);
 		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
+		final Category category = Category.builder().id(2L).title("커머스").build();
 
 		NewsDto newsDto = NewsDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
+				.category(category)
 				.topicIds(testTopicIds)
 				.build();
 
@@ -134,6 +161,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.stream()
 				.filter(n -> n.getCreateAt().isBefore(end))
 				.filter(n -> n.getCreateAt().isAfter(start))
+				.filter(n -> n.getCategory().equals(category))
 				.filter(topics -> topics.getTopics()
 						.stream()
 						.map(Topic::getId)
@@ -142,6 +170,5 @@ public class NewsServiceTest extends NewsTestcase {
 				.collect(toList());
 
 		assertThat(actualResultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
-
 	}
 }

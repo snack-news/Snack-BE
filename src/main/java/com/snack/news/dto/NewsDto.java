@@ -1,5 +1,6 @@
 package com.snack.news.dto;
 
+import com.snack.news.domain.Category;
 import com.snack.news.domain.News;
 import com.snack.news.domain.Topic;
 import com.snack.news.domain.TopicType;
@@ -18,6 +19,7 @@ public class NewsDto {
 	private String title;
 	private String content;
 	private String link;
+	private Category category;
 	private TopicType type;
 	private List<Long> topicIds;
 	private LocalDateTime startDateTime;
@@ -27,6 +29,7 @@ public class NewsDto {
 		return News.builder()
 				.title(title)
 				.content(content)
+				.category(category)
 				.link(link)
 				.build();
 	}
@@ -35,6 +38,7 @@ public class NewsDto {
 		return News.builder()
 				.title(title)
 				.content(content)
+				.category(category)
 				.topics(topics)
 				.link(link)
 				.build();

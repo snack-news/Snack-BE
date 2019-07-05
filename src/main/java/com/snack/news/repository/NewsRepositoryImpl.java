@@ -26,6 +26,10 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		List<Predicate> criteria = new ArrayList<>();
 		Root<News> nr = query.from(News.class);
 
+		if (newsDto.getCategory() != null) {
+			criteria.add(builder.equal(nr.get("category"), newsDto.getCategory()));
+		}
+
 		if (newsDto.getTopicIds() != null) {
 			criteria.add(nr.join("topics").get("id").in(newsDto.getTopicIds()));
 		}
@@ -33,6 +37,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		if (newsDto.getStartDateTime() != null) {
 			criteria.add(builder.greaterThan(nr.get("createAt"), newsDto.getStartDateTime()));
 		}
+
 		if (newsDto.getEndDateTime() != null) {
 			criteria.add(builder.lessThan(nr.get("createAt"), newsDto.getEndDateTime()));
 		}
