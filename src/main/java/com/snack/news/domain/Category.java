@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Category extends BaseTimeEntity {
+public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
