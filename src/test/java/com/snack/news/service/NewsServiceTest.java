@@ -8,6 +8,7 @@ import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsTestcase;
 import com.snack.news.repository.NewsRepository;
+import io.micrometer.core.instrument.Tags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -130,7 +132,6 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-
 		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
 				.stream()
 				.filter(news -> news.getTags()
@@ -173,12 +174,14 @@ public class NewsServiceTest extends NewsTestcase {
 		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
 		final Category category = Category.builder().id(2L).title("커머스").build();
+		final List<Tag> tags = Collections.singletonList(Tag.builder().id(1L).title("TOP10").build());
 
 		NewsDto newsDto = NewsDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
 				.category(category)
 				.topicIds(testTopicIds)
+				.tags(tags)
 				.build();
 
 		List<Long> actualResultNewsIds = newsService.getNewsList(newsDto)
@@ -195,6 +198,9 @@ public class NewsServiceTest extends NewsTestcase {
 						.stream()
 						.map(Topic::getId)
 						.anyMatch(testTopicIds::contains))
+				.filter(news -> news.getTags()
+						.stream()
+						.anyMatch(tags::contains))
 				.map(News::getId)
 				.collect(toList());
 
