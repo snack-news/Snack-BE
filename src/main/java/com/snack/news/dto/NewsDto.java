@@ -20,7 +20,7 @@ public class NewsDto {
 	private Category category;
 	private TopicType type;
 	private List<Long> topicIds;
-	private List<Tag> tags;
+	private List<Long> tagIds;
 	private LocalDateTime startDateTime;
 	private LocalDateTime endDateTime;
 
@@ -29,12 +29,11 @@ public class NewsDto {
 				.title(title)
 				.content(content)
 				.category(category)
-				.tags(tags)
 				.link(link)
 				.build();
 	}
 
-	public News toEntity(List<Topic> topics) {
+	public News toEntity(List<Topic> topics, List<Tag> tags) {
 		return News.builder()
 				.title(title)
 				.content(content)
