@@ -1,6 +1,7 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.News;
+import com.snack.news.domain.Tag;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
@@ -17,11 +18,13 @@ public class NewsService {
 
 	private final NewsRepository newsRepository;
 	private final TopicService topicService;
+	private final TagService tagService;
 
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) {
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
-		News news = newsDto.toEntity(topics);
+		List<Tag> tags = tagService.getTopicList(newsDto.getTopicIds());
+		News news = newsDto.toEntity(topics, tags);
 
 		newsRepository.save(news);
 

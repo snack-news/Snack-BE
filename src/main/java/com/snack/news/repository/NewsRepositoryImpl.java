@@ -34,6 +34,10 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 			criteria.add(nr.join("topics").get("id").in(newsDto.getTopicIds()));
 		}
 
+		if (newsDto.getTagIds() != null) {
+			criteria.add(nr.join("tags").get("id").in(newsDto.getTagIds()));
+		}
+
 		if (newsDto.getStartDateTime() != null) {
 			criteria.add(builder.greaterThan(nr.get("createAt"), newsDto.getStartDateTime()));
 		}
@@ -41,6 +45,8 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		if (newsDto.getEndDateTime() != null) {
 			criteria.add(builder.lessThan(nr.get("createAt"), newsDto.getEndDateTime()));
 		}
+
+
 
 		query.where(builder.and(criteria.toArray(new Predicate[0]))).distinct(true);
 
