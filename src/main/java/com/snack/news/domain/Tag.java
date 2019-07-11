@@ -1,5 +1,6 @@
 package com.snack.news.domain;
 
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @ToString
-public class Category {
+public class Tag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -21,22 +22,20 @@ public class Category {
 	private String title;
 
 	@Builder
-	public Category(Long id, String title) {
+	public Tag(Long id, String title) {
 		this.id = id;
 		this.title = title;
 	}
-
-	public static final Category NONE = Category.builder().build();
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Category category = (Category) o;
+		Tag tag = (Tag) o;
 
-		if (!Objects.equals(id, category.id)) return false;
-		return Objects.equals(title, category.title);
+		if (!Objects.equals(id, tag.id)) return false;
+		return Objects.equals(title, tag.title);
 	}
 
 	@Override

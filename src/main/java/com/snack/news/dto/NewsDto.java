@@ -1,15 +1,16 @@
 package com.snack.news.dto;
 
-import com.snack.news.domain.Category;
-import com.snack.news.domain.News;
-import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +23,10 @@ public class NewsDto {
 	private Category category;
 	private TopicType type;
 	private List<Long> topicIds;
+	private List<Long> tagIds;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime startDateTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime endDateTime;
 
 	public News toEntity() {
@@ -34,7 +38,7 @@ public class NewsDto {
 				.build();
 	}
 
-	public News toEntity(List<Topic> topics) {
+	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {
 		return News.builder()
 				.title(title)
 				.content(content)

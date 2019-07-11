@@ -1,9 +1,12 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.Category;
 import com.snack.news.domain.News;
+import com.snack.news.domain.Tag;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
+import com.snack.news.exception.base.NotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,13 +19,17 @@ import java.util.List;
 public class NewsService {
 
 	private final NewsRepository newsRepository;
+	private final CategoryService categoryService;
 	private final TopicService topicService;
+	private final TagService tagService;
 
 	@Transactional
-	public NewsDto createNews(NewsDto newsDto) {
+	public NewsDto createNews(NewsDto newsDto) throws NotFoundException {
+		Category category = categoryService.getCategory(newsDto.getCategory().getId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
-		News news = newsDto.toEntity(topics);
+		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
+		News news = newsDto.toEntity(category, topics, tags);
 		newsRepository.save(news);
 
 		return NewsDto.builder().id(news.getId()).build();
