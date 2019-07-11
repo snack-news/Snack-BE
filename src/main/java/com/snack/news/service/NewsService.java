@@ -25,7 +25,7 @@ public class NewsService {
 
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) throws NotFoundException {
-		Category category = categoryService.getCategory(newsDto.getCategory().getId());
+		Category category = categoryService.getCategory(newsDto.getCategoryId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 

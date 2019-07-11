@@ -4,6 +4,7 @@ import com.snack.news.domain.Category;
 import com.snack.news.domain.News;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsTestcase;
 import com.snack.news.repository.NewsRepository;
@@ -38,6 +39,17 @@ public class NewsServiceTest extends NewsTestcase {
 	public void 뉴스를_생성할_수_있다() {
 		int size = newsService.getAllNewsList().size();
 
+		NewsDto newsDto = NewsDto.builder().title(TEST_NEWS_TITLE).content(TEST_NEWS_CONTENT).categoryId(1L).build();
+		newsService.createNews(newsDto);
+
+		assertThat(size + 1).isEqualTo(newsService.getAllNewsList().size());
+	}
+
+	@Test(expected = CategoryNotFoundException.class)
+	@Transactional
+	public void 뉴스를_생성할_때_카테고리가_주어지지_않는다면_예외를_반환한다() {
+		int size = newsService.getAllNewsList().size();
+
 		NewsDto newsDto = NewsDto.builder().title(TEST_NEWS_TITLE).content(TEST_NEWS_CONTENT).build();
 		newsService.createNews(newsDto);
 
@@ -47,7 +59,7 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test
 	@Transactional
 	public void ID로_뉴스를_조회할_수_있다() {
-		NewsDto newsDto = NewsDto.builder().title(TEST_TITLE).content(TEST_CONTENT).build();
+		NewsDto newsDto = NewsDto.builder().title(TEST_TITLE).content(TEST_CONTENT).categoryId(1L).build();
 		NewsDto savedNews = newsService.createNews(newsDto);
 		Long id = savedNews.getId();
 
@@ -120,7 +132,7 @@ public class NewsServiceTest extends NewsTestcase {
 
 		Category category = Category.builder().id(2L).title("커머스").build();
 		NewsDto newsDto = NewsDto.builder()
-				.category(category)
+				.categoryId(category.getId())
 				.build();
 
 		List<Long> resultNewsIds = newsService.getNewsList(newsDto)
@@ -148,7 +160,7 @@ public class NewsServiceTest extends NewsTestcase {
 		NewsDto newsDto = NewsDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
-				.category(category)
+				.categoryId(category.getId())
 				.topicIds(testTopicIds)
 				.build();
 

@@ -20,7 +20,7 @@ public class NewsDto {
 	private String title;
 	private String content;
 	private String link;
-	private Category category;
+	private Long categoryId;
 	private TopicType type;
 	private List<Long> topicIds;
 	private List<Long> tagIds;
@@ -33,7 +33,6 @@ public class NewsDto {
 		return News.builder()
 				.title(title)
 				.content(content)
-				.category(category)
 				.link(link)
 				.build();
 	}
