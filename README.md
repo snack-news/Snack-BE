@@ -12,37 +12,75 @@ SPRING_PROFILES_ACTIVE=release ./gradlew clean bootRun # RELEASE
 ```
 
 ## API spec
+### News API
+- News 생성
+  - > `/api/news` (POST)
+    ``` json
+    {
+        "title" : "NEWS TITLE", // 필수
+        "content" : "NEWS CONTENT", // 필수
+        "categoryId" : 1, // 필수
+        "topicIds" : [1, 2],
+        "tagIds" : [1],
+        "link" : "https://snack-link.com"
+    }
+    ```
+- 단일 News 조회
+  - > `/api/news/{id}` (GET)
+- 조건에 맞는 News 리스트 조회
+  - > `/api/news` (POST)
+    ``` json
+    {
+        "startDateTime" : "2019-07-01T00:00",
+        "endDateTime" : "2019-08-31T00:00",
+        "categoryId" : 1,
+        "topicIds" : [1, 2],
+        "tagIds" : [1]
+    }
+    ```
+### Category API
+- 전체 Category 리스트 조회
+  - > `/api/category` (GET)
+
 ### Topic API
-#### 생성
-URL|Method|
----|---
-/api/topic|POST
-- **Request body**
-  - **`name`** -  토픽 이름 (필수)
-  - `type` - 토픽 타입
-    - 예) CORP, PERSON, FIELD, NONE 등
-    - 디폴트는 NONE
+- Topic 생성
+  - > `/api/topic` (POST)
+    ``` json
+    {
+        "name" : "쿠팡", // 필수
+        "type" : "CORP" // 입력 권장 (기본값 NONE)
+    }
+    ```
+- Topic 리스트 조회
+  - > `/api/topic/{type}` (GET)
+    > `/api/topic/{type}&sort={ordering}` (GET)
+  - {type}: `corp`, `person`, `field`...
+  - {ordering}: `name`(기본값), `id`.
+- Topic 수정
+  - > `/api/topic` (PUT)
+    ``` json
+        {
+            "id" : 4, // 필수
+            "name" : "딥러닝", // 필수
+            "type" : "FIELD" // 필수
+        }
+    ```
 
-#### 조회
-URL|Method
----|---
-/api/topic/{type}|GET
-- **URL endpoint**
-  - `type`: 토픽의 타입(대분류)
-    - 예) CORP, PERSON, FIELD, NONE 등
-    - 디폴트는 NONE
-- **Query prarmeter**
-  - `sort`: 토픽 정렬 방법
-    - 예) NAME, ID
-    - 디폴트는 NAME
-
-#### 수정
-URL|Method
----|---
-/api/topic|PUT
-- **Request body**
-  - **`id`** - 토픽 ID (필수)
-  - **`name`** -  토픽 이름 (필수)
-  - `type` - 토픽 타입
-    - 예) CORP, PERSON, FIELD, NONE 등
-    - 디폴트는 NONE
+### Tag API
+- Tag 생성
+  - > `/api/tag` (POST)
+    ``` json
+        {
+            "title" : "WEEKLY" // 필수
+        }
+    ```
+- Tag 리스트 조회
+  - > `/api/tag` (GET)
+- Tag 수정
+  - > `/api/tag` (PUT)
+    ``` json
+        {
+            "id" : 3, // 필수
+            "title" : "RECOMMEND" // 필수
+        }
+    ```
