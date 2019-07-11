@@ -23,7 +23,7 @@ public class NewsService {
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) {
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
-		List<Tag> tags = tagService.getTopicList(newsDto.getTopicIds());
+		List<Tag> tags = tagService.getTagList(newsDto.getTopicIds());
 		News news = newsDto.toEntity(topics, tags);
 
 		newsRepository.save(news);
