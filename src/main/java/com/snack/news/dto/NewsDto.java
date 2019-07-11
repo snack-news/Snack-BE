@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class NewsDto {
+
 	private Long id;
 	private String title;
 	private String content;
@@ -43,6 +44,7 @@ public class NewsDto {
 				.content(content)
 				.category(category)
 				.topics(topics)
+				.tags(tags)
 				.link(link)
 				.build();
 	}

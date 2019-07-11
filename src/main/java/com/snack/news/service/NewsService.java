@@ -29,6 +29,7 @@ public class NewsService {
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
+
 		News news = newsDto.toEntity(category, topics, tags);
 		newsRepository.save(news);
 

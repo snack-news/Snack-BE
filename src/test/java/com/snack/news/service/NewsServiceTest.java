@@ -2,6 +2,7 @@ package com.snack.news.service;
 
 import com.snack.news.domain.Category;
 import com.snack.news.domain.News;
+import com.snack.news.domain.Tag;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.CategoryNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -70,6 +72,14 @@ public class NewsServiceTest extends NewsTestcase {
 		assertThat(result.getContent()).isEqualTo(TEST_CONTENT);
 	}
 
+	@Test(expected = NewsNotFoundException.class)
+	@Transactional
+	public void ID가_유효하지않는다면_예외를_반환한다() {
+		Long invalidNewsId = 999L;
+
+		newsService.getNews(invalidNewsId);
+	}
+
 	@Test
 	@Transactional
 	public void Topic_별로_뉴스를_조회할_수_있다() {
@@ -96,14 +106,6 @@ public class NewsServiceTest extends NewsTestcase {
 		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
 	}
 
-	@Test(expected = NewsNotFoundException.class)
-	@Transactional
-	public void ID가_유효하지않는다면_예외를_반환한다() {
-		Long invalidNewsId = 999L;
-
-		newsService.getNews(invalidNewsId);
-	}
-
 	@Test
 	@Transactional
 	public void 원하는_기간의_뉴스들을_조회할_수_있다() {
@@ -125,6 +127,32 @@ public class NewsServiceTest extends NewsTestcase {
 
 		assertThat(newsListCountBeforeJune + newsListCountAfterJune).isEqualTo(totalNewsCount);
 	}
+
+	@Test
+	@Transactional
+	public void Tag_별로_뉴스를_조회할_수_있다() {
+		List<Long> tagIds = Collections.singletonList(1L);
+		NewsDto newsDto = NewsDto.builder()
+				.tagIds(tagIds)
+				.build();
+
+		List<Long> resultNewsIds = newsService.getNewsList(newsDto)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+		 
+		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
+				.stream()
+				.filter(news -> news.getTags()
+						.stream()
+						.map(Tag::getId)
+						.anyMatch(tagIds::contains))
+				.map(News::getId)
+				.collect(toList());
+
+		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+	}
+
 
 	@Test
 	@Transactional
@@ -156,12 +184,14 @@ public class NewsServiceTest extends NewsTestcase {
 		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
 		final Category category = Category.builder().id(2L).title("커머스").build();
+		final List<Long> tagIds = Collections.singletonList(1L);
 
 		NewsDto newsDto = NewsDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
 				.categoryId(category.getId())
 				.topicIds(testTopicIds)
+				.tagIds(tagIds)
 				.build();
 
 		List<Long> actualResultNewsIds = newsService.getNewsList(newsDto)
@@ -178,6 +208,10 @@ public class NewsServiceTest extends NewsTestcase {
 						.stream()
 						.map(Topic::getId)
 						.anyMatch(testTopicIds::contains))
+				.filter(news -> news.getTags()
+						.stream()
+						.map(Tag::getId)
+						.anyMatch(tagIds::contains))
 				.map(News::getId)
 				.collect(toList());
 
