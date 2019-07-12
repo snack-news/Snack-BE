@@ -21,5 +21,4 @@ public class TagService {
 
 		return tagRepository.findByIdIn(tagIds);
 	}
-
 }
