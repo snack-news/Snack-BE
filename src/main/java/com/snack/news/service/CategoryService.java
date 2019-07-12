@@ -3,7 +3,10 @@ package com.snack.news.service;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+import org.hibernate.boot.jaxb.hbm.internal.CacheAccessTypeConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +27,19 @@ public class CategoryService {
 		return categoryRepository.save(category);
 	}
 
+	public Category getCategory(Long id) throws CategoryNotFoundException {
+		Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new);
+		return categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
+	}
+
+
 	@Transactional(readOnly = true)
 	public List<Category> getCategoryList() {
 		return categoryRepository.findAll();
 	}
 
 	@Transactional
-	public Category updateCategory(CategoryDto categoryDto)	{
+	public Category updateCategory(CategoryDto categoryDto) {
 		Category category = categoryDto.getUpdateEntity();
 		categoryRepository.findById(category.getId()).orElseThrow(CategoryNotFoundException::new);
 

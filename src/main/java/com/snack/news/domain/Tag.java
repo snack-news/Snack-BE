@@ -4,6 +4,7 @@ package com.snack.news.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor
+@ToString
 public class Tag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

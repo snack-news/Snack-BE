@@ -18,6 +18,7 @@ import java.util.Objects;
 public class TagService {
 	private final TagRepository tagRepository;
 
+
 	@Transactional
 	public Tag createTag(TagDto tagDto) {
 		Tag tag = tagDto.getNewEntity();

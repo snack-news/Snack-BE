@@ -26,8 +26,8 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		List<Predicate> criteria = new ArrayList<>();
 		Root<News> nr = query.from(News.class);
 
-		if (newsDto.getCategory() != null) {
-			criteria.add(builder.equal(nr.get("category"), newsDto.getCategory()));
+		if (newsDto.getCategoryId() != null) {
+			criteria.add(builder.equal(nr.get("category").get("id"), newsDto.getCategoryId()));
 		}
 
 		if (newsDto.getTopicIds() != null) {

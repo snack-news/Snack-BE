@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 	private NewsRepository newsRepository;
 
 	@Test
+	@Transactional
 	public void News를_저장할수있다() {
 		long size = newsRepository.count();
 		newsRepository.save(mockNews);
@@ -29,6 +31,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 	}
 
 	@Test
+	@Transactional
 	public void News가_해당하는_날짜에_없다면_빈값을_반환한다() {
 		newsRepository.save(mockNews);
 		LocalDateTime startTime = LocalDateTime.now();
@@ -40,6 +43,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 	}
 
 	@Test
+	@Transactional
 	public void News가_해당하는_날짜에_있다면_리스트를_반환한다() {
 		LocalDateTime startTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plusHours(1);
