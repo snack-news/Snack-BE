@@ -26,8 +26,6 @@ public class Category {
 		this.title = title;
 	}
 
-	public static final Category NONE = Category.builder().build();
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
