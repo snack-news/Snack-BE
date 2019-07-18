@@ -1,19 +1,15 @@
 package com.snack.news.service;
 
-import lombok.AllArgsConstructor;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.hibernate.boot.jaxb.hbm.internal.CacheAccessTypeConverter;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.snack.news.domain.Category;
 import com.snack.news.dto.CategoryDto;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.repository.CategoryRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
