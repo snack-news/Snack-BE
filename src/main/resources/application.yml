@@ -1,8 +1,12 @@
 spring:
   profiles:
     active: dev
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
-
+# local
 ---
 spring:
   profiles: dev
@@ -17,17 +21,17 @@ spring:
     console:
       enabled: true
 
+# production
 ---
-spring:
-  profiles: release
+spring.profiles: set1
+spring.profiles.include: real-db
 
-  datasource:
-    data:
-      url: jdbc:mysql://localhost:3306/news?serverTimezone=UTC
-      username: root
-      password:
+server:
+  port: 8081
 
-  jpa:
-    show-sql: false
-    hibernate:
-      ddl-auto: create
+---
+spring.profiles: set2
+spring.profiles.include: real-db
+
+server:
+  port: 8082
