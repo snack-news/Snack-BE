@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,15 +34,17 @@ public class TopicController {
 
 	@GetMapping("/{type}")
 	public ResponseEntity<List<Topic>> getTopicList(@PathVariable TopicType type, @RequestParam(defaultValue = "NAME") TopicSorting sort) {
-		try {
-			return ResponseEntity.of(Optional.of(topicService.getTypeTopicList(type, sort)));
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.notFound().varyBy("message", e.getMessage()).build();
-		}
+		return ResponseEntity.of(Optional.of(topicService.getTypeTopicList(type, sort)));
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+		// TODO: 에러 메시지 세분화
+		return new ResponseEntity<>(new TopicNotFoundException().getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 	@PutMapping
-	public Topic updateTopic(@RequestBody TopicDto topicDto) {
-		return topicService.updateTopic(topicDto);
+	public ResponseEntity<Topic> updateTopic(@RequestBody TopicDto topicDto) {
+		return ResponseEntity.of(Optional.of(topicService.updateTopic(topicDto)));
 	}
 }
