@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,28 +24,28 @@ public class TopicController {
 
 	// todo : Domain이 직접 노출되는 문제
 	@PostMapping
-	public ResponseEntity<Topic> createTopic(@RequestBody TopicDto topicDto) {
-		return ResponseEntity.of(Optional.of(topicService.createTopic(topicDto)));
+	public ResponseEntity<Topic> createTopic(@Valid @RequestBody TopicDto topicDto) {
+		return ResponseEntity.ok(topicService.createTopic(topicDto));
 	}
 
 	@GetMapping
 	public ResponseEntity<List<Topic>> getTopicList(@RequestParam(defaultValue = "NAME") TopicSorting sort) {
-		return ResponseEntity.of(Optional.of(topicService.getTopicList(sort)));
+		return ResponseEntity.ok(topicService.getTopicList(sort));
 	}
 
 	@GetMapping("/{type}")
 	public ResponseEntity<List<Topic>> getTopicList(@PathVariable TopicType type, @RequestParam(defaultValue = "NAME") TopicSorting sort) {
-		return ResponseEntity.of(Optional.of(topicService.getTypeTopicList(type, sort)));
+		return ResponseEntity.ok(topicService.getTypeTopicList(type, sort));
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
 		// TODO: 에러 메시지 세분화
-		return new ResponseEntity<>(new TopicNotFoundException().getMessage(), HttpStatus.BAD_REQUEST);
+		return ResponseEntity.badRequest().body(new TopicNotFoundException().getMessage());
 	}
-
+	
 	@PutMapping
 	public ResponseEntity<Topic> updateTopic(@RequestBody TopicDto topicDto) {
-		return ResponseEntity.of(Optional.of(topicService.updateTopic(topicDto)));
+		return ResponseEntity.ok(topicService.updateTopic(topicDto));
 	}
 }
