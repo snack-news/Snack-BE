@@ -2,6 +2,7 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.News;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.WrappedResponse;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.service.NewsService;
 import lombok.AllArgsConstructor;
@@ -20,21 +21,21 @@ public class NewsController {
 	@PostMapping
 	public ResponseEntity<NewsDto> createNews(@Valid @RequestBody NewsDto newsDto) {
 		// todo: NewsDto 필수 값에 따른 에러 메시지 관리
-		return ResponseEntity.ok(newsService.createNews(newsDto));
+		return WrappedResponse.ok(newsService.createNews(newsDto));
 	}
 
 	@GetMapping
 	public ResponseEntity<List<News>> getNewsList(@RequestBody NewsDto newsDto) {
 		List<News> result = newsService.getNewsList(newsDto);
-		if(result.isEmpty()) {
+		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
-		return ResponseEntity.ok(result);
+		return WrappedResponse.ok(result);
 	}
 
 	@GetMapping("/{newsId}")
 	public ResponseEntity<News> getNews(@PathVariable Long newsId) {
-		return ResponseEntity.ok(newsService.getNews(newsId));
+		return WrappedResponse.ok(newsService.getNews(newsId));
 	}
 
 	@ExceptionHandler(NewsNotFoundException.class)

@@ -1,7 +1,6 @@
 package com.snack.news.dto;
 
 import com.snack.news.domain.*;
-import com.snack.news.exception.NewsNotFoundException;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
