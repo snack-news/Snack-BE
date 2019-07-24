@@ -8,14 +8,12 @@ import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.service.TopicService;
 import com.snack.news.strategy.TopicSorting;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -44,7 +42,7 @@ public class TopicController {
 		// TODO: 에러 메시지 세분화
 		return ResponseEntity.badRequest().body(new TopicNotFoundException().getMessage());
 	}
-	
+
 	@PutMapping
 	public ResponseEntity<Topic> updateTopic(@RequestBody TopicDto topicDto) {
 		return WrappedResponse.ok(topicService.updateTopic(topicDto));

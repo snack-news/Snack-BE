@@ -4,7 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
-public class WrappedResponse {
+@Getter
+public class WrappedResponse<T> {
+
+	private T data;
+
+	public WrappedResponse(T data) {
+		this.data = data;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T, R> ResponseEntity<R> ok(T body) {

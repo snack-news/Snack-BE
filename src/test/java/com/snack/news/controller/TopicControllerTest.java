@@ -2,9 +2,11 @@ package com.snack.news.controller;
 
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.snack.news.domain.Topic;
 import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
+import com.snack.news.dto.WrappedResponse;
 import com.snack.news.repository.TopicRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -100,9 +103,13 @@ public class TopicControllerTest {
 				.andReturn();
 
 		String responseString = mvcResult.getResponse().getContentAsString();
-		Topic[] responseTopics = new Gson().fromJson(responseString, Topic[].class);
 
-		assertThat(realTopicListSize).isEqualTo(responseTopics.length);
+		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {
+		}.getType();
+		WrappedResponse<List<Topic>> wrappedResponse = new Gson().fromJson(responseString, typeWrappingResponse);
+		List<Topic> responseTopicList = wrappedResponse.getData();
+
+		assertThat(realTopicListSize).isEqualTo(responseTopicList.size());
 	}
 
 	@Test
@@ -117,9 +124,13 @@ public class TopicControllerTest {
 				.andReturn();
 
 		String responseString = mvcResult.getResponse().getContentAsString();
-		Topic[] responseTopics = new Gson().fromJson(responseString, Topic[].class);
 
-		assertThat(responseTopics).containsAll(realTopicList);
+		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {
+		}.getType();
+		WrappedResponse<List<Topic>> wrappedResponse = new Gson().fromJson(responseString, typeWrappingResponse);
+		List<Topic> responseTopicList = wrappedResponse.getData();
+
+		assertThat(responseTopicList).containsAll(realTopicList);
 	}
 
 }
