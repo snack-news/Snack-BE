@@ -2,8 +2,10 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.Tag;
 import com.snack.news.dto.TagDto;
+import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.TagService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,13 +18,13 @@ public class TagController {
 	private final TagService tagService;
 
 	@PostMapping
-	public Tag createTag(@RequestBody TagDto tagDto) {
-		return tagService.createTag(tagDto);
+	public ResponseEntity<Tag> createTag(@RequestBody TagDto tagDto) {
+		return WrappedResponse.ok(tagService.createTag(tagDto));
 	}
 
 	@GetMapping
-	public List<Tag> getTopicList() {
-		return tagService.getAllTagList();
+	public ResponseEntity<List<Tag>> getTopicList() {
+		return WrappedResponse.ok(tagService.getAllTagList());
 	}
 
 	@PutMapping

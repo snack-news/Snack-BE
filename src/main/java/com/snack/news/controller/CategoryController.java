@@ -1,9 +1,11 @@
 package com.snack.news.controller;
 
+import com.snack.news.dto.WrappedResponse;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,17 +25,17 @@ public class CategoryController {
 
 	// todo : Domain이 직접 노출되는 문제
 	@PostMapping
-	public Category createCorp(@RequestBody CategoryDto categoryDto) {
-		return categoryService.createCategory(categoryDto);
+	public ResponseEntity<Category> createCorp(@RequestBody CategoryDto categoryDto) {
+		return WrappedResponse.ok(categoryService.createCategory(categoryDto));
 	}
 
 	@GetMapping
-	public List<Category> getCategoryList() {
-		return categoryService.getCategoryList();
+	public ResponseEntity<List<Category>> getCategoryList() {
+		return WrappedResponse.ok(categoryService.getCategoryList());
 	}
 
 	@PutMapping
-	public Category updateCategory(@RequestBody CategoryDto categoryDto) {
-		return categoryService.updateCategory(categoryDto);
+	public ResponseEntity<Category> updateCategory(@RequestBody CategoryDto categoryDto) {
+		return WrappedResponse.ok(categoryService.updateCategory(categoryDto));
 	}
 }
