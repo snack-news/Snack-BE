@@ -3,9 +3,10 @@ package com.snack.news.exception;
 import com.snack.news.exception.base.NotFoundException;
 
 public class TopicNotFoundException extends NotFoundException {
-	private final static String BASIC_ERROR_MESSAGE = "The topic could not found.";
+	private final static String ERROR_MESSAGE = "해당 토픽을 찾을 수 없습니다.";
+
 	@Override
 	public String getMessage() {
-		return BASIC_ERROR_MESSAGE;
+		return ERROR_MESSAGE;
 	}
 }
