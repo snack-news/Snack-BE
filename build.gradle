@@ -32,8 +32,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     /* Database */
+    compile "org.mariadb.jdbc:mariadb-java-client"
     runtimeOnly 'com.h2database:h2'
-    runtimeOnly('mysql:mysql-connector-java')
 
     /* Test Framework */
     testCompile("org.assertj:assertj-core:3.11.1")
