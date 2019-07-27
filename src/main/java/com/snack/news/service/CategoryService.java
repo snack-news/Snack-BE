@@ -23,7 +23,7 @@ public class CategoryService {
 		return categoryRepository.save(category);
 	}
 
-	public Category getCategory(Long id) throws CategoryNotFoundException {
+	public Category getCategory(Long id) {
 		Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new);
 		return categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
 	}

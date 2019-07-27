@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class TopicDto {
 	private Long id;
-	@NotNull
+	@NotNull(message = "Topic title")
 	private String name;
 	private String image;
 	private TopicType type = TopicType.NONE;

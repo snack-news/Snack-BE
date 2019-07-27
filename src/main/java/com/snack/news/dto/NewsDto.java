@@ -17,12 +17,12 @@ import java.util.List;
 public class NewsDto {
 
 	private Long id;
-	@NotNull(message = "News title ID should NOT be empty.")
+	@NotNull(message = "News title")
 	private String title;
-	@NotNull(message = "News content ID should NOT be empty.")
+	@NotNull(message = "News content")
 	private String content;
 	private String link;
-	@NotNull(message = "Category ID should NOT be empty.")
+	@NotNull(message = "Category ID")
 	private Long categoryId;
 	private TopicType type;
 	private List<Long> topicIds;
