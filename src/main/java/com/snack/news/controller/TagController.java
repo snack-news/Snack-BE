@@ -28,7 +28,7 @@ public class TagController {
 	}
 
 	@PutMapping
-	public Tag updateTopic(@RequestBody TagDto tagDto) {
-		return tagService.updateTag(tagDto);
+	public ResponseEntity<Tag> updateTopic(@RequestBody TagDto tagDto) {
+		return WrappedResponse.ok(tagService.updateTag(tagDto));
 	}
 }
