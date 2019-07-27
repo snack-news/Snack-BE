@@ -4,6 +4,7 @@ import com.snack.news.domain.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,9 +17,12 @@ import java.util.List;
 public class NewsDto {
 
 	private Long id;
+	@NotNull(message = "News title ID should NOT be empty.")
 	private String title;
+	@NotNull(message = "News content ID should NOT be empty.")
 	private String content;
 	private String link;
+	@NotNull(message = "Category ID should NOT be empty.")
 	private Long categoryId;
 	private TopicType type;
 	private List<Long> topicIds;
