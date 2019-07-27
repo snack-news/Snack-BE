@@ -51,8 +51,8 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
     }
     ```
 - Topic 리스트 조회
-  - > `/api/topic/{type}` (GET)
-    > `/api/topic/{type}&sort={ordering}` (GET)
+  - > `/api/topic/{type}` (GET)  
+    > `/api/topic/{type}?sort={ordering}` (GET)
   - {type}: `corp`, `person`, `field`...
   - {ordering}: `name`(기본값), `id`.
 - Topic 수정

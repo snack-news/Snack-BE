@@ -4,6 +4,7 @@ import com.snack.news.domain.News;
 import com.snack.news.dto.ErrorResponse;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
+
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.base.BadRequestException;
 import com.snack.news.service.NewsService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -36,13 +38,13 @@ public class NewsController {
 			return ResponseEntity.noContent().build();
 		}
 		return WrappedResponse.ok(result);
+
 	}
 
 	@GetMapping("/{newsId}")
 	public ResponseEntity getNews(@PathVariable Long newsId) {
 		return WrappedResponse.ok(newsService.getNews(newsId));
 	}
-
 
 	@ExceptionHandler(NewsNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NewsNotFoundException e) {
@@ -71,3 +73,4 @@ public class NewsController {
 		return ResponseEntity.badRequest().body(response);
 	}
 }
+
