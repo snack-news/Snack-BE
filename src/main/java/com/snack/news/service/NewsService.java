@@ -23,7 +23,7 @@ public class NewsService {
 	private final TagService tagService;
 
 	@Transactional
-	public NewsDto 	createNews(NewsDto newsDto) {
+	public NewsDto createNews(NewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());

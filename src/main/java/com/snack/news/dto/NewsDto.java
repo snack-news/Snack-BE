@@ -32,14 +32,6 @@ public class NewsDto {
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime endDateTime;
 
-	public News toEntity() {
-		return News.builder()
-				.title(title)
-				.content(content)
-				.link(link)
-				.build();
-	}
-
 	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {
 		return News.builder()
 				.title(title)
