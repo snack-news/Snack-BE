@@ -7,10 +7,12 @@ import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
+import com.snack.news.util.WeekUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -39,6 +41,10 @@ public class NewsService {
 	}
 
 	public List<News> getNewsList(NewsDto newsDto) {
+		if (newsDto.isAllArgumentNull()) {
+			newsDto.setStartDateTime(WeekUtil.getFirstDayWeekOf(LocalDateTime.now()));
+			newsDto.setEndDateTime(WeekUtil.getLastDayWeekOf(LocalDateTime.now()));
+		}
 		return newsRepository.findByNewsDto(newsDto);
 	}
 

@@ -17,7 +17,6 @@ public class TopicDto {
 	private String image;
 	private TopicType type = TopicType.NONE;
 
-
 	@Builder
 	public TopicDto(Long id, TopicType type, String name, String image) {
 		this.id = id;

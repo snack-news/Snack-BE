@@ -1,12 +1,14 @@
 package com.snack.news.dto;
 
 import com.snack.news.domain.*;
+import com.snack.news.util.WeekUtil;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -42,4 +44,14 @@ public class NewsDto {
 				.link(link)
 				.build();
 	}
+
+	public boolean isAllArgumentNull() {
+		return Objects.isNull(categoryId)
+				&& Objects.isNull(type)
+				&& Objects.isNull(topicIds)
+				&& Objects.isNull(tagIds)
+				&& Objects.isNull(startDateTime)
+				&& Objects.isNull(endDateTime);
+	}
+
 }
