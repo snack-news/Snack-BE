@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -30,9 +29,9 @@ public class NewsDto {
 	private List<Long> topicIds;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime startDateTime;
+	private LocalDateTime startDateTime = WeekUtil.getFirstDayOfWeek(LocalDateTime.now());
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime endDateTime;
+	private LocalDateTime endDateTime = WeekUtil.getLastDayOfWeek(LocalDateTime.now());
 
 	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {
 		return News.builder()
@@ -44,14 +43,4 @@ public class NewsDto {
 				.link(link)
 				.build();
 	}
-
-	public boolean isAllArgumentNull() {
-		return Objects.isNull(categoryId)
-				&& Objects.isNull(type)
-				&& Objects.isNull(topicIds)
-				&& Objects.isNull(tagIds)
-				&& Objects.isNull(startDateTime)
-				&& Objects.isNull(endDateTime);
-	}
-
 }
