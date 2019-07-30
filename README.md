@@ -27,7 +27,7 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
 - 단일 News 조회
   - > `/api/news/{id}` (GET)
 - 조건에 맞는 News 리스트 조회
-  - > `/api/news` (POST)
+  - > `/api/news` (GET)
     ``` json
     {
         "startDateTime" : "2019-07-01T00:00",
