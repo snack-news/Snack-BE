@@ -6,14 +6,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @NoArgsConstructor
 @Getter
 public class TopicDto {
 	private Long id;
+	@NotNull(message = "Topic title")
 	private String name;
 	private String image;
 	private TopicType type = TopicType.NONE;
-
 
 	@Builder
 	public TopicDto(Long id, TopicType type, String name, String image) {
