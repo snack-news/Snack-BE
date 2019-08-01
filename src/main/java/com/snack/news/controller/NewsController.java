@@ -23,7 +23,7 @@ public class NewsController {
 	}
 
 	@GetMapping
-	public ResponseEntity<News> getNewsList(@RequestBody NewsDto newsDto) {
+	public ResponseEntity<List<News>> getNewsList(@RequestBody NewsDto newsDto) {
 		List<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
