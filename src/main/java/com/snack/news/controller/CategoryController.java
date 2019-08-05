@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,9 +17,8 @@ import java.util.List;
 public class CategoryController {
 	private final CategoryService categoryService;
 
-	// todo : Domain이 직접 노출되는 문제
 	@PostMapping
-	public ResponseEntity<Category> createCorp(@RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
 		return WrappedResponse.ok(categoryService.createCategory(categoryDto));
 	}
 

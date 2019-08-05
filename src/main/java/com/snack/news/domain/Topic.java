@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @NoArgsConstructor
 @Getter
-@Entity
 @ToString
+@Entity
 public class Topic {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

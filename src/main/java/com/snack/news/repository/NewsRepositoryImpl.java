@@ -46,12 +46,8 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 			criteria.add(builder.lessThan(nr.get("createAt"), newsDto.getEndDateTime()));
 		}
 
-
-
 		query.where(builder.and(criteria.toArray(new Predicate[0]))).distinct(true);
 
-		TypedQuery<News> typeQuery = em.createQuery(query);
-
-		return typeQuery.getResultList();
+		return em.createQuery(query).getResultList();
 	}
 }

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class TagController {
 	private final TagService tagService;
 
 	@PostMapping
-	public ResponseEntity<Tag> createTag(@RequestBody TagDto tagDto) {
+	public ResponseEntity<Tag> createTag(@Valid @RequestBody TagDto tagDto) {
 		return WrappedResponse.ok(tagService.createTag(tagDto));
 	}
 

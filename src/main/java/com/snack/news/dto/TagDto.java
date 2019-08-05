@@ -5,10 +5,13 @@ import com.snack.news.domain.Tag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @NoArgsConstructor
 @Getter
 public class TagDto {
 	private Long id;
+	@NotNull(message = "Tag title")
 	private String title;
 
 	public Tag getNewEntity() {
