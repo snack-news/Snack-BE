@@ -9,6 +9,7 @@ import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsTestcase;
 import com.snack.news.repository.NewsRepository;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,18 +47,15 @@ public class NewsServiceTest extends NewsTestcase {
 		NewsDto newsDto = NewsDto.builder().title(TEST_NEWS_TITLE).content(TEST_NEWS_CONTENT).categoryId(1L).build();
 		newsService.createNews(newsDto);
 
-		assertThat(size + 1).isEqualTo(newsService.getAllNewsList().size());
+		assertThat(newsService.getAllNewsList().size(), equalTo(size + 1));
+
 	}
 
 	@Test(expected = CategoryNotFoundException.class)
 	@Transactional
 	public void 뉴스를_생성할_때_카테고리가_주어지지_않는다면_예외를_반환한다() {
-		int size = newsService.getAllNewsList().size();
-
 		NewsDto newsDto = NewsDto.builder().title(TEST_NEWS_TITLE).content(TEST_NEWS_CONTENT).build();
 		newsService.createNews(newsDto);
-
-		assertThat(size + 1).isEqualTo(newsService.getAllNewsList().size());
 	}
 
 	@Test
@@ -67,9 +67,9 @@ public class NewsServiceTest extends NewsTestcase {
 
 		News result = newsService.getNews(id);
 
-		assertThat(result.getId()).isEqualTo(id);
-		assertThat(result.getTitle()).isEqualTo(TEST_TITLE);
-		assertThat(result.getContent()).isEqualTo(TEST_CONTENT);
+		assertThat(result.getId(), equalTo(id));
+		assertThat(result.getTitle(), equalTo(TEST_TITLE));
+		assertThat(result.getContent(), equalTo(TEST_CONTENT));
 	}
 
 	@Test(expected = NewsNotFoundException.class)
@@ -103,7 +103,11 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+		System.out.println("@@" + resultNewsIds);
+		System.out.println("@@" + expectedResultNewsIds);
+
+		Collections.sort(resultNewsIds);
+		assertThat(resultNewsIds, equalTo(expectedResultNewsIds)); // containsOnlyElementsOf()
 	}
 
 	@Test
@@ -125,7 +129,7 @@ public class NewsServiceTest extends NewsTestcase {
 
 		long newsListCountAfterJune = newsService.getNewsList(newsDtoAfterJune).size();
 
-		assertThat(newsListCountBeforeJune + newsListCountAfterJune).isEqualTo(totalNewsCount);
+		assertThat(totalNewsCount, equalTo(newsListCountBeforeJune + newsListCountAfterJune));
 	}
 
 	@Test
@@ -140,7 +144,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.stream()
 				.map(News::getId)
 				.collect(toList());
-		 
+
 		List<Long> expectedResultNewsIds = newsService.getAllNewsList()
 				.stream()
 				.filter(news -> news.getTags()
@@ -150,7 +154,8 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+		Collections.sort(resultNewsIds);
+		assertThat(resultNewsIds, equalTogi(expectedResultNewsIds));
 	}
 
 
@@ -174,7 +179,8 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(resultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+		Collections.sort(resultNewsIds);
+		assertThat(resultNewsIds, equalTo(expectedResultNewsIds));
 	}
 
 	@Test
@@ -215,6 +221,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIds).containsOnlyElementsOf(expectedResultNewsIds);
+		Collections.sort(actualResultNewsIds);
+		assertThat(actualResultNewsIds, equalTo(expectedResultNewsIds));
 	}
 }
