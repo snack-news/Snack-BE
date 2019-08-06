@@ -1,10 +1,6 @@
 spring:
   profiles:
-    active: local
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    active: local # 기본 환경 선택
 
 ---
 spring:
