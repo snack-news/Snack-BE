@@ -1,6 +1,6 @@
 #!/bin/bash
 HOST_NAME=SNACK-BE
-BASE_PATH=/home/ec2-user/app/travis
+BASE_PATH=/home/ec2-user/snack-be
 BUILD_PATH=$(ls ${BASE_PATH}/build/build/libs/*.jar)
 
 JAR_NAME=$(basename ${BUILD_PATH})

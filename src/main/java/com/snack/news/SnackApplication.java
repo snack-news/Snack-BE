@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class SnackApplication {
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 			+ "classpath:application.yml,"
-			+ "/home/ec2-user/app/config/snack-news/real-application.yml";
+			+ "/home/ec2-user/snack-be/config/real-application.yml";
 
 	public static void main(String[] args) {
 		new SpringApplicationBuilder(SnackApplication.class)
