@@ -2,17 +2,22 @@
 HOST_NAME=SNACK-BE
 BASE_PATH=/home/ec2-user/snack-be
 BUILD_PATH=$(ls ${BASE_PATH}/build/build/libs/*.jar)
+DEPLOY_SCRIPT_PATH=$BASE_PATH/build/deploy
 
 JAR_NAME=$(basename ${BUILD_PATH})
 echo "> build 파일명: $JAR_NAME"
 
+
+# COPY APPLICATION JAR
 echo "> build 파일 복사"
 DEPLOY_PATH=${BASE_PATH}/jar/
 cp ${BUILD_PATH} ${DEPLOY_PATH}
 
+# CHECK CURRENT PROFILE
 CURRENT_PROFILE=$(curl -s http://localhost/meta/profile)
 echo "> 현재 구동중인 Set 확인 : $CURRENT_PROFILE"
 
+# IDLE PROFILE
 if [[ $CURRENT_PROFILE == set1 ]]
 then
   IDLE_PROFILE=set2
@@ -78,6 +83,29 @@ do
   sleep 10
 done
 
+# SWITCHING NGINX UPSTREAM
 echo "> 스위칭"
 sleep 10
-${BASE_PATH}/switch.sh
+${DEPLOY_SCRIPT_PATH}/switch.sh
+
+# KILL LEGACY APPLICATION
+NEW_PROFILE=$(curl -s http://localhost/meta/profile)
+echo "> $NEW_PROFILE 에서 구동중인 애플리케이션 pid 확인"
+
+if [[ $IDLE_PROFILE == $NEW_PROFILE ]]
+then
+    echo "> 어플리케이션 Switch 성공 "
+    echo "> 기존 어플리케이션을 종료합니다."
+    LEGACY_PID=$(pgrep -f ${CURRENT_PROFILE})
+    if [ -z $LEGACY_PID ]
+    then
+        echo "> 기존 애플리케이션이 없으므로 종료하지 않습니다."
+    else
+      echo "> kill -15 $LEGACY_PID"
+      kill -15 ${LEGACY_PID}
+      sleep 5
+    fi
+fi
+
+
+echo "배포 완료 🚀"
