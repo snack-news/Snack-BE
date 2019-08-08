@@ -12,12 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
@@ -37,8 +35,6 @@ public class TopicServiceTest {
 		assertThat(topicList.size(), is(not(0)));
 
 		List<Topic> originTopicList = topicService.getTopicList(TopicSorting.ID);
-		assertThat(topicList, equalTo(originTopicList));
-
 		List<Topic> sortedTopicList = originTopicList.stream().sorted(TopicSorting.NAME.getOperator()).collect(toList());
 		assertThat(topicList, equalTo(sortedTopicList));
 	}
@@ -51,12 +47,14 @@ public class TopicServiceTest {
 
 		List<Topic> topicList = topicService.getTopicList(TopicSorting.NAME);
 
-//		assertThat(topicList).contains(topic);
+		assertThat(topicList, hasItem(topic));
 	}
 
 	@Test
 	@Transactional
 	public void 토픽을_수정_할_수_있다() {
+		final String updatedData = "UPDATE_IMAGE";
+
 		TopicDto topicDto = TopicDto.builder()
 				.type(TEST_TOPIC_TYPE)
 				.name(TEST_TOPIC_NAME)
@@ -67,13 +65,13 @@ public class TopicServiceTest {
 				.id(createdTopic.getId())
 				.type(TEST_TOPIC_TYPE)
 				.name(createdTopic.getName())
-				.image("UPDATE_IMAGE")
+				.image(updatedData)
 				.build();
 		topicService.updateTopic(updateTopicDto);
 
 		Topic updatedCorp = topicService.getTopic(updateTopicDto);
 
-//		assertThat(updatedCorp.getImage()).isEqualTo("UPDATE_IMAGE");
+		assertThat(updatedCorp.getImage(), equalTo(updatedData));
 	}
 
 	@Test(expected = TopicNotFoundException.class)

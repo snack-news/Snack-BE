@@ -9,7 +9,6 @@ import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsTestcase;
 import com.snack.news.repository.NewsRepository;
-import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -103,11 +101,9 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println("@@" + resultNewsIds);
-		System.out.println("@@" + expectedResultNewsIds);
-
 		Collections.sort(resultNewsIds);
 		assertThat(resultNewsIds, equalTo(expectedResultNewsIds)); // containsOnlyElementsOf()
+
 	}
 
 	@Test
@@ -155,7 +151,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.collect(toList());
 
 		Collections.sort(resultNewsIds);
-		assertThat(resultNewsIds, equalTogi(expectedResultNewsIds));
+		assertThat(resultNewsIds, equalTo(expectedResultNewsIds));
 	}
 
 

@@ -10,7 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -24,6 +25,6 @@ public class CategoryRepositoryTest extends NewsTestcase {
 	public void ID에_해당하는_Category를_가져올_수_있다() {
 		Category category = categoryRepository.findById(1L).orElseThrow(CategoryNotFoundException::new);
 
-		assertThat(category.getTitle()).isEqualTo("IT");
+		assertThat(category.getTitle(), equalTo("IT"));
 	}
 }

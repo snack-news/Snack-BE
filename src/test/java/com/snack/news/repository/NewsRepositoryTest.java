@@ -2,6 +2,7 @@ package com.snack.news.repository;
 
 import com.snack.news.domain.News;
 import com.snack.news.fixture.NewsTestcase;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import static org.exparity.hamcrest.date.LocalDateTimeMatchers.after;
+import static org.exparity.hamcrest.date.LocalDateTimeMatchers.before;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -27,7 +33,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 		newsRepository.save(mockNews);
 
 		List<News> newsList = newsRepository.findAll();
-		assertThat(newsList.size()).isEqualTo(size + 1);
+		assertThat(newsList.size(), equalTo((int) size + 1));
 	}
 
 	@Test
@@ -39,7 +45,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 
 		List<News> newsList = newsRepository.findByCreateAtBetween(startTime, endTime);
 
-		assertThat(newsList.size()).isEqualTo(0);
+		assertThat(newsList.size(), equalTo(0));
 	}
 
 	@Test
@@ -52,6 +58,7 @@ public class NewsRepositoryTest extends NewsTestcase {
 		List<News> newsList = newsRepository.findByCreateAtBetween(startTime, endTime);
 
 		assertThat(newsList.size()).isEqualTo(1);
-		assertThat(newsList.get(0).getCreateAt()).isBefore(endTime).isAfter(startTime);
+		assertThat(newsList.get(0).getCreateAt(), before(endTime));
+		assertThat(newsList.get(0).getCreateAt(), after(startTime));
 	}
 }
