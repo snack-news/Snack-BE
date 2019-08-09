@@ -25,7 +25,9 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,7 +98,7 @@ public class TopicControllerTest {
 	@Test
 	@Transactional
 	public void 토픽_리스트를_정상적으로_가져온다() throws Exception {
-		long realTopicListSize = topicRepository.count();
+		int realTopicListSize = (int) topicRepository.count();
 
 		MvcResult mvcResult = mockMvc.perform(get(TOPIC_API_URL))
 				.andExpect(status().isOk())
@@ -104,12 +106,11 @@ public class TopicControllerTest {
 
 		String responseString = mvcResult.getResponse().getContentAsString();
 
-		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {
-		}.getType();
+		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {}.getType();
 		WrappedResponse<List<Topic>> wrappedResponse = new Gson().fromJson(responseString, typeWrappingResponse);
 		List<Topic> responseTopicList = wrappedResponse.getData();
 
-		assertThat(realTopicListSize).isEqualTo(responseTopicList.size());
+		assertThat(realTopicListSize, equalTo(responseTopicList.size()));
 	}
 
 	@Test
@@ -125,12 +126,10 @@ public class TopicControllerTest {
 
 		String responseString = mvcResult.getResponse().getContentAsString();
 
-		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {
-		}.getType();
+		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {}.getType();
 		WrappedResponse<List<Topic>> wrappedResponse = new Gson().fromJson(responseString, typeWrappingResponse);
 		List<Topic> responseTopicList = wrappedResponse.getData();
 
-		assertThat(responseTopicList).containsAll(realTopicList);
+		assertThat(realTopicList, containsInAnyOrder(responseTopicList));
 	}
-
 }

@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -101,8 +102,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		Collections.sort(resultNewsIds);
-		assertThat(resultNewsIds, equalTo(expectedResultNewsIds)); // containsOnlyElementsOf()
+		assertThat(resultNewsIds, containsInAnyOrder(expectedResultNewsIds));
 
 	}
 
@@ -150,8 +150,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		Collections.sort(resultNewsIds);
-		assertThat(resultNewsIds, equalTo(expectedResultNewsIds));
+		assertThat(resultNewsIds, containsInAnyOrder(expectedResultNewsIds));
 	}
 
 
@@ -175,8 +174,7 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		Collections.sort(resultNewsIds);
-		assertThat(resultNewsIds, equalTo(expectedResultNewsIds));
+		assertThat(resultNewsIds, containsInAnyOrder(expectedResultNewsIds));
 	}
 
 	@Test
@@ -217,7 +215,6 @@ public class NewsServiceTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		Collections.sort(actualResultNewsIds);
-		assertThat(actualResultNewsIds, equalTo(expectedResultNewsIds));
+		assertThat(actualResultNewsIds, containsInAnyOrder(expectedResultNewsIds));
 	}
 }

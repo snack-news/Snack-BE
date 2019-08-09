@@ -2,7 +2,6 @@ package com.snack.news.repository;
 
 import com.snack.news.domain.News;
 import com.snack.news.fixture.NewsTestcase;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import static org.exparity.hamcrest.date.LocalDateTimeMatchers.after;
 import static org.exparity.hamcrest.date.LocalDateTimeMatchers.before;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -29,11 +27,11 @@ public class NewsRepositoryTest extends NewsTestcase {
 	@Test
 	@Transactional
 	public void News를_저장할수있다() {
-		long size = newsRepository.count();
+		int originalSize = (int) newsRepository.count();
 		newsRepository.save(mockNews);
 
 		List<News> newsList = newsRepository.findAll();
-		assertThat(newsList.size(), equalTo((int) size + 1));
+		assertThat(newsList.size(), equalTo(originalSize + 1));
 	}
 
 	@Test
@@ -53,12 +51,12 @@ public class NewsRepositoryTest extends NewsTestcase {
 	public void News가_해당하는_날짜에_있다면_리스트를_반환한다() {
 		LocalDateTime startTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plusHours(1);
+
 		newsRepository.save(mockNews);
 
 		List<News> newsList = newsRepository.findByCreateAtBetween(startTime, endTime);
 
-		assertThat(newsList.size()).isEqualTo(1);
-		assertThat(newsList.get(0).getCreateAt(), before(endTime));
-		assertThat(newsList.get(0).getCreateAt(), after(startTime));
+		assertThat(newsList.size(), equalTo(1));
+		assertThat(newsList.get(0).getCreateAt(), allOf(before(endTime), after(startTime)));
 	}
 }
