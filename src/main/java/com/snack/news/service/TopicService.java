@@ -52,14 +52,18 @@ public class TopicService {
 				.collect(toList());
 	}
 
-	public List<Topic> getTopicList(List<Long> topicIds) {
+	List<Topic> getTopicList(List<Long> topicIds) {
 		if (Objects.isNull(topicIds)) {
 			return Collections.emptyList();
 		}
 
-		return topicRepository.findByIdIn(topicIds);
-	}
+		List<Topic> result = topicRepository.findByIdIn(topicIds).orElseThrow(TopicNotFoundException::new);
+		if (result.size() != topicIds.size()) { // todo: 로직 개선
+			throw new TopicNotFoundException();
+		}
 
+		return result;
+	}
 
 	@Transactional
 	public Topic updateTopic(TopicDto topicDto) {
@@ -67,9 +71,5 @@ public class TopicService {
 		topicRepository.findById(topic.getId()).orElseThrow(TopicNotFoundException::new);
 
 		return topicRepository.save(topic);
-	}
-
-	public Topic getTopic(TopicDto topicDto) {
-		return topicRepository.findById(topicDto.getId()).orElseThrow(TopicNotFoundException::new);
 	}
 }
