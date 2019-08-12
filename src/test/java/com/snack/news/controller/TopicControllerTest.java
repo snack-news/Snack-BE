@@ -15,7 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,11 +25,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TopicControllerTest {
-	private final static String TOPIC_API_URL = "/api/topic";
+public class TopicControllerTest extends TopicTestcase {
 
 	@InjectMocks
 	private TopicController topicController;
+
+	private final static String TOPIC_API_URL = "/api/topic";
 
 	@Mock
 	private TopicService topicService;
@@ -43,9 +43,8 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	@Transactional
 	public void 토픽_생성_요청이_정상적으로_이루어진다() throws Exception {
-		TopicDto topicDtoWithNameAndType = TopicTestcase.CORRECT_TEST_TOPIC_DTO;
+		TopicDto topicDtoWithNameAndType = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		String requestJsonBody = new Gson().toJson(topicDtoWithNameAndType);
 
 		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicTestcase.DUMMY);
@@ -56,7 +55,6 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	@Transactional
 	public void 토픽_타입이_없다면_토픽_생성요청이_실패한다() throws Exception {
 		final String randomTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
 		final TopicType testTopicType = TopicType.NONE;
@@ -70,23 +68,20 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	@Transactional
-	public void 토픽_리스트를_정상적으로_가져온다() throws Exception {
+	public void 원하는_타입의_토픽_리스트를_가져온다() throws Exception {
 		mockMvc.perform(get(TOPIC_API_URL))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	@Transactional
 	public void 원하는_타입의_토픽_리스트를_ID순으로_가져온다() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "/CORP" + "?sort=id"))
+		mockMvc.perform(get(TOPIC_API_URL + "?sort=ID"))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	@Transactional
 	public void 원하는_타입의_토픽_리스트를_이름순으로_가져온다() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "/CORP" + "?sort=id"))
+		mockMvc.perform(get(TOPIC_API_URL + "?sort=NAME"))
 				.andExpect(status().isOk());
 	}
 }
