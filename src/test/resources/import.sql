@@ -143,7 +143,7 @@ insert into news_tag(news_id, tag_id) values (8, 2);
 
 insert into news_tag(news_id, tag_id) values (10, 1);
 insert into news_tag(news_id, tag_id) values (11, 2);
-insert into news_tag(news_id, tag_id) values (12, 3);
+insert into news_tag(news_id, tag_id) values (12, 2);
 insert into news_tag(news_id, tag_id) values (12, 2);
 
 insert into news_tag(news_id, tag_id) values (14, 1);
@@ -173,7 +173,7 @@ insert into news_tag(news_id, tag_id) values (33, 2);
 
 insert into news_tag(news_id, tag_id) values (34, 1);
 insert into news_tag(news_id, tag_id) values (35, 2);
-insert into news_tag(news_id, tag_id) values (36, 3);
+insert into news_tag(news_id, tag_id) values (36, 1);
 insert into news_tag(news_id, tag_id) values (36, 2);
 
 insert into news_tag(news_id, tag_id) values (38, 1);
