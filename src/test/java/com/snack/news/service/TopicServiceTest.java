@@ -1,7 +1,6 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.TopicTestcase;
@@ -25,7 +24,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TopicServiceTest extends TopicTestcase {
-	private static final TopicType TEST_TOPIC_TYPE = TopicType.CORP;
 
 	@InjectMocks
 	private TopicService topicService;
