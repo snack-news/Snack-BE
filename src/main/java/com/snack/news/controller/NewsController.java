@@ -23,7 +23,7 @@ public class NewsController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<News>> getNewsList(@RequestBody NewsDto newsDto) {
+	public ResponseEntity<List<News>> getNewsListRequestBody(@ModelAttribute NewsDto newsDto) {
 		List<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
@@ -36,4 +36,3 @@ public class NewsController {
 		return WrappedResponse.ok(newsService.getNews(newsId));
 	}
 }
-
