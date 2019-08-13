@@ -5,6 +5,7 @@ insert into category (id, title) values (2, '커머스');
 -- Topic 테스트 데이터
 insert into topic (id, type, name) values (1, 'CORP', '카카오');
 insert into topic (id, type, name) values (2, 'CORP', '애플');
+insert into topic (id, type, name) values (3, 'PERSON', '이재용');
 
 -- Tag 테스트 데이터
 insert into tag(id, title) values (1,'TOP10');

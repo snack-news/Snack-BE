@@ -125,17 +125,17 @@ public class TopicServiceTest extends TopicTestcase {
 	@Test
 	public void 토픽ID를_받아_토픽_리스트를_반환한다() {
 		final List<Long> validTopicIds = Arrays.asList(1L, 2L);
-		final Optional<List<Topic>> dummyResult = Optional.of(Arrays.asList(DUMMY, DUMMY));
+		final List<Topic> dummyResult = Arrays.asList(DUMMY, DUMMY);
 		when(topicRepository.findByIdIn(validTopicIds)).thenReturn(dummyResult);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicIds);
-		assertThat(realResult, equalTo(dummyResult.get()));
+		assertThat(realResult, equalTo(dummyResult));
 	}
 
 	@Test(expected = TopicNotFoundException.class)
 	public void 토픽ID에_해당하는_토픽이_없으면_예외가_발생한다() {
 		final List<Long> invalidTopicIds = Arrays.asList(9999L, 10000L);
-		final Optional<List<Topic>> dummyResult = Optional.of(Collections.singletonList(DUMMY));
+		final List<Topic> dummyResult = Collections.singletonList(DUMMY);
 		when(topicRepository.findByIdIn(invalidTopicIds)).thenReturn(dummyResult);
 
 		topicService.getTopicList(invalidTopicIds);

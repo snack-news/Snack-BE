@@ -5,6 +5,7 @@ insert into category (id, title) values (2, '커머스');
 -- Topic 테스트 데이터
 insert into topic (id, type, name) values (1, 'CORP', '카카오');
 insert into topic (id, type, name) values (2, 'CORP', '애플');
+insert into topic (id, type, name) values (3, 'PERSON', '이재용');
 
 -- Tag 테스트 데이터
 insert into tag(id, title) values (1,'TOP10');
@@ -59,7 +60,6 @@ insert into news(id, category_id, title, content, create_at, modified_at) values
 insert into news(id, category_id, title, content, create_at, modified_at) values (46, 2, '46 news title', 'news content: 커머스/애플/TOP10', '2019-08-21 00:00:00', '2019-08-21 00:00:00');
 insert into news(id, category_id, title, content, create_at, modified_at) values (47, 2, '47 news title', 'news content: 커머스/애플/HOT', '2019-08-21 00:00:00', '2019-08-21 00:00:00');
 insert into news(id, category_id, title, content, create_at, modified_at) values (48, 2, '48 news title', 'news content: 커머스/애플/TOP10,HOT', '2019-08-21 00:00:00', '2019-08-21 00:00:00');
-
 -- News-Topic 연관관계 테스트 데이터
 insert into news_topic(news_id, topic_id) values (1, 1);
 insert into news_topic(news_id, topic_id) values (2, 1);

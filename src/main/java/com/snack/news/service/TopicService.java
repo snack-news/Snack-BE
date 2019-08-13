@@ -57,7 +57,7 @@ public class TopicService {
 			return Collections.emptyList();
 		}
 
-		List<Topic> result = topicRepository.findByIdIn(topicIds).orElseThrow(TopicNotFoundException::new);
+		List<Topic> result = topicRepository.findByIdIn(topicIds);
 		if (result.size() != topicIds.size()) { // todo: 로직 개선
 			throw new TopicNotFoundException();
 		}
