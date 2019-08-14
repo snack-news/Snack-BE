@@ -34,7 +34,7 @@ public class NewsService {
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public List<News> getAllNewsList() {
+	protected List<News> getAllNewsList() {
 		return newsRepository.findAll();
 	}
 
