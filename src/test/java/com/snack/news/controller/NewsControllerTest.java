@@ -50,7 +50,7 @@ public class NewsControllerTest extends NewsTestcase {
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
-		
+
 		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
 
 		when(newsService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
@@ -115,7 +115,7 @@ public class NewsControllerTest extends NewsTestcase {
 
 		mockMvc.perform(get(NEWS_API_URL + "/" + TEST_SOME_ID_LONG)
 				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().isNotFound());
 	}
 
 	@Test
