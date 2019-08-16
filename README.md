@@ -27,16 +27,24 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
 - 단일 News 조회
   - > `/api/news/{id}` (GET)
 - 조건에 맞는 News 리스트 조회
-  - > `/api/news` (GET)
-    ``` json
+  - > `/api/news` (GET) 
+    - 필수 parameter: startDateTime, endDateTime
+      - 날짜 값이 없거나 부적절할 시 예외 발생
+      - 날짜 값 조건: startDateTime은 월요일, 두 날짜의 차는 일주일 이하, 두 날짜는 같은 달
+    - 옵션 parameter: categoryId, topicIds, tagIds
+  - 요청 예)
+    ```
     {
-        "startDateTime" : "2019-07-01T00:00",
-        "endDateTime" : "2019-08-31T00:00",
-        "categoryId" : 1,
-        "topicIds" : [1, 2],
-        "tagIds" : [1]
+        http://{host}:{port}/api/news
+        ?startDateTime=2019-07-01T00:00
+        &endDateTime=2019-08-31T00:00
+        &categoryId=1
+        &topicIds=1,2
+        &tagIds=1
     }
     ```
+- 참고: startDateTime 당일 기준의 가까운 월요일, endDateTime은 당일이 디폴트 값 입니다. (필수로 변경될수 있습니다.)
+
 ### Category API
 - 전체 Category 리스트 조회
   - > `/api/category` (GET)

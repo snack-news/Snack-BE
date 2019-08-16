@@ -1,90 +1,141 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
+import com.snack.news.fixture.TopicTestcase;
+import com.snack.news.repository.TopicRepository;
 import com.snack.news.strategy.TopicSorting;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class TopicServiceTest {
-	private static final TopicType TEST_TOPIC_TYPE = TopicType.CORP;
-	private static final String TEST_TOPIC_NAME = "TEST_NAME";
-	private static final String TEST_IMAGE_URL = "IMAGE_URL";
+@RunWith(MockitoJUnitRunner.class)
+public class TopicServiceTest extends TopicTestcase {
 
-	@Autowired
+	@InjectMocks
 	private TopicService topicService;
 
+	@Mock
+	private TopicRepository topicRepository;
+
 	@Test
-	@Transactional
 	public void 토픽들을_토픽명순으로_조회할_수_있다() {
-		List<Topic> topicList = topicService.getTopicList(TopicSorting.NAME);
-		assertThat(topicList.size(), is(not(0)));
+		Topic testTopic01 = Topic.builder().name("가").build();
+		Topic testTopic02 = Topic.builder().name("나").build();
+		Topic testTopic03 = Topic.builder().name("다").build();
 
-		List<Topic> originTopicList = topicService.getTopicList(TopicSorting.ID);
-		List<Topic> sortedTopicList = originTopicList.stream().sorted(TopicSorting.NAME.getOperator()).collect(toList());
-		assertThat(topicList, equalTo(sortedTopicList));
+		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
+		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
+
+		when(topicRepository.findAll()).thenReturn(unsortedTopicList);
+
+		List<Topic> resultTopicList = topicService.getTopicList(TopicSorting.NAME);
+
+		assertThat(resultTopicList.size(), is(not(0)));
+		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
 	}
 
 	@Test
-	@Transactional
-	public void 토픽을_등록_및_조회_할_수_있다() {
-		TopicDto topicDto = TopicDto.builder().type(TEST_TOPIC_TYPE).name(TEST_TOPIC_NAME).image(TEST_IMAGE_URL).build();
-		Topic topic = topicService.createTopic(topicDto);
+	public void 토픽들을_ID순으로_조회할_수_있다() {
+		Topic testTopic01 = TopicDto.builder().id(1L).build().getTopicUpdateEntity();
+		Topic testTopic02 = TopicDto.builder().id(2L).build().getTopicUpdateEntity();
+		Topic testTopic03 = TopicDto.builder().id(3L).build().getTopicUpdateEntity();
 
-		List<Topic> topicList = topicService.getTopicList(TopicSorting.NAME);
+		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
+		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
 
-		assertThat(topicList, hasItem(topic));
+		when(topicRepository.findAll()).thenReturn(unsortedTopicList);
+
+		List<Topic> resultTopicList = topicService.getTopicList(TopicSorting.ID);
+
+		assertThat(resultTopicList.size(), is(not(0)));
+		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
 	}
 
 	@Test
-	@Transactional
-	public void 토픽을_수정_할_수_있다() {
-		final String updatedData = "UPDATE_IMAGE";
+	public void 토픽을_등록할_수_있다() {
+		TopicDto topicDto = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		Topic topicEntityByDto = topicDto.getTopicNewEntity();
 
-		TopicDto topicDto = TopicDto.builder()
-				.type(TEST_TOPIC_TYPE)
-				.name(TEST_TOPIC_NAME)
-				.image(TEST_IMAGE_URL).build();
-		Topic createdTopic = topicService.createTopic(topicDto);
+		when(topicRepository.save(topicEntityByDto)).thenReturn(topicEntityByDto);
+		Topic resultTopic = topicService.createTopic(topicDto);
 
-		TopicDto updateTopicDto = TopicDto.builder()
-				.id(createdTopic.getId())
-				.type(TEST_TOPIC_TYPE)
-				.name(createdTopic.getName())
-				.image(updatedData)
-				.build();
-		topicService.updateTopic(updateTopicDto);
-
-		Topic updatedCorp = topicService.getTopic(updateTopicDto);
-
-		assertThat(updatedCorp.getImage(), equalTo(updatedData));
+		assertThat(topicEntityByDto, equalTo(resultTopic));
 	}
 
 	@Test(expected = TopicNotFoundException.class)
-	@Transactional
-	public void 수정하려는_토픽ID가_유효하지_않는_경우_예외를_반환한다() {
-		Long invalidTopicId = 123L;
-		TopicDto updateTopicDto = TopicDto.builder()
-				.id(invalidTopicId)
-				.type(TEST_TOPIC_TYPE)
-				.name("UPDATE_NAME")
-				.image("UPDATE_IMAGE")
+	public void 토픽_등록시_중복된_이름이라면_예외가_발생한다() {
+		TopicDto topicDto = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		Topic topicEntityByDto = topicDto.getTopicNewEntity();
+
+		when(topicRepository.save(topicEntityByDto)).thenThrow(DataIntegrityViolationException.class);
+		topicService.createTopic(topicDto);
+	}
+
+	@Test
+	public void 토픽을_수정_할_수_있다() {
+		final String updatedDataWithTopicName = "UPDATE_TOPIC_NAME";
+		long savedTopicId = SOME_SAVED_TEST_TOPIC.getId();
+
+		TopicDto editedTopicDto = TopicDto.builder()
+				.id(savedTopicId)
+				.name(updatedDataWithTopicName)
+				.type(SOME_SAVED_TEST_TOPIC.getType())
+				.build();
+		Topic editedTopic = editedTopicDto.getTopicUpdateEntity();
+
+		when(topicRepository.findById(savedTopicId)).thenReturn(Optional.of(SOME_SAVED_TEST_TOPIC));
+		when(topicRepository.save(editedTopic)).thenReturn(editedTopic);
+
+		Topic resultTopic = topicService.updateTopic(editedTopicDto);
+		assertThat(resultTopic.getName(), equalTo(updatedDataWithTopicName));
+	}
+
+	@Test(expected = TopicNotFoundException.class)
+	public void 수정을_시도한_토픽이_존재하지_않는다면_예외가_발생한다() {
+		final String updatedDataWithTopicName = "UPDATE_TOPIC_NAME";
+		long savedTopicId = SOME_SAVED_TEST_TOPIC.getId();
+
+		TopicDto editedTopicDto = TopicDto.builder()
+				.id(savedTopicId)
+				.name(updatedDataWithTopicName)
+				.type(SOME_SAVED_TEST_TOPIC.getType())
 				.build();
 
-		topicService.updateTopic(updateTopicDto);
+		when(topicRepository.findById(savedTopicId)).thenThrow(TopicNotFoundException.class);
+
+		topicService.updateTopic(editedTopicDto);
+	}
+
+	@Test
+	public void 토픽ID를_받아_토픽_리스트를_반환한다() {
+		final List<Long> validTopicIds = Arrays.asList(1L, 2L);
+		final List<Topic> dummyResult = Arrays.asList(DUMMY, DUMMY);
+		when(topicRepository.findByIdIn(validTopicIds)).thenReturn(dummyResult);
+
+		List<Topic> realResult = topicService.getTopicList(validTopicIds);
+		assertThat(realResult, equalTo(dummyResult));
+	}
+
+	@Test(expected = TopicNotFoundException.class)
+	public void 토픽ID에_해당하는_토픽이_없으면_예외가_발생한다() {
+		final List<Long> invalidTopicIds = Arrays.asList(9999L, 10000L);
+		final List<Topic> dummyResult = Collections.singletonList(DUMMY);
+		when(topicRepository.findByIdIn(invalidTopicIds)).thenReturn(dummyResult);
+
+		topicService.getTopicList(invalidTopicIds);
 	}
 }
