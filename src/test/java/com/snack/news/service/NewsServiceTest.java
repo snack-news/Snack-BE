@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -46,23 +45,20 @@ public class NewsServiceTest extends NewsTestcase {
 	@Test(expected = CategoryNotFoundException.class)
 	public void 뉴스_생성시_카테고리ID가_부적절하다면_예외가_발생한다() {
 		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
-		when(newsRepository.save(any())).thenReturn(any());
 
 		newsService.createNews(mockNewsDto);
 	}
 
 	@Test(expected = TopicNotFoundException.class)
 	public void 뉴스_생성시_토픽ID가_부적절하다면_예외가_발생한다() {
-		when(topicService.getTopicList(any(List.class))).thenThrow(TopicNotFoundException.class);
-		when(newsRepository.save(any())).thenReturn(any());
+		when(topicService.getTopicList(mockNewsDto.getTopicIds())).thenThrow(TopicNotFoundException.class);
 
 		newsService.createNews(mockNewsDto);
 	}
 
 	@Test(expected = TagNotFoundException.class)
 	public void 뉴스_생성시_태그ID가_부적절하다면_예외가_발생한다() {
-		when(tagService.getTagList(any(List.class))).thenThrow(TagNotFoundException.class);
-		when(newsRepository.save(any())).thenReturn(any());
+		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
 
 		newsService.createNews(mockNewsDto);
 	}
