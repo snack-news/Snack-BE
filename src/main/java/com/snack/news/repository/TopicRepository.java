@@ -11,3 +11,4 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	List<Topic> findByIdIn(List<Long> ids);
 }
+

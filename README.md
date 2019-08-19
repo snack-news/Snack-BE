@@ -28,6 +28,10 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
   - > `/api/news/{id}` (GET)
 - 조건에 맞는 News 리스트 조회
   - > `/api/news` (GET) 
+    - 필수 parameter: startDateTime, endDateTime
+      - 날짜 값이 없거나 부적절할 시 예외 발생
+      - 날짜 값 조건: startDateTime은 월요일, 두 날짜의 차는 일주일 이하, 두 날짜는 같은 달
+    - 옵션 parameter: categoryId, topicIds, tagIds
   - 요청 예)
     ```
     {

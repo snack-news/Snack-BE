@@ -2,65 +2,52 @@ package com.snack.news.controller;
 
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.snack.news.domain.Topic;
 import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
-import com.snack.news.dto.WrappedResponse;
-import com.snack.news.repository.TopicRepository;
+import com.snack.news.fixture.TopicTestcase;
+import com.snack.news.service.TopicService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.lang.reflect.Type;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class TopicControllerTest {
+@RunWith(MockitoJUnitRunner.class)
+public class TopicControllerTest extends TopicTestcase {
+
+	@InjectMocks
+	private TopicController topicController;
 
 	private final static String TOPIC_API_URL = "/api/topic";
 
-	@Autowired
-	private TopicRepository topicRepository;
-	@Autowired
-	private WebApplicationContext context;
+	@Mock
+	private TopicService topicService;
+
 	private MockMvc mockMvc;
 
 	@Before
 	public void setup() {
-		this.mockMvc = MockMvcBuilders
-				.webAppContextSetup(this.context)
-				.build();
+		mockMvc = MockMvcBuilders.standaloneSetup(topicController).build();
 	}
 
 	@Test
-	@Transactional
 	public void 토픽_생성_요청이_정상적으로_이루어진다() throws Exception {
+		TopicDto topicDtoWithNameAndType = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		String requestJsonBody = new Gson().toJson(topicDtoWithNameAndType);
 
-		final String testTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
-		final TopicType testTopicType = TopicType.CORP;
-
-		TopicDto topicDto = TopicDto.builder().name(testTopicName).type(testTopicType).build();
-		String requestJsonBody = new Gson().toJson(topicDto);
-
+		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicTestcase.DUMMY);
 
 		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -68,27 +55,12 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	@Transactional
-	public void 토픽_이름이_중복이라면_토픽_생성요청이_실패한다() throws Exception {
-		final String testTopicName = "삼성";
-		final TopicType testTopicType = TopicType.CORP;
-
-		TopicDto topicDto = TopicDto.builder().name(testTopicName).type(testTopicType).build();
-		String requestJsonBody = new Gson().toJson(topicDto);
-
-		mockMvc.perform(post(TOPIC_API_URL)
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().is4xxClientError()); // todo: 자세한 오류 메시지 명시
-	}
-
-	@Test
-	@Transactional
 	public void 토픽_타입이_없다면_토픽_생성요청이_실패한다() throws Exception {
-		final String testTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
+		final String randomTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
 		final TopicType testTopicType = TopicType.NONE;
 
-		TopicDto topicDto = TopicDto.builder().name(testTopicName).type(testTopicType).build();
-		String requestJsonBody = new Gson().toJson(topicDto).replace(testTopicType.name(), "WRONG_TYPE");
+		TopicDto requestTopicDto = TopicDto.builder().name(randomTopicName).type(testTopicType).build();
+		String requestJsonBody = new Gson().toJson(requestTopicDto).replace(testTopicType.name(), "SOME_WRONG_TYPE");
 
 		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -96,40 +68,20 @@ public class TopicControllerTest {
 	}
 
 	@Test
-	@Transactional
-	public void 토픽_리스트를_정상적으로_가져온다() throws Exception {
-		int realTopicListSize = (int) topicRepository.count();
-
-		MvcResult mvcResult = mockMvc.perform(get(TOPIC_API_URL))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		String responseString = mvcResult.getResponse().getContentAsString();
-
-		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {}.getType();
-		WrappedResponse<List<Topic>> wrappedResponse = new Gson().fromJson(responseString, typeWrappingResponse);
-		List<Topic> responseTopicList = wrappedResponse.getData();
-
-		assertThat(realTopicListSize, equalTo(responseTopicList.size()));
+	public void 원하는_타입의_토픽_리스트를_가져온다() throws Exception {
+		mockMvc.perform(get(TOPIC_API_URL))
+				.andExpect(status().isOk());
 	}
 
 	@Test
-	@Transactional
-	public void 원하는_타입의_토픽_리스트를_정상적으로_가져온다() throws Exception {
-		final TopicType testTopicType = TopicType.CORP;
+	public void 원하는_타입의_토픽_리스트를_ID순으로_가져온다() throws Exception {
+		mockMvc.perform(get(TOPIC_API_URL + "?sort=ID"))
+				.andExpect(status().isOk());
+	}
 
-		List<Topic> realTopicList = topicRepository.findAllByTypeIs(testTopicType);
-
-		MvcResult mvcResult = mockMvc.perform(get(TOPIC_API_URL + "/CORP"))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		String responseString = mvcResult.getResponse().getContentAsString();
-
-		Type typeWrappingResponse = new TypeToken<WrappedResponse<List<Topic>>>() {}.getType();
-		WrappedResponse<List<Topic>> wrappedResponse = new Gson().fromJson(responseString, typeWrappingResponse);
-		List<Topic> responseTopicList = wrappedResponse.getData();
-
-		assertThat(realTopicList, containsInAnyOrder(responseTopicList));
+	@Test
+	public void 원하는_타입의_토픽_리스트를_이름순으로_가져온다() throws Exception {
+		mockMvc.perform(get(TOPIC_API_URL + "?sort=NAME"))
+				.andExpect(status().isOk());
 	}
 }

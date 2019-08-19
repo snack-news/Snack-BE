@@ -15,6 +15,7 @@ public class WeekUtilTest extends NewsTestcase {
 	public void 날짜_값이_null이면_예외가_발생한다() {
 		assertThat(WeekUtil.isBothDatesInOneWeekWithSameMonth(null, null), is(any(Boolean.class)));
 	}
+  
 	@Test
 	public void 시작일이_월요일이_아니면_거짓을_반환한다() {
 		final LocalDateTime start = LocalDateTime.of(2019, 8, 13, 0, 0);
@@ -48,8 +49,6 @@ public class WeekUtilTest extends NewsTestcase {
 
 		assertThat(start.getDayOfWeek().equals(DayOfWeek.MONDAY), is(true));
 		assertThat(WeekUtil.isBothDatesInOneWeekWithSameMonth(start, end), is(true));
-	}
-
 
 	@Test
 	public void 두_날짜의_치이가_7일_이하지만_다른_달이면_거짓을_반환한다() {
