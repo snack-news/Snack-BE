@@ -34,10 +34,6 @@ public class NewsService {
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public List<News> getAllNewsList() {
-		return newsRepository.findAll();
-	}
-
 	public List<News> getNewsList(NewsDto newsDto) {
 		return newsRepository.findByNewsDto(newsDto);
 	}
