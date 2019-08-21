@@ -1,7 +1,6 @@
 package com.snack.news.dto;
 
 import com.snack.news.domain.*;
-import com.snack.news.util.WeekUtil;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,9 +28,9 @@ public class NewsDto {
 	private List<Long> topicIds;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime startDateTime = WeekUtil.getFirstDayOfWeek(LocalDateTime.now());
+	private LocalDateTime startDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime endDateTime = WeekUtil.getLastDayOfWeek(LocalDateTime.now());
+	private LocalDateTime endDateTime;
 
 	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {
 		return News.builder()
