@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class NewsController {
 
 	@GetMapping
 	public ResponseEntity<List<News>> getNewsListRequestBody(@ModelAttribute NewsDto newsDto) {
-		boolean isValidDate = WeekUtil.isBothDatesInOneWeekWithSameMonth(newsDto.getStartDateTime(), newsDto.getEndDateTime());
+		boolean isValidDate = isBothDatesInOneWeekWithSameMonth(newsDto.getStartDateTime(), newsDto.getEndDateTime());
 		if (!isValidDate) {
 			throw new NewsBadRequestException();
 		}
@@ -41,5 +42,9 @@ public class NewsController {
 	@GetMapping("/{newsId}")
 	public ResponseEntity<News> getNews(@PathVariable Long newsId) {
 		return WrappedResponse.ok(newsService.getNews(newsId));
+	}
+
+	private boolean isBothDatesInOneWeekWithSameMonth(LocalDateTime start, LocalDateTime end) {
+		return WeekUtil.isBothDatesInOneWeekWithSameMonth(start, end);
 	}
 }
