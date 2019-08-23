@@ -1,7 +1,7 @@
 ## Snack News - BE
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3de925b7ef148f3b4eba5a8e28e32e1)](https://app.codacy.com/app/snack-news/Snack-BE?utm_source=github.com&utm_medium=referral&utm_content=snack-news/Snack-BE&utm_campaign=Badge_Grade_Settings)
-[![Build Status](https://travis-ci.org/snack-news/Snack-BE.svg?branch=master)](https://travis-ci.org/snack-news/Snack-BE) [![codecov](https://codecov.io/gh/snack-news/Snack-BE/branch/master/graph/badge.svg)](https://codecov.io/gh/snack-news/Snack-BE)
+
+[![Build Status](https://travis-ci.org/snack-news/Snack-BE.svg?branch=master)](https://travis-ci.org/snack-news/Snack-BE) [![codecov](https://codecov.io/gh/snack-news/Snack-BE/branch/master/graph/badge.svg)](https://codecov.io/gh/snack-news/Snack-BE)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3de925b7ef148f3b4eba5a8e28e32e1)](https://app.codacy.com/app/snack-news/Snack-BE?utm_source=github.com&utm_medium=referral&utm_content=snack-news/Snack-BE&utm_campaign=Badge_Grade_Settings)
 
 ## WIKI
 - <https://github.com/snack-news/Snack-BE/wiki>
