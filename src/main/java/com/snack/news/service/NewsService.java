@@ -35,6 +35,7 @@ public class NewsService {
 	}
 
 	public List<News> getNewsList(NewsDto newsDto) {
+		newsDto.dateValidationCheck();
 		return newsRepository.findByNewsDto(newsDto);
 	}
 
