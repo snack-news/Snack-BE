@@ -110,7 +110,6 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(expectedResultNewsList);
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
 
@@ -136,10 +135,9 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(expectedResultNewsList);
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
-	
+
 	@Test
 	@Transactional
 	public void 여러_조건에_해당하는_뉴스_리스트를_가져온다() {
