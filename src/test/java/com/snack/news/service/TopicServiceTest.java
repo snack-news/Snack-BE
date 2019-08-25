@@ -3,7 +3,7 @@ package com.snack.news.service;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
-import com.snack.news.fixture.TopicTestcase;
+import com.snack.news.fixture.TopicFixture;
 import com.snack.news.repository.TopicRepository;
 import com.snack.news.strategy.TopicSorting;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TopicServiceTest extends TopicTestcase {
+public class TopicServiceTest extends TopicFixture {
 
 	@InjectMocks
 	private TopicService topicService;
@@ -67,7 +67,7 @@ public class TopicServiceTest extends TopicTestcase {
 
 	@Test
 	public void 토픽을_등록할_수_있다() {
-		TopicDto topicDto = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		TopicDto topicDto = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		Topic topicEntityByDto = topicDto.getTopicNewEntity();
 
 		when(topicRepository.save(topicEntityByDto)).thenReturn(topicEntityByDto);
@@ -78,7 +78,7 @@ public class TopicServiceTest extends TopicTestcase {
 
 	@Test(expected = TopicNotFoundException.class)
 	public void 토픽_등록시_중복된_이름이라면_예외가_발생한다() {
-		TopicDto topicDto = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		TopicDto topicDto = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		Topic topicEntityByDto = topicDto.getTopicNewEntity();
 
 		when(topicRepository.save(topicEntityByDto)).thenThrow(DataIntegrityViolationException.class);

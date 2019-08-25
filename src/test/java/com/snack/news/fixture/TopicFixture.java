@@ -6,7 +6,7 @@ import com.snack.news.dto.TopicDto;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TopicTestcase {
+public abstract class TopicFixture {
 	protected final static Topic DUMMY = Topic.builder().build();
 	protected final static TopicDto TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 	protected final static Topic SOME_SAVED_TEST_TOPIC;

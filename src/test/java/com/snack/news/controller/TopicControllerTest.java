@@ -4,7 +4,7 @@ package com.snack.news.controller;
 import com.google.gson.Gson;
 import com.snack.news.domain.TopicType;
 import com.snack.news.dto.TopicDto;
-import com.snack.news.fixture.TopicTestcase;
+import com.snack.news.fixture.TopicFixture;
 import com.snack.news.service.TopicService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TopicControllerTest extends TopicTestcase {
+public class TopicControllerTest extends TopicFixture {
 
 	@InjectMocks
 	private TopicController topicController;
@@ -44,10 +44,10 @@ public class TopicControllerTest extends TopicTestcase {
 
 	@Test
 	public void 토픽_생성_요청이_정상적으로_이루어진다() throws Exception {
-		TopicDto topicDtoWithNameAndType = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		TopicDto topicDtoWithNameAndType = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		String requestJsonBody = new Gson().toJson(topicDtoWithNameAndType);
 
-		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicTestcase.DUMMY);
+		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicFixture.DUMMY);
 
 		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
