@@ -1,8 +1,8 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Category;
-import com.snack.news.domain.News;
-import com.snack.news.domain.Tag;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.news.News;
+import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.fixture.NewsFixture;

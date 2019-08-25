@@ -1,6 +1,6 @@
 package com.snack.news.controller;
 
-import com.snack.news.domain.Category;
+import com.snack.news.domain.category.Category;
 import com.snack.news.dto.CategoryDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.CategoryService;

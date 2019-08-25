@@ -1,6 +1,6 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Category;
+import com.snack.news.domain.category.Category;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.fixture.NewsFixture;
 import org.junit.Test;

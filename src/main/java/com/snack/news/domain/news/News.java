@@ -1,5 +1,8 @@
-package com.snack.news.domain;
+package com.snack.news.domain.news;
 
+import com.snack.news.domain.base.BaseTimeEntity;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import lombok.Builder;
 import lombok.Getter;

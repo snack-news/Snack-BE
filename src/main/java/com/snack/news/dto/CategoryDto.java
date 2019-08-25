@@ -1,6 +1,6 @@
 package com.snack.news.dto;
 
-import com.snack.news.domain.Category;
+import com.snack.news.domain.category.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

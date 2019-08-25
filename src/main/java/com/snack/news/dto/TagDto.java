@@ -1,7 +1,7 @@
 package com.snack.news.dto;
 
 
-import com.snack.news.domain.Tag;
+import com.snack.news.domain.tag.Tag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
