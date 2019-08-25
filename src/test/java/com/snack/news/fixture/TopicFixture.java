@@ -1,7 +1,7 @@
 package com.snack.news.fixture;
 
-import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicType;
 import com.snack.news.dto.TopicDto;
 
 import java.util.concurrent.ThreadLocalRandom;

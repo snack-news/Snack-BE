@@ -2,7 +2,7 @@ package com.snack.news.controller;
 
 
 import com.google.gson.Gson;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.topic.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.fixture.TopicFixture;
 import com.snack.news.service.TopicService;

@@ -1,7 +1,7 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

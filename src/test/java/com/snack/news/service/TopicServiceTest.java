@@ -1,11 +1,11 @@
 package com.snack.news.service;
 
-import com.snack.news.domain.Topic;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicSorting;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.TopicFixture;
 import com.snack.news.repository.TopicRepository;
-import com.snack.news.strategy.TopicSorting;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

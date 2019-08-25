@@ -1,5 +1,6 @@
 package com.snack.news.domain;
 
+import com.snack.news.domain.topic.Topic;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

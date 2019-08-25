@@ -1,6 +1,10 @@
 package com.snack.news.dto;
 
-import com.snack.news.domain.*;
+import com.snack.news.domain.Category;
+import com.snack.news.domain.News;
+import com.snack.news.domain.Tag;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicType;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
