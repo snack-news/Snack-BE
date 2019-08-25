@@ -1,7 +1,6 @@
 package com.snack.news.exception.advice;
 
 import com.snack.news.dto.ErrorResponse;
-import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.TopicBadRequestException;
 import com.snack.news.exception.base.BadRequestException;
 import com.snack.news.exception.base.NotFoundException;
