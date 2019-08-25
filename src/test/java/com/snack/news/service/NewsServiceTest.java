@@ -1,9 +1,8 @@
 package com.snack.news.service;
 
-import com.snack.news.exception.CategoryNotFoundException;
-import com.snack.news.exception.NewsNotFoundException;
-import com.snack.news.exception.TagNotFoundException;
-import com.snack.news.exception.TopicNotFoundException;
+import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.Period;
+import com.snack.news.exception.*;
 import com.snack.news.fixture.NewsTestcase;
 import com.snack.news.repository.NewsRepository;
 import org.junit.Test;
@@ -36,6 +35,9 @@ public class NewsServiceTest extends NewsTestcase {
 	@Mock
 	private TagService tagService;
 
+	@Mock
+	private Period period;
+
 	@Test
 	public void 뉴스를_생성할_수_있다() {
 		when(newsRepository.save(any())).thenReturn(any());
@@ -65,8 +67,32 @@ public class NewsServiceTest extends NewsTestcase {
 
 	@Test
 	public void 뉴스_리스트를_조회할_수_있다() {
-		when(newsRepository.findByNewsDto(any())).thenReturn(any());
-		newsService.getNewsList(mockNewsDto);
+		NewsDto newsDtoWithValidDates = mockNewsDto;
+		when(newsRepository.findByNewsDto(newsDtoWithValidDates)).thenReturn(any());
+
+		newsService.getNewsList(newsDtoWithValidDates);
+	}
+
+	@Test(expected = NewsBadRequestException.class)
+	public void 뉴스_리스트를_조회할_때_날짜가_없다면_예외가_발생한다() {
+		NewsDto newsDtoWithNoDates = NewsDto.builder()
+				.title(TEST_TITLE)
+				.content(TEST_CONTENT)
+				.build();
+
+		newsService.getNewsList(newsDtoWithNoDates);
+	}
+
+	@Test(expected = NewsBadRequestException.class)
+	public void 뉴스_리스트를_조회할_때_날짜가_부적절하다면_예외가_발생한다() {
+		NewsDto newsDtoWithInvalidDates = NewsDto.builder()
+				.title(TEST_TITLE)
+				.content(TEST_CONTENT)
+				.startDateTime(INVALID_START_DATE)
+				.endDateTime(INVALID_END_DATE)
+				.build();
+
+		newsService.getNewsList(newsDtoWithInvalidDates);
 	}
 
 	@Test

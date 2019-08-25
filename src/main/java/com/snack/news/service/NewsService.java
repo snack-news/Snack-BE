@@ -5,6 +5,7 @@ import com.snack.news.domain.News;
 import com.snack.news.domain.Tag;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.Period;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,7 @@ public class NewsService {
 	}
 
 	public List<News> getNewsList(NewsDto newsDto) {
+		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
 		return newsRepository.findByNewsDto(newsDto);
 	}
 

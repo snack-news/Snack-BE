@@ -3,9 +3,7 @@ package com.snack.news.controller;
 import com.snack.news.domain.News;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
-import com.snack.news.exception.NewsBadRequestException;
 import com.snack.news.service.NewsService;
-import com.snack.news.util.WeekUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +24,6 @@ public class NewsController {
 
 	@GetMapping
 	public ResponseEntity<List<News>> getNewsListRequestBody(@ModelAttribute NewsDto newsDto) {
-		boolean isValidDate = WeekUtil.isBothDatesInOneWeekWithSameMonth(newsDto.getStartDateTime(), newsDto.getEndDateTime());
-		if (!isValidDate) {
-			throw new NewsBadRequestException();
-		}
-
 		List<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
