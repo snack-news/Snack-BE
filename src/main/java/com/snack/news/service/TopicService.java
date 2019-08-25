@@ -52,7 +52,7 @@ public class TopicService {
 				.collect(toList());
 	}
 
-	List<Topic> getTopicList(List<Long> topicIds) {
+	public List<Topic> getTopicList(List<Long> topicIds) {
 		if (Objects.isNull(topicIds)) {
 			return Collections.emptyList();
 		}
