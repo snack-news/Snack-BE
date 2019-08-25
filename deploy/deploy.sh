@@ -4,6 +4,8 @@ BASE_PATH=/home/ec2-user/snack-be
 BUILD_PATH=$(ls ${BASE_PATH}/build/build/libs/*.jar)
 DEPLOY_SCRIPT_PATH=$BASE_PATH/build/deploy
 
+echo "> $HOST_NAME : 배포 시작"
+
 JAR_NAME=$(basename ${BUILD_PATH})
 echo "> build 파일명: $JAR_NAME"
 
