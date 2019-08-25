@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,7 +34,7 @@ public class CategoryServiceTest {
 		Category savedCategory = categoryService.createCategory(categoryDto);
 
 		Category expectedCategory = findCategoryByIdOrElseThrowException(savedCategory.getId());
-		assertThat(expectedCategory.getTitle()).isEqualTo(testCategoryTitle);
+		assertThat(expectedCategory.getTitle(), equalTo(testCategoryTitle));
 	}
 
 	@Test
@@ -50,7 +51,7 @@ public class CategoryServiceTest {
 		categoryService.updateCategory(updateCategoryDto);
 		Category expectedCategory = findCategoryByIdOrElseThrowException(savedCategory.getId());
 
-		assertThat(expectedCategory.getTitle()).isEqualTo(updatedTestCategoryTitle);
+		assertThat(expectedCategory.getTitle(), equalTo(updatedTestCategoryTitle));
 	}
 
 	private Category findCategoryByIdOrElseThrowException(long id) {

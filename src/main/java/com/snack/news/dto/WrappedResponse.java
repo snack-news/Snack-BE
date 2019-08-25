@@ -14,8 +14,8 @@ public class WrappedResponse<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T, R> ResponseEntity<R> ok(T body) {
-		return (ResponseEntity<R>) ResponseEntity.ok(new Wrapper(body));
+	public static <T> ResponseEntity<T> ok(T body) {
+		return (ResponseEntity<T>) ResponseEntity.ok(new Wrapper(body));
 	}
 
 	@AllArgsConstructor
