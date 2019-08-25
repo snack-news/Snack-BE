@@ -6,7 +6,7 @@ import org.junit.Before;
 
 import java.time.LocalDateTime;
 
-public abstract class NewsTestcase {
+public abstract class NewsFixture {
 	protected static final String TEST_TITLE = "Snack-Title";
 	protected static final String TEST_CONTENT = "Snack-Content";
 	protected static final String TEST_LINK = "https://snack-mockNews.com";

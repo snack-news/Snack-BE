@@ -4,7 +4,7 @@ package com.snack.news.controller;
 import com.google.gson.Gson;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import com.snack.news.service.NewsService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NewsControllerTest extends NewsTestcase {
+public class NewsControllerTest extends NewsFixture {
 
 	@InjectMocks
 	private NewsController newsController;

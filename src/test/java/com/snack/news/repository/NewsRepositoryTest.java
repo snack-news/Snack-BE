@@ -5,7 +5,7 @@ import com.snack.news.domain.News;
 import com.snack.news.domain.Tag;
 import com.snack.news.domain.Topic;
 import com.snack.news.dto.NewsDto;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class NewsRepositoryTest extends NewsTestcase {
+public class NewsRepositoryTest extends NewsFixture {
 	@Autowired
 	private NewsRepository newsRepository;
 
