@@ -1,6 +1,4 @@
-package com.snack.news.strategy;
-
-import com.snack.news.domain.Topic;
+package com.snack.news.domain.topic;
 
 import java.util.Comparator;
 

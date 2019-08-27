@@ -1,11 +1,11 @@
 package com.snack.news.controller;
 
 
-import com.google.gson.Gson;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import com.snack.news.service.NewsService;
+import com.snack.news.util.SnackObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NewsControllerTest extends NewsTestcase {
+public class NewsControllerTest extends NewsFixture {
 
 	@InjectMocks
 	private NewsController newsController;
@@ -51,7 +51,7 @@ public class NewsControllerTest extends NewsTestcase {
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
 		when(newsService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
 
@@ -67,7 +67,7 @@ public class NewsControllerTest extends NewsTestcase {
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
 		mockMvc.perform(post(NEWS_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -81,7 +81,7 @@ public class NewsControllerTest extends NewsTestcase {
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
 		mockMvc.perform(post(NEWS_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -95,7 +95,7 @@ public class NewsControllerTest extends NewsTestcase {
 				.content(TEST_CONTENT)
 				.build();
 
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
 		mockMvc.perform(post(NEWS_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))

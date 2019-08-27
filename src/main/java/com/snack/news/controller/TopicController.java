@@ -1,11 +1,11 @@
 package com.snack.news.controller;
 
-import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicSorting;
+import com.snack.news.domain.topic.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.TopicService;
-import com.snack.news.strategy.TopicSorting;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

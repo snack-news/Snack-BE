@@ -1,11 +1,11 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Category;
-import com.snack.news.domain.News;
-import com.snack.news.domain.Tag;
-import com.snack.news.domain.Topic;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.news.News;
+import com.snack.news.domain.tag.Tag;
+import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class NewsRepositoryTest extends NewsTestcase {
+public class NewsRepositoryTest extends NewsFixture {
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -110,7 +110,6 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(expectedResultNewsList);
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
 
@@ -136,10 +135,9 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(expectedResultNewsList);
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
-	
+
 	@Test
 	@Transactional
 	public void 여러_조건에_해당하는_뉴스_리스트를_가져온다() {

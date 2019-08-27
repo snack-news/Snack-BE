@@ -1,6 +1,6 @@
 package com.snack.news.controller;
 
-import com.snack.news.domain.Tag;
+import com.snack.news.domain.tag.Tag;
 import com.snack.news.dto.TagDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.TagService;

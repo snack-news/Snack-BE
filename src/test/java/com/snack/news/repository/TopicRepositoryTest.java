@@ -1,7 +1,7 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

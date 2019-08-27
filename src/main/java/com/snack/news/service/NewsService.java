@@ -1,9 +1,9 @@
 package com.snack.news.service;
 
-import com.snack.news.domain.Category;
-import com.snack.news.domain.News;
-import com.snack.news.domain.Tag;
-import com.snack.news.domain.Topic;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.news.News;
+import com.snack.news.domain.tag.Tag;
+import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.Period;
 import com.snack.news.exception.NewsNotFoundException;

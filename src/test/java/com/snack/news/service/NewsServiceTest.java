@@ -3,7 +3,7 @@ package com.snack.news.service;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.Period;
 import com.snack.news.exception.*;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NewsServiceTest extends NewsTestcase {
+public class NewsServiceTest extends NewsFixture {
 
 	@InjectMocks
 	private NewsService newsService;

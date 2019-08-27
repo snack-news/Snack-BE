@@ -1,7 +1,8 @@
 package com.snack.news.dto;
 
-import com.snack.news.domain.Topic;
-import com.snack.news.domain.TopicType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class TopicDto {
 		this.name = topic.getName();
 	}
 
+	@JsonIgnore
 	public Topic getTopicNewEntity() {
 		return Topic.builder()
 				.type(type)
@@ -38,6 +40,7 @@ public class TopicDto {
 				.build();
 	}
 
+	@JsonIgnore
 	public Topic getTopicUpdateEntity() {
 		return Topic.builder()
 				.id(id)

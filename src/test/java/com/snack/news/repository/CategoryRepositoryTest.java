@@ -1,8 +1,8 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Category;
+import com.snack.news.domain.category.Category;
 import com.snack.news.exception.CategoryNotFoundException;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CategoryRepositoryTest extends NewsTestcase {
+public class CategoryRepositoryTest extends NewsFixture {
 
 	@Autowired
 	private CategoryRepository categoryRepository;

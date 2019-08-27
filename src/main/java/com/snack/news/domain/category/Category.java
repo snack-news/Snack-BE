@@ -1,4 +1,4 @@
-package com.snack.news.domain;
+package com.snack.news.domain.category;
 
 import lombok.Builder;
 import lombok.Getter;

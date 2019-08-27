@@ -1,6 +1,6 @@
 package com.snack.news.service;
 
-import com.snack.news.domain.Category;
+import com.snack.news.domain.category.Category;
 import com.snack.news.dto.CategoryDto;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.repository.CategoryRepository;

@@ -1,6 +1,6 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Tag;
+import com.snack.news.domain.tag.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

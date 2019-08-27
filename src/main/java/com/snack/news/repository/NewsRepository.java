@@ -1,6 +1,6 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.News;
+import com.snack.news.domain.news.News;
 import com.snack.news.dto.NewsDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
