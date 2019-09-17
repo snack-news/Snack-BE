@@ -35,9 +35,6 @@ public class NewsServiceTest extends NewsFixture {
 	@Mock
 	private TagService tagService;
 
-	@Mock
-	private Period period;
-
 	@Test
 	public void 뉴스를_생성할_수_있다() {
 		when(newsRepository.save(any())).thenReturn(any());
@@ -70,7 +67,7 @@ public class NewsServiceTest extends NewsFixture {
 		NewsDto newsDtoWithValidDates = mockNewsDto;
 		when(newsRepository.findByNewsDto(newsDtoWithValidDates)).thenReturn(any());
 
-		newsService.getNewsList(newsDtoWithValidDates);
+		newsService.getNewsListForUserView(newsDtoWithValidDates);
 	}
 
 	@Test(expected = NewsBadRequestException.class)
@@ -80,7 +77,7 @@ public class NewsServiceTest extends NewsFixture {
 				.content(TEST_CONTENT)
 				.build();
 
-		newsService.getNewsList(newsDtoWithNoDates);
+		newsService.getNewsListForUserView(newsDtoWithNoDates);
 	}
 
 	@Test(expected = NewsBadRequestException.class)
@@ -92,7 +89,7 @@ public class NewsServiceTest extends NewsFixture {
 				.endDateTime(INVALID_END_DATE)
 				.build();
 
-		newsService.getNewsList(newsDtoWithInvalidDates);
+		newsService.getNewsListForUserView(newsDtoWithInvalidDates);
 	}
 
 	@Test
@@ -105,5 +102,15 @@ public class NewsServiceTest extends NewsFixture {
 	public void 뉴스를_조회시_ID가_부적절하면_예외가_발생한다() {
 		when(newsRepository.findById(anyLong())).thenThrow(NewsNotFoundException.class);
 		newsService.getNews(TEST_SOME_ID_LONG);
+	}
+
+	@Test
+	public void 어드민_페이지에서_뉴스리스트를_조회할_수_있다() {
+
+	}
+
+	@Test
+	public void 어드민_페이지에서_뉴스리스트를_페이징처리할_수_있다() {
+
 	}
 }

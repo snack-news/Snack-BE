@@ -9,6 +9,11 @@ import com.snack.news.dto.Period;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -35,9 +40,15 @@ public class NewsService {
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public List<News> getNewsList(NewsDto newsDto) {
+	public List<News> getNewsListForUserView(NewsDto newsDto) {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
 		return newsRepository.findByNewsDto(newsDto);
+	}
+
+	public Page<News> getNewsListForAdmin(int page) {
+		Pageable pageable = PageRequest.of(page, 10, new Sort(Sort.Direction.DESC, "id"));
+
+		return newsRepository.findAll(pageable);
 	}
 
 	public News getNews(Long newsId) {

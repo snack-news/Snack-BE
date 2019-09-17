@@ -5,29 +5,29 @@ import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.NewsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/news")
-public class NewsController {
+@RequestMapping("/api/admin")
+public class AdminController {
 	private final NewsService newsService;
 
-	@GetMapping
-	public ResponseEntity<List<News>> getNewsList(@ModelAttribute NewsDto newsDto) {
-		List<News> result = newsService.getNewsListForUserView(newsDto);
+	@PostMapping
+	public ResponseEntity<NewsDto> createNews(@Valid @RequestBody NewsDto newsDto) {
+		return WrappedResponse.ok(newsService.createNews(newsDto));
+	}
+
+	@GetMapping("/news/{page}")
+	public ResponseEntity<Page<News>> getNewsList(@PathVariable int page) {
+		Page<News> result = newsService.getNewsListForAdmin(page);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
 		return WrappedResponse.ok(result);
-	}
-
-	@GetMapping("/{newsId}")
-	public ResponseEntity<News> getNews(@PathVariable Long newsId) {
-		return WrappedResponse.ok(newsService.getNews(newsId));
 	}
 }
