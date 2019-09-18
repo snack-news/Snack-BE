@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 @AllArgsConstructor
 @Service
@@ -46,8 +48,7 @@ public class NewsService {
 	}
 
 	public Page<News> getNewsListForAdmin(int page) {
-		Pageable pageable = PageRequest.of(page, 10, new Sort(Sort.Direction.DESC, "id"));
-
+		Pageable pageable = PageRequest.of(page, 10);
 		return newsRepository.findAll(pageable);
 	}
 

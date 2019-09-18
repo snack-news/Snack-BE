@@ -10,6 +10,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -177,5 +180,27 @@ public class NewsRepositoryTest extends NewsFixture {
 				.collect(toList());
 
 		assertThat(actualResultNewsIds, containsInAnyOrder(expectedResultNewsIds));
+	}
+
+	@Test
+	public void 뉴스리스트를_페이징_처리할_수_있다() {
+
+		final int pageSize = 10;
+
+		Pageable firstPageable = PageRequest.of(0, pageSize);
+		Page<News> firstNewsPage = newsRepository.findAll(firstPageable);
+
+		final int totalPage = firstNewsPage.getTotalPages();
+		final long totalElements = firstNewsPage.getTotalElements();
+
+		Pageable middlePageable = PageRequest.of(totalPage - 2, pageSize);
+		Page<News> middleNewsPage = newsRepository.findAll(middlePageable);
+
+		Pageable lastPageable = PageRequest.of(totalPage - 1, pageSize);
+		Page<News> lastNewsPage = newsRepository.findAll(lastPageable);
+
+		assertThat(firstNewsPage.get().count(), equalTo((long) pageSize));
+		assertThat(middleNewsPage.get().count(), equalTo((long) pageSize));
+		assertThat(lastNewsPage.get().count(), equalTo((totalElements % pageSize)));
 	}
 }

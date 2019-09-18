@@ -1,7 +1,7 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.news.News;
 import com.snack.news.dto.NewsDto;
-import com.snack.news.dto.Period;
 import com.snack.news.exception.*;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
@@ -10,11 +10,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -105,12 +108,17 @@ public class NewsServiceTest extends NewsFixture {
 	}
 
 	@Test
-	public void 어드민_페이지에서_뉴스리스트를_조회할_수_있다() {
-
-	}
-
-	@Test
 	public void 어드민_페이지에서_뉴스리스트를_페이징처리할_수_있다() {
 
+		List<News> newsList = Arrays.asList(
+				News.builder().build(),
+				News.builder().build(),
+				News.builder().build(),
+				News.builder().build(),
+				News.builder().build());
+
+		when(newsRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl(newsList));
+
+		newsService.getNewsListForAdmin(anyInt());
 	}
 }
