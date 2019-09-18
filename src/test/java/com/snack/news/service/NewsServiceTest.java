@@ -1,7 +1,6 @@
 package com.snack.news.service;
 
 import com.snack.news.dto.NewsDto;
-import com.snack.news.dto.Period;
 import com.snack.news.exception.*;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
@@ -34,9 +33,6 @@ public class NewsServiceTest extends NewsFixture {
 
 	@Mock
 	private TagService tagService;
-
-	@Mock
-	private Period period;
 
 	@Test
 	public void 뉴스를_생성할_수_있다() {

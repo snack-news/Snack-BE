@@ -23,7 +23,7 @@ public class Period {
 			throw new NewsBadRequestException();
 		}
 
-		if (!start.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+		if (!start.getDayOfWeek().equals(DayOfWeek.MONDAY) && !end.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
 			throw new NewsBadRequestException();
 		}
 
