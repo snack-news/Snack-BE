@@ -9,17 +9,13 @@ import com.snack.news.dto.Period;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 @AllArgsConstructor
 @Service
@@ -48,7 +44,7 @@ public class NewsService {
 	}
 
 	public Page<News> getNewsListForAdmin(int page) {
-		Pageable pageable = PageRequest.of(page, 10);
+		Pageable pageable = PageRequest.of(page - 1, 10);
 		return newsRepository.findAll(pageable);
 	}
 

@@ -119,6 +119,6 @@ public class NewsServiceTest extends NewsFixture {
 
 		when(newsRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl(newsList));
 
-		newsService.getNewsListForAdmin(anyInt());
+		newsService.getNewsListForAdmin(1);
 	}
 }
