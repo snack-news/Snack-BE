@@ -14,15 +14,19 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("admin/api")
 public class AdminController {
 
 	private final NewsService newsService;
 
-	@GetMapping({"/news", "/news/{page}"})
-	public ResponseEntity<Page<News>> getNewsList(@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-												  @PathVariable Optional<Integer> page) {
-		Page<News> result = newsService.getNewsListForAdmin(page.orElse(1));
+	@GetMapping("/news")
+	public ResponseEntity<Page<News>> getNewsList() {
+		return getNewsList(1);
+	}
+
+	@GetMapping("/news/{page}")
+	public ResponseEntity<Page<News>> getNewsList(@PathVariable int page) {
+		Page<News> result = newsService.getNewsListForAdmin(page);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
