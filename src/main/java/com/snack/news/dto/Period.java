@@ -23,13 +23,21 @@ public class Period {
 			throw new NewsBadRequestException();
 		}
 
-		if (!start.getDayOfWeek().equals(DayOfWeek.MONDAY) && !end.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+		if (!(isMonday(start) || isSunday(end))) {
 			throw new NewsBadRequestException();
 		}
 
 		if (!isBothDatesInOneWeek(start, end) || !isBothDatesInSameMonth(start, end)) {
 			throw new NewsBadRequestException();
 		}
+	}
+
+	private boolean isMonday(LocalDateTime startDay) {
+		return startDay.getDayOfWeek().equals(DayOfWeek.MONDAY);
+	}
+
+	private boolean isSunday(LocalDateTime endDay) {
+		return endDay.getDayOfWeek().equals(DayOfWeek.SUNDAY);
 	}
 
 	private static boolean isBothDatesInOneWeek(LocalDateTime start, LocalDateTime end) {
