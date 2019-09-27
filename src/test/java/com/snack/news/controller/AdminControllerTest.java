@@ -27,11 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminControllerTest extends NewsFixture {
+	private final static String ADMIN_API_URL = "/api/admin/news";
 
 	@InjectMocks
 	private AdminController adminController;
-
-	private final static String ADMIN_API_URL = "/api/admin/news";
 
 	@Mock
 	private NewsService newsService;
