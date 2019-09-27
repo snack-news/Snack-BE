@@ -15,6 +15,8 @@ public class AppWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
-        corsRegistry.addMapping("/**");
+        corsRegistry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("*");
     }
 }
