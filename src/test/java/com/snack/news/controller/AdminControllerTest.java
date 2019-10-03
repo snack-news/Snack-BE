@@ -3,7 +3,7 @@ package com.snack.news.controller;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.fixture.NewsFixture;
-import com.snack.news.service.NewsService;
+import com.snack.news.service.AdminService;
 import com.snack.news.util.SnackObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminControllerTest extends NewsFixture {
-	private final static String ADMIN_API_URL = "/api/admin/news";
+	private final static String ADMIN_API_URL = "/admin/api/news";
 
 	@InjectMocks
 	private AdminController adminController;
 
 	@Mock
-	private NewsService newsService;
+	private AdminService adminService;
 
 	private MockMvc mockMvc;
 
@@ -52,7 +52,7 @@ public class AdminControllerTest extends NewsFixture {
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		when(newsService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
+		when(adminService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
 
 		mockMvc.perform(post(ADMIN_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -104,7 +104,7 @@ public class AdminControllerTest extends NewsFixture {
 	@Test
 	public void 어드민_페이지에서_뉴스리스트를_정상적으로_가져온다() throws Exception {
 		Page<News> dummyNewsPage = new PageImpl<>(Collections.singletonList(News.builder().build()));
-		when(newsService.getNewsListForAdmin(1)).thenReturn(dummyNewsPage);
+		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
 		mockMvc.perform(get(ADMIN_API_URL + "/1"))
 				.andExpect(status().isOk());
@@ -113,7 +113,7 @@ public class AdminControllerTest extends NewsFixture {
 	@Test
 	public void 어드민_페이지에서_페이지를_지정하지_않는다면_1페이지를_가져온다() throws Exception {
 		Page<News> dummyNewsPage = new PageImpl<>(Collections.singletonList(News.builder().build()));
-		when(newsService.getNewsListForAdmin(1)).thenReturn(dummyNewsPage);
+		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
 		mockMvc.perform(get(ADMIN_API_URL))
 				.andExpect(status().isOk());

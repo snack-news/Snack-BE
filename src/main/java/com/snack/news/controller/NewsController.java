@@ -18,7 +18,7 @@ public class NewsController {
 
 	@GetMapping
 	public ResponseEntity<List<News>> getNewsList(@ModelAttribute NewsDto newsDto) {
-		List<News> result = newsService.getNewsListForUserView(newsDto);
+		List<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}

@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

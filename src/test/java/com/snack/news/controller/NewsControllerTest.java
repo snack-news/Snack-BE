@@ -61,7 +61,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Test
 	public void 뉴스_리스트_조회_요청시_값이_있다면_OK_상태코드로_응답한다() throws Exception {
-		when(newsService.getNewsListForUserView(any(NewsDto.class))).thenReturn(Collections.singletonList(mockNews));
+		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.singletonList(mockNews));
 
 		mockMvc.perform(get(NEWS_API_URL))
 				.andExpect(status().isOk());
@@ -69,7 +69,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Test
 	public void 뉴스_리스트_조회_요청시_값이_없디면_NOCONTENT_상태코드로_응답한다() throws Exception {
-		when(newsService.getNewsListForUserView(any(NewsDto.class))).thenReturn(Collections.EMPTY_LIST);
+		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.EMPTY_LIST);
 
 		mockMvc.perform(get(NEWS_API_URL))
 				.andExpect(status().isNoContent());
