@@ -12,9 +12,9 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
 ```
 
 ## API spec
-### News API
+### Admin API
 - News 생성
-  - > `/api/news` (POST)
+  - > `/admin/api/news` (POST)
     ``` json
     {
         "title" : "NEWS TITLE", // 필수
@@ -25,6 +25,10 @@ SPRING_PROFILES_ACTIVE=dev ./gradlew clean bootRun  # DEV
         "link" : "https://snack-link.com"
     }
     ```
+- News 리스트 조회
+  - > `/admin/api/news/{page}` (GET)
+  - response 형식은 다음 [이슈](https://github.com/snack-news/Snack-BE/issues/88)를 참조 
+### News API
 - 단일 News 조회
   - > `/api/news/{id}` (GET)
 - 조건에 맞는 News 리스트 조회
