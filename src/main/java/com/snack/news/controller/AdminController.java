@@ -4,14 +4,12 @@ import com.snack.news.domain.news.News;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.AdminService;
-import com.snack.news.service.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
