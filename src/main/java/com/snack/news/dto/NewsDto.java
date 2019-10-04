@@ -36,6 +36,8 @@ public class NewsDto {
 	private LocalDateTime startDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime endDateTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime publishAt;
 
 	@JsonIgnore
 	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {
@@ -46,6 +48,7 @@ public class NewsDto {
 				.topics(topics)
 				.tags(tags)
 				.link(link)
+				.publishAt(publishAt)
 				.build();
 	}
 }
