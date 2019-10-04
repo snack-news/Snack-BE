@@ -1,8 +1,10 @@
 package com.snack.news.service;
 
 import com.snack.news.dto.NewsDto;
+
 import com.snack.news.exception.NewsBadRequestException;
 import com.snack.news.exception.NewsNotFoundException;
+
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
 import org.junit.Test;
@@ -25,7 +27,7 @@ public class NewsServiceTest extends NewsFixture {
 
 	@Mock
 	private NewsRepository newsRepository;
-
+  
 	@Test
 	public void 뉴스_리스트를_조회할_수_있다() {
 		NewsDto newsDtoWithValidDates = mockNewsDto;
