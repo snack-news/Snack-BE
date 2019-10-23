@@ -20,9 +20,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -116,6 +116,12 @@ public class AdminControllerTest extends NewsFixture {
 		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
 		mockMvc.perform(get(ADMIN_API_URL))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void 뉴스_삭제_요청시_정상적으로_동작한다() throws Exception {
+		mockMvc.perform(delete(ADMIN_API_URL + "/" + anyLong()))
 				.andExpect(status().isOk());
 	}
 }

@@ -5,6 +5,7 @@ import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.OptionalInt;
 
 @AllArgsConstructor
 @Service
@@ -39,5 +41,14 @@ public class AdminService {
 	public Page<News> getNewsList(int page) {
 		Pageable pageable = PageRequest.of(page - 1, 10);
 		return newsRepository.findAll(pageable);
+	}
+
+	@Transactional
+	public void deleteNews(long newsId) {
+		try {
+			newsRepository.deleteById(newsId);
+		} catch (IllegalArgumentException e) {
+			throw new NewsNotFoundException();
+		}
 	}
 }

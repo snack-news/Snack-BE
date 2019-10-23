@@ -2,6 +2,7 @@ package com.snack.news.service;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.exception.CategoryNotFoundException;
+import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.TagNotFoundException;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.NewsFixture;
@@ -18,7 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminServiceTest extends NewsFixture {
@@ -78,5 +80,17 @@ public class AdminServiceTest extends NewsFixture {
 		when(newsRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl(newsList));
 
 		adminService.getNewsList(1);
+	}
+
+	@Test
+	public void 뉴스를_삭제할_수_있다() {
+		adminService.deleteNews(anyLong());
+		verify(newsRepository).deleteById(anyLong());
+	}
+
+	@Test(expected = NewsNotFoundException.class)
+	public void 뉴스를_삭제_요청시_뉴스ID가_존재히지_않는다면_예외가_발생한다() {
+		doThrow(new IllegalArgumentException()).when(newsRepository).deleteById(anyLong());
+		adminService.deleteNews(anyLong());
 	}
 }
