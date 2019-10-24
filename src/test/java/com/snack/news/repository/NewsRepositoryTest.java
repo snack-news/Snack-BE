@@ -203,4 +203,12 @@ public class NewsRepositoryTest extends NewsFixture {
 		assertThat(middleNewsPage.get().count(), equalTo((long) pageSize));
 		assertThat(lastNewsPage.get().count(), equalTo((totalElements % pageSize)));
 	}
+
+	@Test
+	@Transactional
+	public void 뉴스를_삭제할_수_있다() {
+		long originSize = newsRepository.count();
+		newsRepository.deleteById(1L);
+		assertThat(newsRepository.count(), equalTo(originSize - 1));
+	}
 }
