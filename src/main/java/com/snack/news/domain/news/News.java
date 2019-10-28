@@ -4,10 +4,8 @@ import com.snack.news.domain.base.BaseTimeEntity;
 import com.snack.news.domain.category.Category;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.snack.news.dto.NewsDto;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +18,7 @@ import java.util.List;
 public class News extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter
 	private Long id;
 
 	@Column(nullable = false)

@@ -5,6 +5,7 @@ import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,18 +27,37 @@ public class AdminService {
 
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) {
-		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
-		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
+		News news = generateNews(newsDto);
+		newsRepository.save(generateNews(newsDto));
 
-		News news = newsDto.toEntity(category, topics, tags);
+		return NewsDto.builder().id(news.getId()).build();
+	}
+
+	public Page<News> getNewsList(long page) {
+		Pageable pageable = PageRequest.of((int) page - 1, 10);
+		return newsRepository.findAll(pageable);
+	}
+
+	public NewsDto updateNews(long newsId, NewsDto newsDto) {
+		if (!newsRepository.existsById(newsId)) {
+			throw new NewsNotFoundException();
+		}
+
+		News news = generateNews(newsDto);
+		news.setId(newsId);
+
 		newsRepository.save(news);
 
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public Page<News> getNewsList(int page) {
-		Pageable pageable = PageRequest.of(page - 1, 10);
-		return newsRepository.findAll(pageable);
+	private News generateNews(NewsDto newsDto) {
+		Category category = categoryService.getCategory(newsDto.getCategoryId());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
+
+		return newsDto.toEntity(category, topics, tags);
 	}
+
+
 }
