@@ -28,7 +28,7 @@ public class AdminService {
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) {
 		News news = generateNews(newsDto);
-		newsRepository.save(generateNews(newsDto));
+		newsRepository.save(news);
 
 		return NewsDto.builder().id(news.getId()).build();
 	}
@@ -58,6 +58,4 @@ public class AdminService {
 
 		return newsDto.toEntity(category, topics, tags);
 	}
-
-
 }
