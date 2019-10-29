@@ -21,8 +21,7 @@ import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,13 +43,13 @@ public class AdminControllerTest extends NewsFixture {
 
 	@Test
 	public void 뉴스_생성_요청이_정상적으로_이루어진다() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		NewsDto correctRequestNewsDtoForCreate = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
 
 		when(adminService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
 
@@ -118,4 +117,21 @@ public class AdminControllerTest extends NewsFixture {
 		mockMvc.perform(get(ADMIN_API_URL))
 				.andExpect(status().isOk());
 	}
+
+	@Test
+	public void 뉴스_수정_요청이_정상적으로_이루어진다() throws Exception {
+		NewsDto correctRequestNewsDtoForUpdate = NewsDto.builder()
+				.title(TEST_TITLE)
+				.content(TEST_CONTENT)
+				.categoryId(TEST_SOME_ID_LONG)
+				.build();
+
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForUpdate);
+
+		final long anyLong = 1;
+		mockMvc.perform(put(ADMIN_API_URL + "/" + anyLong)
+				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
+				.andExpect(status().isOk());
+	}
+
 }

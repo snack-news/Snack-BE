@@ -40,7 +40,6 @@ public class AdminServiceTest extends NewsFixture {
 
 	@Test
 	public void 뉴스를_생성할_수_있다() {
-		when(newsRepository.save(any())).thenReturn(any());
 		adminService.createNews(mockNewsDto);
 	}
 
@@ -63,6 +62,13 @@ public class AdminServiceTest extends NewsFixture {
 		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
 
 		adminService.createNews(mockNewsDto);
+	}
+
+	@Test
+	public void 뉴스를_수정할_수_있다() {
+		final long anyLong = 1;
+		when(newsRepository.existsById(anyLong)).thenReturn(true);
+		adminService.updateNews(anyLong, mockNewsDto);
 	}
 
 	@Test
