@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHan
 
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -53,7 +54,7 @@ public class NewsControllerTest extends NewsFixture {
 		ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
 			protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
 				Method method = new ExceptionHandlerMethodResolver(ControllerExceptionHandler.class).resolveMethod(exception);
-				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), method);
+				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), Objects.requireNonNull(method));
 			}
 		};
 		exceptionResolver.afterPropertiesSet();
@@ -72,7 +73,7 @@ public class NewsControllerTest extends NewsFixture {
 	public void 뉴스_조회_요청이_ID가_부적절하다면_NOTFOUND_상태코드로_응답한다() throws Exception {
 		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
-		mockMvc.perform(get(NEWS_API_URL + "/" + TEST_SOME_ID_LONG)
+		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
@@ -89,12 +90,6 @@ public class NewsControllerTest extends NewsFixture {
 	public void 뉴스_리스트_조회_요청시_값이_없디면_NOCONTENT_상태코드로_응답한다() throws Exception {
 		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.EMPTY_LIST);
 
-		mockMvc.perform(get(NEWS_API_URL))
-				.andExpect(status().isNoContent());
-	}
-
-	@Test
-	public void 뉴스_리스트_조회_요청시_필수_파라매터가_없다면_BADREQUEST_상태코드로_응답한다() throws Exception {
 		mockMvc.perform(get(NEWS_API_URL))
 				.andExpect(status().isNoContent());
 	}

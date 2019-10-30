@@ -55,6 +55,6 @@ public class ControllerExceptionHandler {
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NotFoundException e) {
-		return new ResponseEntity<>(new ErrorResponse(e.getErrorCode(), e.getMessage()), HttpStatus.NOT_FOUND);
+		return ResponseEntity.notFound().build();
 	}
 }
