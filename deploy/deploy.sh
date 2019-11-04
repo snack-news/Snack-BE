@@ -14,6 +14,17 @@ echo "> build 파일 복사"
 DEPLOY_PATH=${BASE_PATH}/jar/
 cp ${BUILD_PATH} ${DEPLOY_PATH}
 
+# NGINX CHECK AND RESTART
+NGINX_CHECK=`ps -ef | grep -v "grep" | grep "nginx" | wc -l`
+if [[ $NGINX_CHECK == "0"  ]];
+then
+  echo "> Nginx 확인할 수 없음. 재실행 시작"
+  sudo service nginx start
+else
+  echo "> Nginx 실행 확인"
+fi
+  echo "> 완료"
+
 # CHECK CURRENT PROFILE
 CURRENT_PROFILE=$(curl -s http://localhost/meta/profile)
 echo -n "> 현재 구동중인 Set 확인 : "
