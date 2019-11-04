@@ -9,28 +9,41 @@ echo "> $HOST_NAME : 배포 시작"
 JAR_NAME=$(basename ${BUILD_PATH})
 echo "> build 파일명: $JAR_NAME"
 
-
 # COPY APPLICATION JAR
 echo "> build 파일 복사"
 DEPLOY_PATH=${BASE_PATH}/jar/
 cp ${BUILD_PATH} ${DEPLOY_PATH}
 
+# NGINX CHECK AND RESTART
+NGINX_CHECK=`ps -ef | grep -v "grep" | grep "nginx" | wc -l`
+if [[ $NGINX_CHECK == "0"  ]];
+then
+  echo "> Nginx 확인할 수 없음. 재실행 시작"
+  sudo service nginx start
+else
+  echo "> Nginx 실행 확인"
+fi
+  echo "> 완료"
+
 # CHECK CURRENT PROFILE
 CURRENT_PROFILE=$(curl -s http://localhost/meta/profile)
-echo "> 현재 구동중인 Set 확인 : $CURRENT_PROFILE"
+echo -n "> 현재 구동중인 Set 확인 : "
 
 # IDLE PROFILE
 if [[ $CURRENT_PROFILE == set1 ]]
 then
+  echo "$CURRENT_PROFILE"
   IDLE_PROFILE=set2
   IDLE_PORT=8082
 elif [[ $CURRENT_PROFILE == set2 ]]
 then
+  echo "$CURRENT_PROFILE"
   IDLE_PROFILE=set1
   IDLE_PORT=8081
 else
-  echo "> 일치하는 Profile이 없습니다. Profile: $CURRENT_PROFILE"
-  echo "> set1을 할당합니다. IDLE_PROFILE: set1"
+  echo "> 일치하는 Profile이 없습니다."
+  echo "> set1을 할당합니다."
+  echo "" | sudo tee /etc/nginx/conf.d/service-url.inc
   IDLE_PROFILE=set1
   IDLE_PORT=8081
 fi
@@ -108,6 +121,5 @@ then
       sleep 5
     fi
 fi
-
 
 echo "배포 완료 🚀"
