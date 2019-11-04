@@ -1,6 +1,11 @@
 package com.snack.news.dto;
 
-import com.snack.news.domain.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.news.News;
+import com.snack.news.domain.tag.Tag;
+import com.snack.news.domain.topic.Topic;
+import com.snack.news.domain.topic.TopicType;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,7 +36,10 @@ public class NewsDto {
 	private LocalDateTime startDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime endDateTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime publishAt;
 
+	@JsonIgnore
 	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {
 		return News.builder()
 				.title(title)
@@ -40,6 +48,7 @@ public class NewsDto {
 				.topics(topics)
 				.tags(tags)
 				.link(link)
+				.publishAt(publishAt)
 				.build();
 	}
 }

@@ -1,11 +1,11 @@
 package com.snack.news.controller;
 
 
-import com.google.gson.Gson;
-import com.snack.news.domain.TopicType;
+import com.snack.news.domain.topic.TopicType;
 import com.snack.news.dto.TopicDto;
-import com.snack.news.fixture.TopicTestcase;
+import com.snack.news.fixture.TopicFixture;
 import com.snack.news.service.TopicService;
+import com.snack.news.util.SnackObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,17 +25,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TopicControllerTest extends TopicTestcase {
+public class TopicControllerTest extends TopicFixture {
+	private final static String TOPIC_API_URL = "/api/topic";
 
 	@InjectMocks
 	private TopicController topicController;
-
-	private final static String TOPIC_API_URL = "/api/topic";
-
 	@Mock
 	private TopicService topicService;
 
 	private MockMvc mockMvc;
+
 
 	@Before
 	public void setup() {
@@ -44,10 +43,10 @@ public class TopicControllerTest extends TopicTestcase {
 
 	@Test
 	public void 토픽_생성_요청이_정상적으로_이루어진다() throws Exception {
-		TopicDto topicDtoWithNameAndType = TopicTestcase.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
-		String requestJsonBody = new Gson().toJson(topicDtoWithNameAndType);
+		TopicDto topicDtoWithNameAndType = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(topicDtoWithNameAndType);
 
-		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicTestcase.DUMMY);
+		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicFixture.DUMMY);
 
 		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -60,7 +59,7 @@ public class TopicControllerTest extends TopicTestcase {
 		final TopicType testTopicType = TopicType.NONE;
 
 		TopicDto requestTopicDto = TopicDto.builder().name(randomTopicName).type(testTopicType).build();
-		String requestJsonBody = new Gson().toJson(requestTopicDto).replace(testTopicType.name(), "SOME_WRONG_TYPE");
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(requestTopicDto).replace(testTopicType.name(), "SOME_WRONG_TYPE");
 
 		mockMvc.perform(post(TOPIC_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))

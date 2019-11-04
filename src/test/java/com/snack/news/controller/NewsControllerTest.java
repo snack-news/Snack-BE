@@ -1,10 +1,9 @@
 package com.snack.news.controller;
 
 
-import com.google.gson.Gson;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import com.snack.news.service.NewsService;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,11 +21,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NewsControllerTest extends NewsTestcase {
+public class NewsControllerTest extends NewsFixture {
 
 	@InjectMocks
 	private NewsController newsController;
@@ -43,64 +41,7 @@ public class NewsControllerTest extends NewsTestcase {
 		mockMvc = MockMvcBuilders.standaloneSetup(newsController).build();
 	}
 
-	@Test
-	public void 뉴스_생성_요청이_정상적으로_이루어진다() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
-				.title(TEST_TITLE)
-				.content(TEST_CONTENT)
-				.categoryId(TEST_SOME_ID_LONG)
-				.build();
 
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
-
-		when(newsService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
-
-		mockMvc.perform(post(NEWS_API_URL)
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	public void 뉴스_생성_요청시_제목을_입력하지_않으면_BADREQUEST_상태코드로_응답한다() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
-				.content(TEST_CONTENT)
-				.categoryId(TEST_SOME_ID_LONG)
-				.build();
-
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
-
-		mockMvc.perform(post(NEWS_API_URL)
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	public void 뉴스_생성_요청시_내용을_입력하지_않으면_BADREQUEST_상태코드로_응답한다() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
-				.title(TEST_TITLE)
-				.categoryId(TEST_SOME_ID_LONG)
-				.build();
-
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
-
-		mockMvc.perform(post(NEWS_API_URL)
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	public void 뉴스_생성_요청시_카테고리ID를_입력하지_않으면_BADREQUEST_상태코드로_응답한다() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
-				.title(TEST_TITLE)
-				.content(TEST_CONTENT)
-				.build();
-
-		String requestJsonBody = new Gson().toJson(incorrectRequestNewsDtoForCreateNews);
-
-		mockMvc.perform(post(NEWS_API_URL)
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
-	}
 
 	@Test
 	public void 뉴스_조회_요청이_정상적으로_이루어진다() throws Exception {

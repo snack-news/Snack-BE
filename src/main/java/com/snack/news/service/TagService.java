@@ -1,6 +1,6 @@
 package com.snack.news.service;
 
-import com.snack.news.domain.Tag;
+import com.snack.news.domain.tag.Tag;
 import com.snack.news.dto.TagDto;
 import com.snack.news.exception.TagNotFoundException;
 import com.snack.news.repository.TagRepository;

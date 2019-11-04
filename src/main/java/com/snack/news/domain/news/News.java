@@ -1,11 +1,16 @@
-package com.snack.news.domain;
+package com.snack.news.domain.news;
 
+import com.snack.news.domain.base.BaseTimeEntity;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.tag.Tag;
+import com.snack.news.domain.topic.Topic;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -42,14 +47,17 @@ public class News extends BaseTimeEntity {
 			inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags;
 
+	@Column
+	private LocalDateTime publishAt;
 
 	@Builder
-	public News(String title, String link, String content, Category category, List<Topic> topics, List<Tag> tags) {
+	public News(String title, String link, String content, Category category, List<Topic> topics, List<Tag> tags , LocalDateTime publishAt) {
 		this.title = title;
 		this.link = link;
 		this.category = category;
 		this.content = content;
 		this.topics = topics;
 		this.tags = tags;
+		this.publishAt = publishAt;
 	}
 }

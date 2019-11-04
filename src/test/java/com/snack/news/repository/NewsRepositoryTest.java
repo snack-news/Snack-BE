@@ -1,15 +1,18 @@
 package com.snack.news.repository;
 
-import com.snack.news.domain.Category;
-import com.snack.news.domain.News;
-import com.snack.news.domain.Tag;
-import com.snack.news.domain.Topic;
+import com.snack.news.domain.category.Category;
+import com.snack.news.domain.news.News;
+import com.snack.news.domain.tag.Tag;
+import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
-import com.snack.news.fixture.NewsTestcase;
+import com.snack.news.fixture.NewsFixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +28,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class NewsRepositoryTest extends NewsTestcase {
+public class NewsRepositoryTest extends NewsFixture {
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -110,7 +113,6 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(expectedResultNewsList);
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
 
@@ -136,10 +138,9 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(expectedResultNewsList);
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
-	
+
 	@Test
 	@Transactional
 	public void 여러_조건에_해당하는_뉴스_리스트를_가져온다() {
@@ -179,5 +180,27 @@ public class NewsRepositoryTest extends NewsTestcase {
 				.collect(toList());
 
 		assertThat(actualResultNewsIds, containsInAnyOrder(expectedResultNewsIds));
+	}
+
+	@Test
+	public void 뉴스리스트를_페이징_처리할_수_있다() {
+
+		final int pageSize = 10;
+
+		Pageable firstPageable = PageRequest.of(0, pageSize);
+		Page<News> firstNewsPage = newsRepository.findAll(firstPageable);
+
+		final int totalPage = firstNewsPage.getTotalPages();
+		final long totalElements = firstNewsPage.getTotalElements();
+
+		Pageable middlePageable = PageRequest.of(totalPage - 2, pageSize);
+		Page<News> middleNewsPage = newsRepository.findAll(middlePageable);
+
+		Pageable lastPageable = PageRequest.of(totalPage - 1, pageSize);
+		Page<News> lastNewsPage = newsRepository.findAll(lastPageable);
+
+		assertThat(firstNewsPage.get().count(), equalTo((long) pageSize));
+		assertThat(middleNewsPage.get().count(), equalTo((long) pageSize));
+		assertThat(lastNewsPage.get().count(), equalTo((totalElements % pageSize)));
 	}
 }
