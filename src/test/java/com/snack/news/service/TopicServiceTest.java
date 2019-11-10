@@ -43,8 +43,6 @@ public class TopicServiceTest extends TopicFixture {
 		when(topicRepository.findAll()).thenReturn(unsortedTopicList);
 
 		List<Topic> resultTopicList = topicService.getTopicList(TopicSorting.NAME);
-
-		assertThat(resultTopicList.size(), is(not(0)));
 		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
 	}
 
@@ -59,10 +57,8 @@ public class TopicServiceTest extends TopicFixture {
 
 		when(topicRepository.findAll()).thenReturn(unsortedTopicList);
 
-		List<Topic> resultTopicList = topicService.getTopicList(TopicSorting.ID);
-
-		assertThat(resultTopicList.size(), is(not(0)));
-		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
+		List<Topic> resultTopicListSortedByID = topicService.getTopicList(TopicSorting.ID);
+		assertThat(resultTopicListSortedByID, contains(testTopic01, testTopic02, testTopic03));
 	}
 
 	@Test
