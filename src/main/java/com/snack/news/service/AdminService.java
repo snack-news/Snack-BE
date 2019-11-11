@@ -11,15 +11,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.OptionalInt;
 
 @AllArgsConstructor
 @Service
 public class AdminService {
+	private final static Sort SORT_BY_ID = new Sort(Sort.Direction.DESC, "id");
 
 	private final NewsRepository newsRepository;
 	private final CategoryService categoryService;
@@ -39,7 +40,7 @@ public class AdminService {
 	}
 
 	public Page<News> getNewsList(int page) {
-		Pageable pageable = PageRequest.of(page - 1, 10);
+		Pageable pageable = PageRequest.of(page - 1, 10, SORT_BY_ID);
 		return newsRepository.findAll(pageable);
 	}
 
