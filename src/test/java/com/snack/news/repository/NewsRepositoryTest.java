@@ -13,17 +13,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
@@ -183,8 +187,8 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@Transactional
 	public void 뉴스리스트를_페이징_처리할_수_있다() {
-
 		final int pageSize = 10;
 
 		Pageable firstPageable = PageRequest.of(0, pageSize);
@@ -202,6 +206,25 @@ public class NewsRepositoryTest extends NewsFixture {
 		assertThat(firstNewsPage.get().count(), equalTo((long) pageSize));
 		assertThat(middleNewsPage.get().count(), equalTo((long) pageSize));
 		assertThat(lastNewsPage.get().count(), equalTo((totalElements % pageSize)));
+	}
+
+	@Test
+	@Transactional
+	public void 뉴스리스트를_생성일_역순으로_정렬할_수_있다() {
+		final int pageSize = 5;
+		List<News> expectedListFistNewsPage = newsRepository.findAll()
+				.stream().sorted(Comparator.comparing(News::getId).reversed()).limit(pageSize).collect(toList());
+
+		long lastNewsId1 = expectedListFistNewsPage.get(0).getId();
+		long lastNewsId2 = expectedListFistNewsPage.get(1).getId();
+		long lastNewsId3 = expectedListFistNewsPage.get(2).getId();
+		long lastNewsId4 = expectedListFistNewsPage.get(3).getId();
+		long lastNewsId5 = expectedListFistNewsPage.get(4).getId();
+		
+		Pageable pageableDesc = PageRequest.of(0, pageSize, new Sort(Sort.Direction.DESC, "id"));
+
+		assertThat(expectedListFistNewsPage.stream().map(News::getId).collect(toList()),
+				contains(lastNewsId1, lastNewsId2, lastNewsId3, lastNewsId4, lastNewsId5));
 	}
 
 	@Test

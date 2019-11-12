@@ -77,7 +77,7 @@ public class AdminServiceTest extends NewsFixture {
 				News.builder().build(),
 				News.builder().build());
 
-		when(newsRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl(newsList));
+		when(newsRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(newsList));
 
 		adminService.getNewsList(1);
 	}
