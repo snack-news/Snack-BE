@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
 import static java.util.stream.Collectors.toList;
@@ -220,10 +219,11 @@ public class NewsRepositoryTest extends NewsFixture {
 		long lastNewsId3 = expectedListFistNewsPage.get(2).getId();
 		long lastNewsId4 = expectedListFistNewsPage.get(3).getId();
 		long lastNewsId5 = expectedListFistNewsPage.get(4).getId();
-		
-		Pageable pageableDesc = PageRequest.of(0, pageSize, new Sort(Sort.Direction.DESC, "id"));
 
-		assertThat(expectedListFistNewsPage.stream().map(News::getId).collect(toList()),
+		Pageable pageableDesc = PageRequest.of(0, pageSize, new Sort(Sort.Direction.DESC, "id"));
+		List<News> result = newsRepository.findAll(pageableDesc).getContent();
+
+		assertThat(result.stream().map(News::getId).collect(toList()),
 				contains(lastNewsId1, lastNewsId2, lastNewsId3, lastNewsId4, lastNewsId5));
 	}
 
