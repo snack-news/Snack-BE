@@ -36,4 +36,10 @@ public class AdminController {
 		}
 		return WrappedResponse.ok(result);
 	}
+
+	@DeleteMapping("/news/{id}")
+	public ResponseEntity<NewsDto> deleteNews(@PathVariable long id) {
+		adminService.deleteNews(id);
+		return ResponseEntity.ok().build();
+	}
 }
