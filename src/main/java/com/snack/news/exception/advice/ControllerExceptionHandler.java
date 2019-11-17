@@ -2,9 +2,7 @@ package com.snack.news.exception.advice;
 
 import com.snack.news.dto.ErrorResponse;
 import com.snack.news.exception.TopicBadRequestException;
-import com.snack.news.exception.base.BadRequestException;
 import com.snack.news.exception.base.NotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,10 +18,10 @@ import java.util.Objects;
 public class ControllerExceptionHandler {
 	/**
 	 * @param e DTO에서 설정된 validation 예외
-	 * @return 누락된 필수 인자을 포함한 ResponseEntity 객체
+	 * @return 누락된 필수 인자를 포함한 ResponseEntity 객체
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+	public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 		List<String> badParamNames = new ArrayList<>();
 		e.getBindingResult().getAllErrors()
 				.stream()
@@ -33,9 +31,7 @@ public class ControllerExceptionHandler {
 		StringBuilder result = new StringBuilder();
 		badParamNames.forEach(v -> result.append("[").append(v).append("] "));
 
-		ErrorResponse response = new ErrorResponse(BadRequestException.ERROR_CODE, String.format("%s값이 필요합니다.", result));
-
-		return ResponseEntity.badRequest().body(response);
+		return ResponseEntity.badRequest().body(String.format("%s값이 필요합니다.", result));
 	}
 
 	/**

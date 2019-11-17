@@ -35,13 +35,13 @@ public class News extends BaseTimeEntity {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "news_topic",
 			joinColumns = @JoinColumn(name = "news_id"),
 			inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private List<Topic> topics;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "news_tag",
 			joinColumns = @JoinColumn(name = "news_id"),
 			inverseJoinColumns = @JoinColumn(name = "tag_id"))
@@ -51,7 +51,7 @@ public class News extends BaseTimeEntity {
 	private LocalDateTime publishAt;
 
 	@Builder
-	public News(String title, String link, String content, Category category, List<Topic> topics, List<Tag> tags , LocalDateTime publishAt) {
+	public News(String title, String link, String content, Category category, List<Topic> topics, List<Tag> tags, LocalDateTime publishAt) {
 		this.title = title;
 		this.link = link;
 		this.category = category;

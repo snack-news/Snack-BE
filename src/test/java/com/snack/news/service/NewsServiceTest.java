@@ -27,7 +27,7 @@ public class NewsServiceTest extends NewsFixture {
 
 	@Mock
 	private NewsRepository newsRepository;
-  
+
 	@Test
 	public void 뉴스_리스트를_조회할_수_있다() {
 		NewsDto newsDtoWithValidDates = mockNewsDto;
