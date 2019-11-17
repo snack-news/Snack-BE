@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class AdminService {
-	private final static Sort SORT_BY_ID = new Sort(Sort.Direction.DESC, "id");
+	private final static Sort SORT_BY_ID = Sort.by(Sort.Direction.DESC, "id");
 
 	private final NewsRepository newsRepository;
 	private final CategoryService categoryService;

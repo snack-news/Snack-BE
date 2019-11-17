@@ -220,7 +220,7 @@ public class NewsRepositoryTest extends NewsFixture {
 		long lastNewsId4 = expectedListFistNewsPage.get(3).getId();
 		long lastNewsId5 = expectedListFistNewsPage.get(4).getId();
 
-		Pageable pageableDesc = PageRequest.of(0, pageSize, new Sort(Sort.Direction.DESC, "id"));
+		Pageable pageableDesc = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		List<News> result = newsRepository.findAll(pageableDesc).getContent();
 
 		assertThat(result.stream().map(News::getId).collect(toList()),
