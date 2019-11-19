@@ -3,6 +3,7 @@ package com.snack.news.controller;
 
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
+import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.service.NewsService;
 import org.junit.Before;
@@ -14,8 +15,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -38,9 +45,21 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Before
 	public void setup() {
-		mockMvc = MockMvcBuilders.standaloneSetup(newsController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(newsController)
+				.setHandlerExceptionResolvers(createExceptionResolver())
+				.build();
 	}
 
+	private ExceptionHandlerExceptionResolver createExceptionResolver() {
+		ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
+			protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
+				Method method = new ExceptionHandlerMethodResolver(ControllerExceptionHandler.class).resolveMethod(exception);
+				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), Objects.requireNonNull(method));
+			}
+		};
+		exceptionResolver.afterPropertiesSet();
+		return exceptionResolver;
+	}
 
 
 	@Test
@@ -54,7 +73,7 @@ public class NewsControllerTest extends NewsFixture {
 	public void 뉴스_조회_요청이_ID가_부적절하다면_NOTFOUND_상태코드로_응답한다() throws Exception {
 		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
-		mockMvc.perform(get(NEWS_API_URL + "/" + TEST_SOME_ID_LONG)
+		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}

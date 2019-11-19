@@ -43,4 +43,10 @@ public class AdminController {
 	public ResponseEntity<NewsDto> updateNews(@PathVariable long newsId, @Valid @RequestBody NewsDto newsDto) {
 		return WrappedResponse.ok(adminService.updateNews(newsId, newsDto));
 	}
+
+	@DeleteMapping("/news/{id}")
+	public ResponseEntity<NewsDto> deleteNews(@PathVariable long id) {
+		adminService.deleteNews(id);
+		return ResponseEntity.ok().build();
+	}
 }

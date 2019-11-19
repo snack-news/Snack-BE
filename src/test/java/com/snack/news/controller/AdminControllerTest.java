@@ -2,6 +2,8 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.exception.NewsNotFoundException;
+import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.service.AdminService;
 import com.snack.news.util.SnackObjectMapper;
@@ -16,12 +18,24 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,7 +52,20 @@ public class AdminControllerTest extends NewsFixture {
 
 	@Before
 	public void setup() {
-		mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(adminController)
+				.setHandlerExceptionResolvers(createExceptionResolver())
+				.build();
+	}
+
+	private ExceptionHandlerExceptionResolver createExceptionResolver() {
+		ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
+			protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
+				Method method = new ExceptionHandlerMethodResolver(ControllerExceptionHandler.class).resolveMethod(exception);
+				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), Objects.requireNonNull(method));
+			}
+		};
+		exceptionResolver.afterPropertiesSet();
+		return exceptionResolver;
 	}
 
 	@Test
@@ -134,4 +161,15 @@ public class AdminControllerTest extends NewsFixture {
 				.andExpect(status().isOk());
 	}
 
+	public void 뉴스_삭제_요청시_정상적으로_동작한다() throws Exception {
+		mockMvc.perform(delete(ADMIN_API_URL + "/" + anyLong()))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void 뉴스_삭제_요청시_ID가_없으면_NOTFOUND_상태코드로_응답한다() throws Exception {
+		doThrow(new NewsNotFoundException()).when(adminService).deleteNews(anyLong());
+		mockMvc.perform(delete(ADMIN_API_URL + "/" + anyLong()))
+				.andExpect(status().isNotFound());
+	}
 }

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class AdminService {
+	private final static Sort SORT_BY_ID = Sort.by(Sort.Direction.DESC, "id");
 
 	private final NewsRepository newsRepository;
 	private final CategoryService categoryService;
@@ -57,5 +59,19 @@ public class AdminService {
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
 		return newsDto.toEntity(category, topics, tags);
+	}
+
+	public Page<News> getNewsList(int page) {
+		Pageable pageable = PageRequest.of(page - 1, 10, SORT_BY_ID);
+		return newsRepository.findAll(pageable);
+	}
+
+	@Transactional
+	public void deleteNews(long newsId) {
+		try {
+			newsRepository.deleteById(newsId);
+		} catch (IllegalArgumentException e) {
+			throw new NewsNotFoundException();
+		}
 	}
 }
