@@ -27,7 +27,7 @@ public class AdminController {
 
 	@GetMapping("/news")
 	public ResponseEntity<Page<News>> getNewsList() {
-		return getNewsList(1);
+		return getNewsList(1L);
 	}
 
 	@GetMapping("/news/{page}")

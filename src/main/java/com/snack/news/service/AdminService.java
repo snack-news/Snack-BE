@@ -40,6 +40,7 @@ public class AdminService {
 		return newsRepository.findAll(pageable);
 	}
 
+	@Transactional
 	public NewsDto updateNews(long newsId, NewsDto newsDto) {
 		if (!newsRepository.existsById(newsId)) {
 			throw new NewsNotFoundException();
@@ -53,19 +54,6 @@ public class AdminService {
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	private News generateNews(NewsDto newsDto) {
-		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
-		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
-
-		return newsDto.toEntity(category, topics, tags);
-	}
-
-	public Page<News> getNewsList(int page) {
-		Pageable pageable = PageRequest.of(page - 1, 10, SORT_BY_ID);
-		return newsRepository.findAll(pageable);
-	}
-
 	@Transactional
 	public void deleteNews(long newsId) {
 		try {
@@ -73,5 +61,13 @@ public class AdminService {
 		} catch (IllegalArgumentException e) {
 			throw new NewsNotFoundException();
 		}
+	}
+
+	private News generateNews(NewsDto newsDto) {
+		Category category = categoryService.getCategory(newsDto.getCategoryId());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
+
+		return newsDto.toEntity(category, topics, tags);
 	}
 }
