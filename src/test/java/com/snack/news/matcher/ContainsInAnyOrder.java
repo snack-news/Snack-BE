@@ -23,15 +23,14 @@ public class ContainsInAnyOrder<T> extends TypeSafeMatcher<List<T>> {
 		return this.items.containsAll(items);
 	}
 
-	@Override
-	public void describeTo(Description description) {
-
-	}
 
 	@Factory
 	public static <T> Matcher<List> containsInAnyOrder(List<T> list) {
 		return new ContainsInAnyOrder(list);
 	}
 
+	@Override
+	public void describeTo(Description description) {
 
+	}
 }

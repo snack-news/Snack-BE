@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
+import static com.snack.news.matcher.EqualsInOrder.equalsInOrder;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -74,7 +75,7 @@ public class NewsRepositoryTest extends NewsFixture {
 
 	@Test
 	@Transactional
-	public void 해당_날짜사이의_뉴스_리스트를_가져온다() {
+	public void 해당_날짜사이의_뉴스_리스트를_생성시간_역순으로_정렬하여_가져온다() {
 		final LocalDateTime startDate = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime endDate = LocalDateTime.of(2019, 7, 30, 0, 0);
 
@@ -88,10 +89,11 @@ public class NewsRepositoryTest extends NewsFixture {
 		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
 				.filter(n -> n.getCreateAt().isBefore(endDate))
 				.filter(n -> n.getCreateAt().isAfter(startDate))
+				.sorted(Comparator.comparing(News::getId).reversed())
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
+		assertThat(actualResultNewsIdList, equalsInOrder(expectedResultNewsList));
 	}
 
 	@Test
@@ -115,6 +117,9 @@ public class NewsRepositoryTest extends NewsFixture {
 						.anyMatch(testTopicIds::contains))
 				.map(News::getId)
 				.collect(toList());
+
+		System.out.println(actualResultNewsIdList);
+		System.out.println(expectedResultNewsList);
 
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
@@ -209,7 +214,7 @@ public class NewsRepositoryTest extends NewsFixture {
 
 	@Test
 	@Transactional
-	public void 뉴스리스트를_생성일_역순으로_정렬할_수_있다() {
+	public void 어드민에서_뉴스리스트를_생성일_역순으로_정렬할_수_있다() {
 		final int pageSize = 5;
 		List<News> expectedListFistNewsPage = newsRepository.findAll()
 				.stream().sorted(Comparator.comparing(News::getId).reversed()).limit(pageSize).collect(toList());
