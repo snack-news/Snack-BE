@@ -25,7 +25,8 @@ public class AdminController {
 
 	@GetMapping("/news")
 	public ResponseEntity<Page<News>> getNewsList() {
-		return getNewsList(1L);
+		final long DEFAULT_PAGE_SIZE = 1L;
+		return getNewsList(DEFAULT_PAGE_SIZE);
 	}
 
 	@GetMapping("/news/{page}")
