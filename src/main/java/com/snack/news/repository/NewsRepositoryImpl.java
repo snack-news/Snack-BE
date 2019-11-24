@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +39,17 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		}
 
 		if (newsDto.getStartDateTime() != null) {
-			criteria.add(builder.greaterThan(nr.get("createAt"), newsDto.getStartDateTime()));
+			criteria.add(builder.greaterThan(nr.get("publishAt"), newsDto.getStartDateTime()));
 		}
 
 		if (newsDto.getEndDateTime() != null) {
-			criteria.add(builder.lessThan(nr.get("createAt"), newsDto.getEndDateTime()));
+			criteria.add(builder.lessThan(nr.get("publishAt"), newsDto.getEndDateTime()));
 		}
 
-		query.where(builder.and(criteria.toArray(new Predicate[0])))
+		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
+		Predicate afterPublishAt = builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), LocalDateTime.now());
+
+		query.where(builder.and(conditionOfDto), afterPublishAt)
 				.orderBy(builder.desc(nr.get("publishAt")))
 				.distinct(true);
 
