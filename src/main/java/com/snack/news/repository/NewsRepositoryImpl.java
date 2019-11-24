@@ -46,7 +46,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		}
 
 		query.where(builder.and(criteria.toArray(new Predicate[0])))
-				.orderBy(builder.desc(nr.get("id")))
+				.orderBy(builder.desc(nr.get("publishAt")))
 				.distinct(true);
 
 		return em.createQuery(query).getResultList();
