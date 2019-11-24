@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class AdminService {
 	private final static Sort SORT_BY_ID = Sort.by(Sort.Direction.DESC, "id");
+	private final static int DEFAULT_PAGING_SIZE = 10;
 
 	private final NewsRepository newsRepository;
 	private final CategoryService categoryService;
@@ -36,7 +37,7 @@ public class AdminService {
 	}
 
 	public Page<News> getNewsList(long page) {
-		Pageable pageable = PageRequest.of((int) page - 1, 10);
+		Pageable pageable = PageRequest.of((int) page - 1, DEFAULT_PAGING_SIZE, SORT_BY_ID);
 		return newsRepository.findAll(pageable);
 	}
 
