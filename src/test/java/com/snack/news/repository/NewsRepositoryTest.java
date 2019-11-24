@@ -76,8 +76,8 @@ public class NewsRepositoryTest extends NewsFixture {
 	@Test
 	@Transactional
 	public void 해당_날짜사이의_뉴스_리스트를_업로드예약일_역순으로_정렬하여_가져온다() {
-		final LocalDateTime startDate = LocalDateTime.of(2019, 7, 1, 0, 0);
-		final LocalDateTime endDate = LocalDateTime.of(2019, 7, 30, 0, 0);
+		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 1, 0, 0);
+		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 30, 0, 0);
 
 		NewsDto queryNewsDtoWithDate = NewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
@@ -87,8 +87,8 @@ public class NewsRepositoryTest extends NewsFixture {
 				.collect(toList());
 
 		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
-				.filter(n -> n.getCreateAt().isBefore(endDate))
-				.filter(n -> n.getCreateAt().isAfter(startDate))
+				.filter(n -> n.getPublishAt().isBefore(endDate))
+				.filter(n -> n.getPublishAt().isAfter(startDate))
 				.sorted(Comparator.comparing(News::getPublishAt).reversed())
 				.map(News::getId)
 				.collect(toList());
@@ -173,8 +173,8 @@ public class NewsRepositoryTest extends NewsFixture {
 
 		List<Long> expectedResultNewsIds = newsRepository.findAll()
 				.stream()
-				.filter(n -> n.getCreateAt().isBefore(end))
-				.filter(n -> n.getCreateAt().isAfter(start))
+				.filter(n -> n.getPublishAt().isBefore(end))
+				.filter(n -> n.getPublishAt().isAfter(start))
 				.filter(n -> n.getCategory().equals(category))
 				.filter(topics -> topics.getTopics()
 						.stream()
