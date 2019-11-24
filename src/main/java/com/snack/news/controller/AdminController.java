@@ -7,11 +7,9 @@ import com.snack.news.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.file.Watchable;
 
 @AllArgsConstructor
 @RestController

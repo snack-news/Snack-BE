@@ -4,8 +4,10 @@ import com.snack.news.domain.base.BaseTimeEntity;
 import com.snack.news.domain.category.Category;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import com.snack.news.dto.NewsDto;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
