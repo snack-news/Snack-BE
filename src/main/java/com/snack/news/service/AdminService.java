@@ -42,16 +42,12 @@ public class AdminService {
 
 	@Transactional
 	public NewsDto updateNews(long newsId, NewsDto newsDto) {
-		if (!newsRepository.existsById(newsId)) {
-			throw new NewsNotFoundException();
-		}
+		News originNews = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
+		News updatedNews = updateNews(originNews, newsDto);
 
-		News news = generateNews(newsDto);
-		news.setId(newsId);
+		newsRepository.save(updatedNews);
 
-		newsRepository.save(news);
-
-		return NewsDto.builder().id(news.getId()).build();
+		return NewsDto.builder().id(newsId).build();
 	}
 
 	@Transactional
@@ -69,5 +65,20 @@ public class AdminService {
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
 		return newsDto.toEntity(category, topics, tags);
+	}
+
+	private News updateNews(News news, NewsDto newsDto) {
+		Category category = categoryService.getCategory(newsDto.getCategoryId());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
+
+		return news.updateNews(
+				newsDto.getTitle(),
+				newsDto.getContent(),
+				newsDto.getLink(),
+				newsDto.getPublishAt(),
+				category,
+				topics,
+				tags);
 	}
 }
