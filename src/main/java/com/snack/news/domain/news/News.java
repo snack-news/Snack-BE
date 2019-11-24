@@ -51,13 +51,25 @@ public class News extends BaseTimeEntity {
 	private LocalDateTime publishAt;
 
 	@Builder
-	public News(String title, String link, String content, Category category, List<Topic> topics, List<Tag> tags, LocalDateTime publishAt) {
+	public News(String title, String content, String link, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
 		this.title = title;
-		this.link = link;
-		this.category = category;
 		this.content = content;
+		this.link = link;
+		this.publishAt = publishAt;
+		this.category = category;
 		this.topics = topics;
 		this.tags = tags;
+	}
+
+	public News updateNews(String title, String content, String link, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
+		this.title = title;
+		this.content = content;
+		this.link = link;
 		this.publishAt = publishAt;
+		this.category = category;
+		this.topics = topics;
+		this.tags = tags;
+
+		return this;
 	}
 }
