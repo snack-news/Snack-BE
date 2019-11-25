@@ -19,7 +19,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 	private EntityManager em;
 
 	@Override
-	public List<News> findByNewsDto(NewsDto newsDto) {
+	public List<News> findByNewsDto(NewsDto newsDto, LocalDateTime now) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<News> query = builder.createQuery(News.class);
 
@@ -47,12 +47,17 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		}
 
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
-		Predicate afterPublishAt = builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), LocalDateTime.now());
+		Predicate afterPublishAt = builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), now);
 
 		query.where(builder.and(conditionOfDto), afterPublishAt)
 				.orderBy(builder.desc(nr.get("publishAt")))
 				.distinct(true);
 
 		return em.createQuery(query).getResultList();
+	}
+
+	@Override
+	public List<News> findByNewsDto(NewsDto newsDto) {
+		return findByNewsDto(newsDto, LocalDateTime.now());
 	}
 }

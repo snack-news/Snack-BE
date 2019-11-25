@@ -33,6 +33,8 @@ import static org.hamcrest.Matchers.equalTo;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class NewsRepositoryTest extends NewsFixture {
+
+	private static final LocalDateTime TEST_TIME = LocalDateTime.of(2019, 7, 1, 0, 0);
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -60,7 +62,7 @@ public class NewsRepositoryTest extends NewsFixture {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 
 		NewsDto queryNewsDtoWithCategory = NewsDto.builder().categoryId(category.getId()).build();
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory, TEST_TIME)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -81,7 +83,7 @@ public class NewsRepositoryTest extends NewsFixture {
 
 		NewsDto queryNewsDtoWithDate = NewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, TEST_TIME)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -93,6 +95,9 @@ public class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
+		System.out.println(actualResultNewsIdList);
+		System.out.println(expectedResultNewsList);
+
 		assertThat(actualResultNewsIdList, equalsInOrder(expectedResultNewsList));
 	}
 
@@ -101,11 +106,11 @@ public class NewsRepositoryTest extends NewsFixture {
 	public void 해당_토픽들의_뉴스_리스트를_가져온다() {
 		List<Long> testTopicIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDtoWithDate = NewsDto.builder()
+		NewsDto queryNewsDtoWithTopic = NewsDto.builder()
 				.topicIds(testTopicIds)
 				.build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTopic, TEST_TIME)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -126,11 +131,11 @@ public class NewsRepositoryTest extends NewsFixture {
 	public void 해당_태그들의_뉴스_리스트를_가져온다() {
 		List<Long> testTagIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDtoWithDate = NewsDto.builder()
+		NewsDto queryNewsDtoWithTag = NewsDto.builder()
 				.tagIds(testTagIds)
 				.build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTag, TEST_TIME)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -142,6 +147,9 @@ public class NewsRepositoryTest extends NewsFixture {
 						.anyMatch(testTagIds::contains))
 				.map(News::getId)
 				.collect(toList());
+
+		System.out.println(actualResultNewsIdList);
+		System.out.println(expectedResultNewsList);
 
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
@@ -163,7 +171,7 @@ public class NewsRepositoryTest extends NewsFixture {
 				.tagIds(tagIds)
 				.build();
 
-		List<Long> actualResultNewsIds = newsRepository.findByNewsDto(queryNewsDto)
+		List<Long> actualResultNewsIds = newsRepository.findByNewsDto(queryNewsDto, TEST_TIME)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
