@@ -95,9 +95,6 @@ public class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
-		System.out.println(actualResultNewsIdList);
-		System.out.println(expectedResultNewsList);
-
 		assertThat(actualResultNewsIdList, equalsInOrder(expectedResultNewsList));
 	}
 
@@ -147,9 +144,6 @@ public class NewsRepositoryTest extends NewsFixture {
 						.anyMatch(testTagIds::contains))
 				.map(News::getId)
 				.collect(toList());
-
-		System.out.println(actualResultNewsIdList);
-		System.out.println(expectedResultNewsList);
 
 		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
 	}
