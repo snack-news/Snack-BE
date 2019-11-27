@@ -7,11 +7,11 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.List;
 
-public class ContainsInAnyOrder<T> extends TypeSafeMatcher<List<T>> {
+public class EqualsInOrder<T> extends TypeSafeMatcher<List<T>> {
 
 	private List<T> items;
 
-	public ContainsInAnyOrder(List<T> items) {
+	public EqualsInOrder(List<T> items) {
 		this.items = items;
 	}
 
@@ -20,13 +20,19 @@ public class ContainsInAnyOrder<T> extends TypeSafeMatcher<List<T>> {
 		if (this.items.size() != items.size()) {
 			return false;
 		}
-		return this.items.containsAll(items);
+
+		for (int i = 0; i < items.size(); i++) {
+			if (!this.items.get(i).equals(items.get(i))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
-
 	@Factory
-	public static <T> Matcher<List> containsInAnyOrder(List<T> list) {
-		return new ContainsInAnyOrder(list);
+	public static <T> Matcher<List> equalsInOrder(List<T> list) {
+		return new EqualsInOrder(list);
 	}
 
 	@Override
