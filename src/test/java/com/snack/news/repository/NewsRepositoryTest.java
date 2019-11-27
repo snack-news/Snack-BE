@@ -238,4 +238,25 @@ public class NewsRepositoryTest extends NewsFixture {
 		newsRepository.deleteById(1L);
 		assertThat(newsRepository.count(), equalTo(originSize - 1));
 	}
+
+	@Test
+	@Transactional
+	public void 뉴스를_수정할_수_있다() {
+		News someNews = newsRepository.getOne(1L);
+		final String changedTitle = "This is changed title.";
+
+		someNews.updateNews(
+				changedTitle,
+				someNews.getContent(),
+				someNews.getLink(),
+				someNews.getPublishAt(),
+				someNews.getCategory(),
+				someNews.getTopics(),
+				someNews.getTags()
+		);
+
+		newsRepository.save(someNews);
+
+		assertThat(newsRepository.getOne(1L).getTitle(), equalTo(changedTitle));
+	}
 }

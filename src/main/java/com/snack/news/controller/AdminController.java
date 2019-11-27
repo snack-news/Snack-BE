@@ -25,16 +25,22 @@ public class AdminController {
 
 	@GetMapping("/news")
 	public ResponseEntity<Page<News>> getNewsList() {
-		return getNewsList(1);
+		final long DEFAULT_PAGE_SIZE = 1L;
+		return getNewsList(DEFAULT_PAGE_SIZE);
 	}
 
 	@GetMapping("/news/{page}")
-	public ResponseEntity<Page<News>> getNewsList(@PathVariable int page) {
+	public ResponseEntity<Page<News>> getNewsList(@PathVariable long page) {
 		Page<News> result = adminService.getNewsList(page);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
 		return WrappedResponse.ok(result);
+	}
+
+	@PutMapping("/news/{newsId}")
+	public ResponseEntity<NewsDto> updateNews(@PathVariable long newsId, @Valid @RequestBody NewsDto newsDto) {
+		return WrappedResponse.ok(adminService.updateNews(newsId, newsDto));
 	}
 
 	@DeleteMapping("/news/{id}")

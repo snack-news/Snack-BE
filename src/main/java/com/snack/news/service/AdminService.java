@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class AdminService {
 	private final static Sort SORT_BY_ID = Sort.by(Sort.Direction.DESC, "id");
+	private final static int DEFAULT_PAGING_SIZE = 10;
 
 	private final NewsRepository newsRepository;
 	private final CategoryService categoryService;
@@ -29,19 +30,25 @@ public class AdminService {
 
 	@Transactional
 	public NewsDto createNews(NewsDto newsDto) {
-		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
-		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
-
-		News news = newsDto.toEntity(category, topics, tags);
+		News news = generateNews(newsDto);
 		newsRepository.save(news);
 
 		return NewsDto.builder().id(news.getId()).build();
 	}
 
-	public Page<News> getNewsList(int page) {
-		Pageable pageable = PageRequest.of(page - 1, 10, SORT_BY_ID);
+	public Page<News> getNewsList(long page) {
+		Pageable pageable = PageRequest.of((int) page - 1, DEFAULT_PAGING_SIZE, SORT_BY_ID);
 		return newsRepository.findAll(pageable);
+	}
+
+	@Transactional
+	public NewsDto updateNews(long newsId, NewsDto newsDto) {
+		News originNews = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
+		News updatedNews = updateNews(originNews, newsDto);
+
+		newsRepository.save(updatedNews);
+
+		return NewsDto.builder().id(newsId).build();
 	}
 
 	@Transactional
@@ -51,5 +58,28 @@ public class AdminService {
 		} catch (IllegalArgumentException e) {
 			throw new NewsNotFoundException();
 		}
+	}
+
+	private News generateNews(NewsDto newsDto) {
+		Category category = categoryService.getCategory(newsDto.getCategoryId());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
+
+		return newsDto.toEntity(category, topics, tags);
+	}
+
+	private News updateNews(News news, NewsDto newsDto) {
+		Category category = categoryService.getCategory(newsDto.getCategoryId());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
+
+		return news.updateNews(
+				newsDto.getTitle(),
+				newsDto.getContent(),
+				newsDto.getLink(),
+				newsDto.getPublishAt(),
+				category,
+				topics,
+				tags);
 	}
 }
