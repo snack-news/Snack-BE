@@ -12,6 +12,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Getter
@@ -59,6 +60,7 @@ public class News extends BaseTimeEntity {
 		this.category = category;
 		this.topics = topics;
 		this.tags = tags;
+		this.publishAt = Objects.nonNull(publishAt) ? publishAt : LocalDateTime.now();
 	}
 
 	public News updateNews(String title, String content, String link, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
