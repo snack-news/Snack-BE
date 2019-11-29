@@ -47,7 +47,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		}
 
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
-		Predicate afterPublishAt = builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), now);
+		Predicate afterPublishAt = builder.lessThan(nr.get("publishAt").as(LocalDateTime.class), now);
 
 		query.where(builder.and(conditionOfDto), afterPublishAt)
 				.orderBy(builder.desc(nr.get("publishAt")))

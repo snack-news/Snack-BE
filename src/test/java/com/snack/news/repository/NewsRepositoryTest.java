@@ -78,8 +78,8 @@ public class NewsRepositoryTest extends NewsFixture {
 	@Test
 	@Transactional
 	public void 해당_날짜사이의_뉴스_리스트를_업로드예약일_역순으로_정렬하여_가져온다() {
-		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 1, 0, 0);
-		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 30, 0, 0);
+		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 11, 0, 0);
+		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 16, 11, 59);
 
 		NewsDto queryNewsDtoWithDate = NewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
