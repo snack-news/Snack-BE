@@ -60,6 +60,7 @@ insert into news(id, category_id, title, content, create_at, modified_at, publis
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (46, 2, '46 news title', 'news content: 커머스/애플/TOP10', '2019-08-21 00:00:00', '2019-08-21 00:00:00', '2019-12-21 00:00:00');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (47, 2, '47 news title', 'news content: 커머스/애플/HOT', '2019-08-21 00:00:00', '2019-08-21 00:00:00', '2019-12-21 00:00:00');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (48, 2, '48 news title', 'news content: 커머스/애플/TOP10,HOT', '2019-08-21 00:00:00', '2019-08-21 00:00:00', '2019-12-21 00:00:00');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (49, 2, '데르프의 테스트', '이것은 테스트 내용', '2019-11-11 00:00:00', '2019-11-11 00:00:00', '2019-11-17 00:00:00');
 
 -- News-Topic 연관관계 테스트 데이터
 insert into news_topic(news_id, topic_id) values (1, 1);
