@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
-	<appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
-		<webhookUri>https://hooks.slack.com/services/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</webhookUri>
+	<appender name="SLACK" class="com.snack.news.util.SlackAppender">
+		<webhookUri>TA756FFFV/BR6UA13EK/gX2K1jXrmU3YVbTLjzJStwmG</webhookUri>
 		<channel>#snack_dev_noti</channel>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<pattern>[%d{yyyy-MM-dd HH:mm}] [%-5level] [%logger{36}] - %msg%n</pattern>
