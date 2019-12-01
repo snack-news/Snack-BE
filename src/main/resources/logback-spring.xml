@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
+		<webhookUri>https://hooks.slack.com/services/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</webhookUri>
+		<channel>#snack_dev_noti</channel>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>[%d{yyyy-MM-dd HH:mm}] [%-5level] [%logger{36}] - %msg%n</pattern>
+		</layout>
+		<username>${HOSTNAME}</username>
+		<iconEmoji>:fire:</iconEmoji>
+		<colorCoding>true</colorCoding>
+	</appender>
+
+	<!-- Currently recommended way of using Slack appender -->
+	<appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="SLACK" />
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+
+	<root>
+		<level value="ALL" />
+		<appender-ref ref="ASYNC_SLACK" />
+	</root>
+
+</configuration>
