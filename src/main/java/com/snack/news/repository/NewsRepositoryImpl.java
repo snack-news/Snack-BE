@@ -46,10 +46,11 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 			criteria.add(builder.lessThan(nr.get("publishAt"), newsDto.getEndDateTime()));
 		}
 
-		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
-		Predicate afterPublishAt = builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), now);
+		criteria.add(builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), now));
 
-		query.where(builder.and(conditionOfDto), afterPublishAt)
+		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
+
+		query.where(builder.and(conditionOfDto))
 				.orderBy(builder.desc(nr.get("publishAt")))
 				.distinct(true);
 
