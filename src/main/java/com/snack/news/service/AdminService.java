@@ -8,6 +8,7 @@ import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class AdminService {
@@ -56,6 +58,7 @@ public class AdminService {
 		try {
 			newsRepository.deleteById(newsId);
 		} catch (IllegalArgumentException e) {
+			log.error("Invalid News Id in DeleteNews : {}", newsId, e);
 			throw new NewsNotFoundException();
 		}
 	}

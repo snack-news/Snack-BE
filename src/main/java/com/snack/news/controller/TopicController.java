@@ -24,11 +24,6 @@ public class TopicController {
 		return WrappedResponse.ok(topicService.createTopic(topicDto));
 	}
 
-	@GetMapping
-	public ResponseEntity<List<Topic>> getTopicList(@RequestParam(defaultValue = "NAME") TopicSorting sort) {
-		return WrappedResponse.ok(topicService.getTopicList(sort));
-	}
-
 	@GetMapping("/{type}")
 	public ResponseEntity<List<Topic>> getTopicList(@PathVariable TopicType type, @RequestParam(defaultValue = "NAME") TopicSorting sort) {
 		return WrappedResponse.ok(topicService.getTypeTopicList(type, sort));
