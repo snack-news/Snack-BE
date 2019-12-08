@@ -44,14 +44,6 @@ public class TopicService {
 	}
 
 
-	public List<Topic> getTopicList(TopicSorting sorting) {
-		List<Topic> topics = topicRepository.findAll();
-
-		return topics.stream()
-				.sorted(sorting.getOperator())
-				.collect(toList());
-	}
-
 	public List<Topic> getTopicList(List<Long> topicIds) {
 		if (Objects.isNull(topicIds)) {
 			return Collections.emptyList();

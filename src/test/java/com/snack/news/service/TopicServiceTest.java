@@ -2,6 +2,7 @@ package com.snack.news.service;
 
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.domain.topic.TopicSorting;
+import com.snack.news.domain.topic.TopicType;
 import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.TopicFixture;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,32 +34,32 @@ public class TopicServiceTest extends TopicFixture {
 	private TopicRepository topicRepository;
 
 	@Test
-	public void 토픽들을_토픽명순으로_조회할_수_있다() {
-		Topic testTopic01 = Topic.builder().name("가").build();
-		Topic testTopic02 = Topic.builder().name("나").build();
-		Topic testTopic03 = Topic.builder().name("다").build();
+	public void 회사토픽들을_토픽명순으로_조회할_수_있다() {
+		Topic testTopic01 = Topic.builder().name("가").type(TopicType.CORP).build();
+		Topic testTopic02 = Topic.builder().name("나").type(TopicType.CORP).build();
+		Topic testTopic03 = Topic.builder().name("다").type(TopicType.CORP).build();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
 		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
 
-		when(topicRepository.findAll()).thenReturn(unsortedTopicList);
+		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(unsortedTopicList);
 
-		List<Topic> resultTopicList = topicService.getTopicList(TopicSorting.NAME);
+		List<Topic> resultTopicList = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.NAME);
 		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
 	}
 
 	@Test
 	public void 토픽들을_ID순으로_조회할_수_있다() {
-		Topic testTopic01 = TopicDto.builder().id(1L).build().getTopicUpdateEntity();
-		Topic testTopic02 = TopicDto.builder().id(2L).build().getTopicUpdateEntity();
-		Topic testTopic03 = TopicDto.builder().id(3L).build().getTopicUpdateEntity();
+		Topic testTopic01 = TopicDto.builder().id(1L).type(TopicType.CORP).build().getTopicUpdateEntity();
+		Topic testTopic02 = TopicDto.builder().id(2L).type(TopicType.CORP).build().getTopicUpdateEntity();
+		Topic testTopic03 = TopicDto.builder().id(3L).type(TopicType.CORP).build().getTopicUpdateEntity();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
 		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
 
-		when(topicRepository.findAll()).thenReturn(unsortedTopicList);
+		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(unsortedTopicList);
 
-		List<Topic> resultTopicListSortedByID = topicService.getTopicList(TopicSorting.ID);
+		List<Topic> resultTopicListSortedByID = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.ID);
 		assertThat(resultTopicListSortedByID, contains(testTopic01, testTopic02, testTopic03));
 	}
 
