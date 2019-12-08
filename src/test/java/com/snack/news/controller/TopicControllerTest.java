@@ -68,19 +68,19 @@ public class TopicControllerTest extends TopicFixture {
 
 	@Test
 	public void 원하는_타입의_토픽_리스트를_가져온다() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL))
+		mockMvc.perform(get(TOPIC_API_URL + "/CORP"))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	public void 원하는_타입의_토픽_리스트를_ID순으로_가져온다() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "?sort=ID"))
+		mockMvc.perform(get(TOPIC_API_URL + "/CORP"+ "?sort=ID"))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	public void 원하는_타입의_토픽_리스트를_이름순으로_가져온다() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "?sort=NAME"))
+		mockMvc.perform(get(TOPIC_API_URL + "/CORP" + "?sort=NAME"))
 				.andExpect(status().isOk());
 	}
 }
