@@ -58,7 +58,7 @@ public class AdminServiceTest extends NewsFixture {
 
 	@Test(expected = TopicNotFoundException.class)
 	public void 뉴스_생성시_토픽ID가_부적절하다면_예외가_발생한다() {
-		when(topicService.getTopicList(mockNewsDto.getTopicIds())).thenThrow(TopicNotFoundException.class);
+		when(topicService.getTopicList(mockNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
 
 		adminService.createNews(mockNewsDto);
 	}

@@ -30,7 +30,7 @@ public class NewsDto {
 	@NotNull(message = "Category ID")
 	private Long categoryId;
 	private TopicType type;
-	private List<Long> topicIds;
+	private List<String> topicNames;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime startDateTime;

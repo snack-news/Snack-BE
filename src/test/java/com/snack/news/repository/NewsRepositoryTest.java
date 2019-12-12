@@ -102,10 +102,10 @@ public class NewsRepositoryTest extends NewsFixture {
 	@Test
 	@Transactional
 	public void 해당_토픽들의_뉴스_리스트를_가져온다() {
-		List<Long> testTopicIds = Collections.singletonList(1L);
+		List<String> testTopicNames = Collections.singletonList("카카오");
 
 		NewsDto queryNewsDtoWithTopic = NewsDto.builder()
-				.topicIds(testTopicIds)
+				.topicNames(testTopicNames)
 				.build();
 
 		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTopic, TEST_TIME)
@@ -116,8 +116,8 @@ public class NewsRepositoryTest extends NewsFixture {
 		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
 				.filter(topics -> topics.getTopics()
 						.stream()
-						.map(Topic::getId)
-						.anyMatch(testTopicIds::contains))
+						.map(Topic::getName)
+						.anyMatch(testTopicNames::contains))
 				.map(News::getId)
 				.collect(toList());
 
@@ -152,7 +152,7 @@ public class NewsRepositoryTest extends NewsFixture {
 	@Test
 	@Transactional
 	public void 여러_조건에_해당하는_뉴스_리스트를_가져온다() {
-		final List<Long> testTopicIds = Arrays.asList(1L, 2L);
+		final List<String> testTopicNames = Arrays.asList("카카오", "애플");
 		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
 		final Category category = Category.builder().id(2L).title("커머스").build();
@@ -162,7 +162,7 @@ public class NewsRepositoryTest extends NewsFixture {
 				.startDateTime(start)
 				.endDateTime(end)
 				.categoryId(category.getId())
-				.topicIds(testTopicIds)
+				.topicNames(testTopicNames)
 				.tagIds(tagIds)
 				.build();
 
@@ -179,7 +179,7 @@ public class NewsRepositoryTest extends NewsFixture {
 				.filter(topics -> topics.getTopics()
 						.stream()
 						.map(Topic::getId)
-						.anyMatch(testTopicIds::contains))
+						.anyMatch(testTopicNames::contains))
 				.filter(news -> news.getTags()
 						.stream()
 						.map(Tag::getId)

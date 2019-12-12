@@ -10,5 +10,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 	List<Topic> findAllByTypeIs(TopicType type);
 
 	List<Topic> findByIdIn(List<Long> ids);
+
+	List<Topic> findByNameIn(List<String> ids);
 }
 

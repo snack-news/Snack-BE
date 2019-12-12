@@ -30,8 +30,8 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 			criteria.add(builder.equal(nr.get("category").get("id"), newsDto.getCategoryId()));
 		}
 
-		if (newsDto.getTopicIds() != null) {
-			criteria.add(nr.join("topics").get("id").in(newsDto.getTopicIds()));
+		if (newsDto.getTopicNames() != null) {
+			criteria.add(nr.join("topics").get("name").in(newsDto.getTopicNames()));
 		}
 
 		if (newsDto.getTagIds() != null) {

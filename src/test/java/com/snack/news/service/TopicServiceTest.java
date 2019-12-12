@@ -120,20 +120,20 @@ public class TopicServiceTest extends TopicFixture {
 
 	@Test
 	public void 토픽ID를_받아_토픽_리스트를_반환한다() {
-		final List<Long> validTopicIds = Arrays.asList(1L, 2L);
+		final List<String> validTopicNames = Arrays.asList("카카오", "애플");
 		final List<Topic> dummyResult = Arrays.asList(DUMMY, DUMMY);
-		when(topicRepository.findByIdIn(validTopicIds)).thenReturn(dummyResult);
+		when(topicRepository.findByNameIn(validTopicNames)).thenReturn(dummyResult);
 
-		List<Topic> realResult = topicService.getTopicList(validTopicIds);
+		List<Topic> realResult = topicService.getTopicList(validTopicNames);
 		assertThat(realResult, equalTo(dummyResult));
 	}
 
 	@Test(expected = TopicNotFoundException.class)
 	public void 토픽ID에_해당하는_토픽이_없으면_예외가_발생한다() {
-		final List<Long> invalidTopicIds = Arrays.asList(9999L, 10000L);
+		final List<String> invalidTopicNames = Arrays.asList("의미없는", "토픽들");
 		final List<Topic> dummyResult = Collections.singletonList(DUMMY);
-		when(topicRepository.findByIdIn(invalidTopicIds)).thenReturn(dummyResult);
+		when(topicRepository.findByNameIn(invalidTopicNames)).thenReturn(dummyResult);
 
-		topicService.getTopicList(invalidTopicIds);
+		topicService.getTopicList(invalidTopicNames);
 	}
 }

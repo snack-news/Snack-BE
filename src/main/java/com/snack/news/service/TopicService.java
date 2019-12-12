@@ -44,13 +44,13 @@ public class TopicService {
 	}
 
 
-	public List<Topic> getTopicList(List<Long> topicIds) {
-		if (Objects.isNull(topicIds)) {
+	public List<Topic> getTopicList(List<String> topics) {
+		if (Objects.isNull(topics)) {
 			return Collections.emptyList();
 		}
 
-		List<Topic> result = topicRepository.findByIdIn(topicIds);
-		if (result.size() != topicIds.size()) { // todo: 로직 개선
+		List<Topic> result = topicRepository.findByNameIn(topics);
+		if (result.size() != topics.size()) {
 			throw new TopicNotFoundException();
 		}
 

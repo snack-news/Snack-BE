@@ -65,7 +65,7 @@ public class AdminService {
 
 	private News generateNews(NewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
 		return newsDto.toEntity(category, topics, tags);
@@ -73,7 +73,7 @@ public class AdminService {
 
 	private News updateNews(News news, NewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
 		return news.updateNews(
