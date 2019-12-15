@@ -46,28 +46,28 @@ public class AdminServiceTest extends NewsFixture {
 
 	@Test
 	public void 뉴스를_생성할_수_있다() {
-		adminService.createNews(mockNewsDto);
+		adminService.createNews(mockAdminNewsDto);
 	}
 
 	@Test(expected = CategoryNotFoundException.class)
 	public void 뉴스_생성시_카테고리ID가_부적절하다면_예외가_발생한다() {
 		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
 
-		adminService.createNews(mockNewsDto);
+		adminService.createNews(mockAdminNewsDto);
 	}
 
 	@Test(expected = TopicNotFoundException.class)
 	public void 뉴스_생성시_토픽ID가_부적절하다면_예외가_발생한다() {
-		when(topicService.getTopicList(mockNewsDto.getTopicIds())).thenThrow(TopicNotFoundException.class);
+		when(topicService.getTopicList(mockAdminNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
 
-		adminService.createNews(mockNewsDto);
+		adminService.createNews(mockAdminNewsDto);
 	}
 
 	@Test(expected = TagNotFoundException.class)
 	public void 뉴스_생성시_태그ID가_부적절하다면_예외가_발생한다() {
 		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
 
-		adminService.createNews(mockNewsDto);
+		adminService.createNews(mockAdminNewsDto);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class AdminServiceTest extends NewsFixture {
 		final long anyLong = 1L;
 		when(newsRepository.findById(anyLong)).thenReturn(Optional.of(mockNews));
 
-		adminService.updateNews(anyLong, mockNewsDto);
+		adminService.updateNews(anyLong, mockAdminNewsDto);
 	}
 
 	@Test

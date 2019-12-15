@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 @Service
 public class TopicService {
+	private static final TopicType DEFAULT_TOPIC_TYPE = TopicType.CORP;
 	private final TopicRepository topicRepository;
 
 	@Transactional
@@ -44,18 +46,23 @@ public class TopicService {
 	}
 
 
-	public List<Topic> getTopicList(List<Long> topicIds) {
-		if (Objects.isNull(topicIds)) {
+	public List<Topic> getTopicList(List<String> topicNames) {
+		if (Objects.isNull(topicNames)) {
 			return Collections.emptyList();
 		}
 
-		List<Topic> result = topicRepository.findByIdIn(topicIds);
-		if (result.size() != topicIds.size()) { // todo: 로직 개선
-			throw new TopicNotFoundException();
+		List<Topic> result = new ArrayList<>();
+		for (String name : topicNames) {
+			if (!topicRepository.existsByName(name)) {
+				TopicDto topic = TopicDto.builder().name(name).type(DEFAULT_TOPIC_TYPE).build();
+				createTopic(topic);
+			}
+			result.add(topicRepository.findByName(name));
 		}
 
 		return result;
 	}
+
 
 	@Transactional
 	public Topic updateTopic(TopicDto topicDto) {

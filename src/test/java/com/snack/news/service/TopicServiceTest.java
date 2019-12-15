@@ -21,8 +21,10 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TopicServiceTest extends TopicFixture {
@@ -119,21 +121,37 @@ public class TopicServiceTest extends TopicFixture {
 	}
 
 	@Test
-	public void 토픽ID를_받아_토픽_리스트를_반환한다() {
-		final List<Long> validTopicIds = Arrays.asList(1L, 2L);
-		final List<Topic> dummyResult = Arrays.asList(DUMMY, DUMMY);
-		when(topicRepository.findByIdIn(validTopicIds)).thenReturn(dummyResult);
+	public void 토픽이름를_받아_토픽_리스트를_반환한다() {
+		final String topicNameKakao = "카카오";
+		final String topicNameApple = "애플";
+		final List<String> validTopicNames = Arrays.asList(topicNameKakao, topicNameApple);
 
-		List<Topic> realResult = topicService.getTopicList(validTopicIds);
-		assertThat(realResult, equalTo(dummyResult));
+		Topic topicKakao = TopicDto.builder().name(topicNameKakao).type(TopicType.CORP).build().getTopicNewEntity();
+		Topic topicApple = TopicDto.builder().name(topicNameApple).type(TopicType.CORP).build().getTopicNewEntity();
+
+		final List<Topic> dummyResult = Arrays.asList(topicKakao, topicApple);
+
+		when(topicRepository.existsByName(anyString())).thenReturn(true);
+		when(topicRepository.findByName(anyString())).thenReturn(topicKakao);
+		when(topicRepository.findByName(anyString())).thenReturn(topicApple);
+
+		List<Topic> realResult = topicService.getTopicList(validTopicNames);
+		assertThat(realResult, containsInAnyOrder(dummyResult));
 	}
 
-	@Test(expected = TopicNotFoundException.class)
-	public void 토픽ID에_해당하는_토픽이_없으면_예외가_발생한다() {
-		final List<Long> invalidTopicIds = Arrays.asList(9999L, 10000L);
-		final List<Topic> dummyResult = Collections.singletonList(DUMMY);
-		when(topicRepository.findByIdIn(invalidTopicIds)).thenReturn(dummyResult);
+	@Test
+	public void 토픽이름에_해당하는_토픽이_없으면_새_토픽을_생성한_후_반환한다() {
+		final String newTopicName = "없는 토픽";
+		final List<String> validTopicNames = Collections.singletonList(newTopicName);
 
-		topicService.getTopicList(invalidTopicIds);
+		Topic newTopic = TopicDto.builder().name(newTopicName).type(TopicType.CORP).build().getTopicNewEntity();
+
+		final List<Topic> dummyResult = Collections.singletonList(newTopic);
+
+		when(topicRepository.existsByName(anyString())).thenReturn(false);
+		when(topicRepository.findByName(anyString())).thenReturn(newTopic);
+
+		List<Topic> realResult = topicService.getTopicList(validTopicNames);
+		assertThat(realResult, containsInAnyOrder(dummyResult));
 	}
 }
