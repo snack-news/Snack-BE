@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 @Service
 public class TopicService {
-	private static final TopicType DEFAULT_TOPIC_TYPE = TopicType.CORP;
 	private final TopicRepository topicRepository;
 
 	@Transactional
@@ -61,7 +60,7 @@ public class TopicService {
 
 	private Topic createTopicIfAbsent(String topicName) {
 		if (topicRepository.existsNotByName(topicName)) {
-			TopicDto topic = TopicDto.builder().name(topicName).type(DEFAULT_TOPIC_TYPE).build();
+			TopicDto topic = TopicDto.builder().name(topicName).type(TopicType.CORP).build();
 			return createTopic(topic);
 		}
 		return topicRepository.findByName(topicName);
