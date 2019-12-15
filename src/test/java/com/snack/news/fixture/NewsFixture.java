@@ -4,7 +4,6 @@ import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
 import org.junit.Before;
-import sun.tools.jconsole.AboutDialog;
 
 import java.time.LocalDateTime;
 
