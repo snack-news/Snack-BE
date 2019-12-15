@@ -11,7 +11,7 @@ class PublishedCorpTopicTest {
 	@ParameterizedTest
 	@NullAndEmptySource
 	@DisplayName("회사 이름이 잘못 입력될 경우 false를 반환한다.")
-	void isPublishedCorp(String name) {
+	public void isPublishedCorp(String name) {
 		assertThat(PublishedCorpTopic.isPublishedCorp(name)).isFalse();
 	}
 }
