@@ -36,9 +36,9 @@ public class TopicServiceTest extends TopicFixture {
 
 	@Test
 	public void 회사토픽들을_토픽명순으로_조회할_수_있다() {
-		Topic testTopic01 = Topic.builder().name(PublishedCorpTopic.WOOWA_BROS.getName()).type(TopicType.CORP).build();
-		Topic testTopic02 = Topic.builder().name(PublishedCorpTopic.WEMAKEPRICE.getName()).type(TopicType.CORP).build();
-		Topic testTopic03 = Topic.builder().name(PublishedCorpTopic.YANOLJA.getName()).type(TopicType.CORP).build();
+		Topic testTopic01 = Topic.builder().name(PublishedCorpTopic.YANOLJA.getName()).type(TopicType.CORP).build();
+		Topic testTopic02 = Topic.builder().name(PublishedCorpTopic.WOOWA_BROS.getName()).type(TopicType.CORP).build();
+		Topic testTopic03 = Topic.builder().name(PublishedCorpTopic.WEMAKEPRICE.getName()).type(TopicType.CORP).build();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
 		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
