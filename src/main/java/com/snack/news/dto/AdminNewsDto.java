@@ -6,7 +6,12 @@ import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.domain.topic.TopicType;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
