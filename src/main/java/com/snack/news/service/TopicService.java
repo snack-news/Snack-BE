@@ -53,14 +53,18 @@ public class TopicService {
 
 		List<Topic> result = new ArrayList<>();
 		for (String name : topicNames) {
-			if (topicRepository.existsNotByName(name)) {
-				TopicDto topic = TopicDto.builder().name(name).type(DEFAULT_TOPIC_TYPE).build();
-				createTopic(topic);
-			}
-			result.add(topicRepository.findByName(name));
+			result.add(createTopicIfAbsent(name));
 		}
 
 		return result;
+	}
+
+	private Topic createTopicIfAbsent(String topicName) {
+		if (topicRepository.existsNotByName(topicName)) {
+			TopicDto topic = TopicDto.builder().name(topicName).type(DEFAULT_TOPIC_TYPE).build();
+			return createTopic(topic);
+		}
+		return topicRepository.findByName(topicName);
 	}
 
 	@Transactional
