@@ -53,7 +53,7 @@ public class TopicService {
 
 		List<Topic> result = new ArrayList<>();
 		for (String name : topicNames) {
-			if (!topicRepository.existsByName(name)) {
+			if (topicRepository.existsNotByName(name)) {
 				TopicDto topic = TopicDto.builder().name(name).type(DEFAULT_TOPIC_TYPE).build();
 				createTopic(topic);
 			}
@@ -62,7 +62,6 @@ public class TopicService {
 
 		return result;
 	}
-
 
 	@Transactional
 	public Topic updateTopic(TopicDto topicDto) {

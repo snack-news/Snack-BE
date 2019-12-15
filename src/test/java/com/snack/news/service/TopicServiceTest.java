@@ -19,12 +19,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TopicServiceTest extends TopicFixture {
@@ -123,19 +124,16 @@ public class TopicServiceTest extends TopicFixture {
 	@Test
 	public void 토픽이름를_받아_토픽_리스트를_반환한다() {
 		final String topicNameKakao = "카카오";
-		final String topicNameApple = "애플";
-		final List<String> validTopicNames = Arrays.asList(topicNameKakao, topicNameApple);
+		final List<String> validTopicNames = Collections.singletonList(topicNameKakao);
 
 		Topic topicKakao = TopicDto.builder().name(topicNameKakao).type(TopicType.CORP).build().getTopicNewEntity();
-		Topic topicApple = TopicDto.builder().name(topicNameApple).type(TopicType.CORP).build().getTopicNewEntity();
+		final List<Topic> dummyResult = Collections.singletonList(topicKakao);
 
-		final List<Topic> dummyResult = Arrays.asList(topicKakao, topicApple);
-
-		when(topicRepository.existsByName(anyString())).thenReturn(true);
+		when(topicRepository.existsNotByName(anyString())).thenReturn(false);
 		when(topicRepository.findByName(anyString())).thenReturn(topicKakao);
-		when(topicRepository.findByName(anyString())).thenReturn(topicApple);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
+		verify(topicRepository, times(0)).save(topicKakao);
 		assertThat(realResult, containsInAnyOrder(dummyResult));
 	}
 
@@ -148,10 +146,11 @@ public class TopicServiceTest extends TopicFixture {
 
 		final List<Topic> dummyResult = Collections.singletonList(newTopic);
 
-		when(topicRepository.existsByName(anyString())).thenReturn(false);
+		when(topicRepository.existsNotByName(anyString())).thenReturn(true);
 		when(topicRepository.findByName(anyString())).thenReturn(newTopic);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
+		verify(topicRepository, times(1)).save(newTopic);
 		assertThat(realResult, containsInAnyOrder(dummyResult));
 	}
 }
