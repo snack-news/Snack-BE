@@ -147,7 +147,6 @@ public class TopicServiceTest extends TopicFixture {
 		final List<Topic> dummyResult = Collections.singletonList(newTopic);
 
 		when(topicRepository.existsNotByName(anyString())).thenReturn(true);
-		when(topicRepository.findByName(anyString())).thenReturn(newTopic);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
 		verify(topicRepository, times(1)).save(newTopic);
