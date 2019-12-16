@@ -1,6 +1,7 @@
 package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
+import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
@@ -78,7 +79,7 @@ public class AdminControllerTest extends NewsFixture {
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
 
-		when(adminService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
+		when(adminService.createNews(any(AdminNewsDto.class))).thenReturn(mockNewsDto);
 
 		mockMvc.perform(post(ADMIN_API_URL)
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
