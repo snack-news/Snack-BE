@@ -1,5 +1,6 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.topic.PublishedCorpTopic;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.domain.topic.TopicSorting;
 import com.snack.news.domain.topic.TopicType;
@@ -40,6 +41,7 @@ public class TopicService {
 		List<Topic> topics = topicRepository.findAllByTypeIs(topicType);
 
 		return topics.stream()
+				.filter(topic -> PublishedCorpTopic.isPublishedCorp(topic.getName()))
 				.sorted(sorting.getOperator())
 				.collect(toList());
 	}

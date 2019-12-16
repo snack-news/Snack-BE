@@ -1,5 +1,6 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.topic.PublishedCorpTopic;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.domain.topic.TopicSorting;
 import com.snack.news.domain.topic.TopicType;
@@ -40,9 +41,9 @@ public class TopicServiceTest extends TopicFixture {
 
 	@Test
 	public void 회사토픽들을_토픽명순으로_조회할_수_있다() {
-		Topic testTopic01 = Topic.builder().name("가").type(TopicType.CORP).build();
-		Topic testTopic02 = Topic.builder().name("나").type(TopicType.CORP).build();
-		Topic testTopic03 = Topic.builder().name("다").type(TopicType.CORP).build();
+		Topic testTopic01 = Topic.builder().name(PublishedCorpTopic.YANOLJA.getName()).type(TopicType.CORP).build();
+		Topic testTopic02 = Topic.builder().name(PublishedCorpTopic.WOOWA_BROS.getName()).type(TopicType.CORP).build();
+		Topic testTopic03 = Topic.builder().name(PublishedCorpTopic.WEMAKEPRICE.getName()).type(TopicType.CORP).build();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
 		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
@@ -50,14 +51,15 @@ public class TopicServiceTest extends TopicFixture {
 		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(unsortedTopicList);
 
 		List<Topic> resultTopicList = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.NAME);
+
 		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
 	}
 
 	@Test
 	public void 토픽들을_ID순으로_조회할_수_있다() {
-		Topic testTopic01 = TopicDto.builder().id(1L).type(TopicType.CORP).build().getTopicUpdateEntity();
-		Topic testTopic02 = TopicDto.builder().id(2L).type(TopicType.CORP).build().getTopicUpdateEntity();
-		Topic testTopic03 = TopicDto.builder().id(3L).type(TopicType.CORP).build().getTopicUpdateEntity();
+		Topic testTopic01 = TopicDto.builder().name(PublishedCorpTopic.COUPANG.getName()).id(1L).type(TopicType.CORP).build().getTopicUpdateEntity();
+		Topic testTopic02 = TopicDto.builder().name(PublishedCorpTopic.YANOLJA.getName()).id(2L).type(TopicType.CORP).build().getTopicUpdateEntity();
+		Topic testTopic03 = TopicDto.builder().name(PublishedCorpTopic.VIVA_REPUBLICA.getName()).id(3L).type(TopicType.CORP).build().getTopicUpdateEntity();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
 		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
@@ -65,7 +67,21 @@ public class TopicServiceTest extends TopicFixture {
 		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(unsortedTopicList);
 
 		List<Topic> resultTopicListSortedByID = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.ID);
+
 		assertThat(resultTopicListSortedByID, contains(testTopic01, testTopic02, testTopic03));
+	}
+
+	@Test
+	public void 노출가능한_토픽들만_조회가_가능하다() {
+		Topic publishedTopic1 = Topic.builder().name(PublishedCorpTopic.YANOLJA.getName()).type(TopicType.CORP).build();
+		Topic unPublishedTopic = Topic.builder().name("노출이되지않는회사이름").type(TopicType.CORP).build();
+		Topic publishedTopic2 = Topic.builder().name(PublishedCorpTopic.WOOWA_BROS.getName()).type(TopicType.CORP).build();
+		List<Topic> topicList = Arrays.asList(unPublishedTopic, publishedTopic2, publishedTopic1);
+		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(topicList);
+
+		List<Topic> resultTopicList = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.NAME);
+
+		assertThat(resultTopicList, contains(publishedTopic1, publishedTopic2));
 	}
 
 	@Test
