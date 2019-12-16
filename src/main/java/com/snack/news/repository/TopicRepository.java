@@ -11,7 +11,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 	List<Topic> findByIdIn(List<Long> ids);
 
-	boolean existsNotByName(String name);
+	boolean existsByName(String name);
 
 	Topic findByName(String name);
 }
