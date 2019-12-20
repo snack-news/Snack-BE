@@ -8,6 +8,7 @@ import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,12 +20,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.doThrow;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminServiceTest extends NewsFixture {
@@ -45,41 +45,46 @@ public class AdminServiceTest extends NewsFixture {
 	private TagService tagService;
 
 	@Test
-	public void 뉴스를_생성할_수_있다() {
+	@DisplayName("뉴스를 생성할 수 있다")
+	public void createNewsTest() {
 		adminService.createNews(mockAdminNewsDto);
-	}
-
-	@Test(expected = CategoryNotFoundException.class)
-	public void 뉴스_생성시_카테고리ID가_부적절하다면_예외가_발생한다() {
-		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
-
-		adminService.createNews(mockAdminNewsDto);
-	}
-
-	@Test(expected = TopicNotFoundException.class)
-	public void 뉴스_생성시_토픽ID가_부적절하다면_예외가_발생한다() {
-		when(topicService.getTopicList(mockAdminNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
-
-		adminService.createNews(mockAdminNewsDto);
-	}
-
-	@Test(expected = TagNotFoundException.class)
-	public void 뉴스_생성시_태그ID가_부적절하다면_예외가_발생한다() {
-		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
-
-		adminService.createNews(mockAdminNewsDto);
+		verify(newsRepository).save(any(News.class));
 	}
 
 	@Test
-	public void 뉴스를_수정할_수_있다() {
+	@DisplayName("뉴스 생성시 Category id가 부적절하다면 예외가 발생한다")
+	public void createNewsTestWhenIllegalCategoryId() {
+		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
+		assertThrows(CategoryNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
+	}
+
+	@Test
+	@DisplayName("뉴스 생성시 Topic id가 부적절하다면 예외가 발생한다")
+	public void createNewsTestWhenIllegalTopicId() {
+		when(topicService.getTopicList(mockAdminNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
+		assertThrows(TopicNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
+	}
+
+	@Test
+	@DisplayName("뉴스 생성시 Tag id가 부적절하다면 예외가 발생한다")
+	public void createNewsTestWhenIllegalTagId() {
+		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
+		assertThrows(TagNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
+	}
+
+	@Test
+	@DisplayName("뉴스를 수정할 수 있다")
+	public void udateNewsTest() {
 		final long anyLong = 1L;
 		when(newsRepository.findById(anyLong)).thenReturn(Optional.of(mockNews));
 
 		adminService.updateNews(anyLong, mockAdminNewsDto);
+		verify(newsRepository).save(any(News.class));
 	}
 
 	@Test
-	public void 어드민_페이지에서_뉴스리스트를_페이징처리할_수_있다() {
+	@DisplayName("어드민 페이지에서 뉴스리스트를 페이징처리할 수 있다")
+	public void adminNewsPagingTest() {
 
 		List<News> newsList = Arrays.asList(
 				News.builder().build(),
@@ -91,17 +96,20 @@ public class AdminServiceTest extends NewsFixture {
 		when(newsRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(newsList));
 
 		adminService.getNewsList(1);
+		verify(newsRepository).findAll(any(Pageable.class));
 	}
 
 	@Test
-	public void 뉴스를_삭제할_수_있다() {
+	@DisplayName("뉴스를 삭제할 수 있다")
+	public void deleteNewsTest() {
 		adminService.deleteNews(anyLong());
 		verify(newsRepository).deleteById(anyLong());
 	}
 
-	@Test(expected = NewsNotFoundException.class)
-	public void 뉴스를_삭제_요청시_뉴스ID가_존재히지_않는다면_예외가_발생한다() {
+	@Test
+	@DisplayName("뉴스를 삭제 요청시 뉴스ID가 존재히지 않는다면 예외가 발생한다")
+	public void deleteNewsTestWhenNotExistNewsId() {
 		doThrow(new IllegalArgumentException()).when(newsRepository).deleteById(anyLong());
-		adminService.deleteNews(anyLong());
+		assertThrows(NewsNotFoundException.class, () -> adminService.deleteNews(anyLong()));
 	}
 }
