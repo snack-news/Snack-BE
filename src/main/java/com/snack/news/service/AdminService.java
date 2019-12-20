@@ -4,6 +4,7 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
+import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
@@ -31,7 +32,7 @@ public class AdminService {
 	private final TagService tagService;
 
 	@Transactional
-	public NewsDto createNews(NewsDto newsDto) {
+	public NewsDto createNews(AdminNewsDto newsDto) {
 		News news = generateNews(newsDto);
 		newsRepository.save(news);
 
@@ -44,7 +45,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public NewsDto updateNews(long newsId, NewsDto newsDto) {
+	public NewsDto updateNews(long newsId, AdminNewsDto newsDto) {
 		News originNews = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
 		News updatedNews = updateNews(originNews, newsDto);
 
@@ -63,17 +64,17 @@ public class AdminService {
 		}
 	}
 
-	private News generateNews(NewsDto newsDto) {
+	private News generateNews(AdminNewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
 		return newsDto.toEntity(category, topics, tags);
 	}
 
-	private News updateNews(News news, NewsDto newsDto) {
+	private News updateNews(News news, AdminNewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
-		List<Topic> topics = topicService.getTopicList(newsDto.getTopicIds());
+		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
 
 		return news.updateNews(
