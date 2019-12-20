@@ -74,7 +74,7 @@ public class AdminServiceTest extends NewsFixture {
 
 	@Test
 	@DisplayName("뉴스를 수정할 수 있다")
-	public void udateNewsTest() {
+	public void updateNewsTest() {
 		final long anyLong = 1L;
 		when(newsRepository.findById(anyLong)).thenReturn(Optional.of(mockNews));
 
