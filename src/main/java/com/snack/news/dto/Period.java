@@ -23,7 +23,7 @@ public class Period {
 			throw new NewsBadRequestException();
 		}
 
-		if (!(isMonday(start) || isSunday(end))) {
+		if (isNotMonday(start) && isNotSunday(end)) {
 			throw new NewsBadRequestException();
 		}
 
@@ -32,12 +32,12 @@ public class Period {
 		}
 	}
 
-	private boolean isMonday(LocalDateTime startDay) {
-		return startDay.getDayOfWeek().equals(DayOfWeek.MONDAY);
+	private boolean isNotMonday(LocalDateTime startDay) {
+		return !startDay.getDayOfWeek().equals(DayOfWeek.MONDAY);
 	}
 
-	private boolean isSunday(LocalDateTime endDay) {
-		return endDay.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+	private boolean isNotSunday(LocalDateTime endDay) {
+		return !endDay.getDayOfWeek().equals(DayOfWeek.SUNDAY);
 	}
 
 	private static boolean isBothDatesInOneWeek(LocalDateTime start, LocalDateTime end) {
