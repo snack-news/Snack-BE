@@ -24,15 +24,6 @@ jobs:
         run:  ./gradlew --version
       - name: 'Build with Gradle'
         run: ./gradlew build
-      - name: 'Slack Notification'
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEB_HOOK }}
-          SLACK_USERNAME: Snak-CI
-          SLACK_ICON: https://snak.news/aa63c82b3da4ad0111684fc1a93fabdb.png
-          SLACK_COLOR: '#3278BD'
-          SLACK_TITLE: Snak-Build-Status
-          SLACK_MESSAGE: 'Build Success :rocket:'
 
   coverage:
     name: 'Coverage'
@@ -41,9 +32,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: 'Set up Java 8'
-          uses: actions/setup-java@v1
-          with:
-            java-version: 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
       - name: 'Run tests with JaCoCo'
         shell: bash
         run: |
