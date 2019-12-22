@@ -61,7 +61,7 @@ public class TopicService {
 	}
 
 	private Topic createTopicIfAbsent(String topicName) {
-		if (topicRepository.existsNotByName(topicName)) {
+		if (topicRepository.existsByNameNot(topicName)) {
 			TopicDto topic = TopicDto.builder().name(topicName).type(TopicType.CORP).build();
 			return createTopic(topic);
 		}
