@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/snack-news/Snack-BE.svg?branch=master)](https://travis-ci.org/snack-news/Snack-BE) [![codecov](https://codecov.io/gh/snack-news/Snack-BE/branch/master/graph/badge.svg)](https://codecov.io/gh/snack-news/Snack-BE)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3de925b7ef148f3b4eba5a8e28e32e1)](https://app.codacy.com/app/snack-news/Snack-BE?utm_source=github.com&utm_medium=referral&utm_content=snack-news/Snack-BE&utm_campaign=Badge_Grade_Settings)
 
-![SNAK-CI](https://github.com/snack-news/Snack-BE/workflows/SNAK-CI/badge.svg?branch=master)
+[![SNAK-CI](https://github.com/snack-news/Snack-BE/workflows/SNAK-CI/badge.svg)](https://github.com/snack-news/Snack-BE/actions?query=workflow%3ASNAK-CI)
 
 ## WIKI
 - <https://github.com/snack-news/Snack-BE/wiki>
