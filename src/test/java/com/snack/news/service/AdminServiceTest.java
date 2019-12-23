@@ -5,14 +5,14 @@ import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.TagNotFoundException;
 import com.snack.news.exception.TopicNotFoundException;
-import com.snack.news.fixture.NewsFixture;
+import com.snack.news.fixture.NewsFixtureJunit5;
 import com.snack.news.repository.NewsRepository;
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
@@ -21,13 +21,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AdminServiceTest extends NewsFixture {
+@ExtendWith(MockitoExtension.class)
+public class AdminServiceTest extends NewsFixtureJunit5 {
 
 	@InjectMocks
 	private AdminService adminService;
@@ -46,7 +45,7 @@ public class AdminServiceTest extends NewsFixture {
 
 	@Test
 	@DisplayName("뉴스를 생성할 수 있다")
-	public void createNewsTest() {
+	void createNewsTest() {
 		adminService.createNews(mockAdminNewsDto);
 		verify(newsRepository).save(any(News.class));
 	}
