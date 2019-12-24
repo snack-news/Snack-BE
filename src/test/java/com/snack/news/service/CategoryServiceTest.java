@@ -4,20 +4,20 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.dto.CategoryDto;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.repository.CategoryRepository;
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CategoryServiceTest {
+@ExtendWith(MockitoExtension.class)
+class CategoryServiceTest {
 
 	@InjectMocks
 	private CategoryService categoryService;
@@ -27,7 +27,7 @@ public class CategoryServiceTest {
 
 	@Test
 	@DisplayName("카테고리를 생성할 수 있다")
-	public void createCategoryTest() {
+	void createCategoryTest() {
 		final String testCategoryTitle = "some category title";
 		CategoryDto categoryDto = CategoryDto.builder().title(testCategoryTitle).build();
 
@@ -37,7 +37,7 @@ public class CategoryServiceTest {
 
 	@Test
 	@DisplayName("카테고리를 수정할 수 있다")
-	public void updateCategoryTest() {
+	void updateCategoryTest() {
 		CategoryDto originCategoryDto = CategoryDto.builder().build();
 		when(categoryRepository.existsById(any())).thenReturn(true);
 
@@ -47,8 +47,8 @@ public class CategoryServiceTest {
 
 	@Test
 	@DisplayName("카테고리 수정 시 Category id가 유효하지 않다면 예외를 반환한다")
-	public void updateCategoryTestWhenIllegalCategoryId() {
-		final long invalidId = 999L;
+	void updateCategoryTestWhenIllegalCategoryId() {
+		long invalidId = 999L;
 		CategoryDto invalidIdDto = CategoryDto.builder().id(invalidId).build();
 
 		when(categoryRepository.existsById(any())).thenReturn(false);
