@@ -5,14 +5,15 @@ import com.snack.news.domain.topic.Topic;
 import com.snack.news.domain.topic.TopicSorting;
 import com.snack.news.domain.topic.TopicType;
 import com.snack.news.dto.TopicDto;
+import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.TopicFixture;
 import com.snack.news.repository.TopicRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Arrays;
@@ -24,13 +25,12 @@ import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TopicServiceTest extends TopicFixture {
 
 	@InjectMocks
@@ -95,13 +95,14 @@ public class TopicServiceTest extends TopicFixture {
 		assertThat(topicEntityByDto, equalTo(resultTopic));
 	}
 
-	@Test(expected = TopicNotFoundException.class)
+	@Test
 	public void 토픽_등록시_중복된_이름이라면_예외가_발생한다() {
 		TopicDto topicDto = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		Topic topicEntityByDto = topicDto.getTopicNewEntity();
 
 		when(topicRepository.save(topicEntityByDto)).thenThrow(DataIntegrityViolationException.class);
-		topicService.createTopic(topicDto);
+
+		assertThrows(TopicNotFoundException.class, () -> topicService.createTopic(topicDto));
 	}
 
 	@Test
@@ -123,7 +124,7 @@ public class TopicServiceTest extends TopicFixture {
 		assertThat(resultTopic.getName(), equalTo(updatedDataWithTopicName));
 	}
 
-	@Test(expected = TopicNotFoundException.class)
+	@Test
 	public void 수정을_시도한_토픽이_존재하지_않는다면_예외가_발생한다() {
 		final String updatedDataWithTopicName = "UPDATE_TOPIC_NAME";
 		long savedTopicId = SOME_SAVED_TEST_TOPIC.getId();
@@ -135,8 +136,7 @@ public class TopicServiceTest extends TopicFixture {
 				.build();
 
 		when(topicRepository.findById(savedTopicId)).thenThrow(TopicNotFoundException.class);
-
-		topicService.updateTopic(editedTopicDto);
+		assertThrows(TopicNotFoundException.class, () -> topicService.updateTopic(editedTopicDto));
 	}
 
 	@Test
