@@ -3,7 +3,7 @@ package com.snack.news.service;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsBadRequestException;
 import com.snack.news.exception.NewsNotFoundException;
-import com.snack.news.fixture.NewsFixtureJunit5;
+import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class NewsServiceTest extends NewsFixtureJunit5 {
+class NewsServiceTest extends NewsFixture {
 
 	@InjectMocks
 	private NewsService newsService;

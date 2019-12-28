@@ -5,7 +5,7 @@ import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.TagNotFoundException;
 import com.snack.news.exception.TopicNotFoundException;
-import com.snack.news.fixture.NewsFixtureJunit5;
+import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminServiceTest extends NewsFixtureJunit5 {
+class AdminServiceTest extends NewsFixture {
 
 	@InjectMocks
 	private AdminService adminService;
@@ -52,28 +52,28 @@ public class AdminServiceTest extends NewsFixtureJunit5 {
 
 	@Test
 	@DisplayName("뉴스 생성시 Category id가 부적절하다면 예외가 발생한다")
-	public void createNewsTestWhenIllegalCategoryId() {
+	void createNewsTestWhenIllegalCategoryId() {
 		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
 		assertThrows(CategoryNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Topic id가 부적절하다면 예외가 발생한다")
-	public void createNewsTestWhenIllegalTopicId() {
+	void createNewsTestWhenIllegalTopicId() {
 		when(topicService.getTopicList(mockAdminNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
 		assertThrows(TopicNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Tag id가 부적절하다면 예외가 발생한다")
-	public void createNewsTestWhenIllegalTagId() {
+	void createNewsTestWhenIllegalTagId() {
 		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
 		assertThrows(TagNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
 	}
 
 	@Test
 	@DisplayName("뉴스를 수정할 수 있다")
-	public void updateNewsTest() {
+	void updateNewsTest() {
 		final long anyLong = 1L;
 		when(newsRepository.findById(anyLong)).thenReturn(Optional.of(mockNews));
 
@@ -83,7 +83,7 @@ public class AdminServiceTest extends NewsFixtureJunit5 {
 
 	@Test
 	@DisplayName("어드민 페이지에서 뉴스리스트를 페이징처리할 수 있다")
-	public void adminNewsPagingTest() {
+	void adminNewsPagingTest() {
 
 		List<News> newsList = Arrays.asList(
 				News.builder().build(),
@@ -100,14 +100,14 @@ public class AdminServiceTest extends NewsFixtureJunit5 {
 
 	@Test
 	@DisplayName("뉴스를 삭제할 수 있다")
-	public void deleteNewsTest() {
+	void deleteNewsTest() {
 		adminService.deleteNews(anyLong());
 		verify(newsRepository).deleteById(anyLong());
 	}
 
 	@Test
 	@DisplayName("뉴스를 삭제 요청시 뉴스ID가 존재히지 않는다면 예외가 발생한다")
-	public void deleteNewsTestWhenNotExistNewsId() {
+	void deleteNewsTestWhenNotExistNewsId() {
 		doThrow(new IllegalArgumentException()).when(newsRepository).deleteById(anyLong());
 		assertThrows(NewsNotFoundException.class, () -> adminService.deleteNews(anyLong()));
 	}
