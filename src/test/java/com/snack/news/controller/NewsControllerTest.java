@@ -6,12 +6,15 @@ import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.service.NewsService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -30,7 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NewsControllerTest extends NewsFixture {
 
 	@InjectMocks
@@ -43,7 +46,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	private MockMvc mockMvc;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		mockMvc = MockMvcBuilders.standaloneSetup(newsController)
 				.setHandlerExceptionResolvers(createExceptionResolver())
@@ -63,14 +66,16 @@ public class NewsControllerTest extends NewsFixture {
 
 
 	@Test
-	public void 뉴스_조회_요청이_정상적으로_이루어진다() throws Exception {
+	@DisplayName("뉴스 조회 요청이 정상적으로 이루어진다")
+	public void requestCreateNewsTest() throws Exception {
 		mockMvc.perform(get(NEWS_API_URL + "/" + TEST_SOME_ID_LONG)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	public void 뉴스_조회_요청이_ID가_부적절하다면_NOTFOUND_상태코드로_응답한다() throws Exception {
+	@DisplayName("뉴스 조회 요청이 ID가 부적절하다면 NOTFOUND 상태코드로 응답한다")
+	public void requestCreateNewsTestWithInvalidNewsId() throws Exception {
 		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
 		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
@@ -79,7 +84,8 @@ public class NewsControllerTest extends NewsFixture {
 	}
 
 	@Test
-	public void 뉴스_리스트_조회_요청시_값이_있다면_OK_상태코드로_응답한다() throws Exception {
+	@DisplayName("뉴스 리스트 조회 요청시 값이 있다면 OK 상태코드로 응답한다")
+	public void requestNewsListTest() throws Exception {
 		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.singletonList(mockNews));
 
 		mockMvc.perform(get(NEWS_API_URL))
@@ -87,7 +93,8 @@ public class NewsControllerTest extends NewsFixture {
 	}
 
 	@Test
-	public void 뉴스_리스트_조회_요청시_값이_없디면_NOCONTENT_상태코드로_응답한다() throws Exception {
+	@DisplayName("뉴스 리스트 조회 요청시 값이 없디면 NOCONTENT 상태코드로 응답한다")
+	public void requestNewsListTestWhenNoneResult() throws Exception {
 		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.EMPTY_LIST);
 
 		mockMvc.perform(get(NEWS_API_URL))
