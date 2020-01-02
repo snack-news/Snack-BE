@@ -3,17 +3,18 @@ package com.snack.news.repository;
 import com.snack.news.domain.category.Category;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.fixture.NewsFixture;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
 @DataJpaTest
 public class CategoryRepositoryTest extends NewsFixture {
 
@@ -21,8 +22,9 @@ public class CategoryRepositoryTest extends NewsFixture {
 	private CategoryRepository categoryRepository;
 
 	@Test
+	@DisplayName("ID에 해당하는 Category를 가져올 수 있다")
 	@Transactional
-	public void ID에_해당하는_Category를_가져올_수_있다() {
+	public void getCategoryById() {
 		Category category = categoryRepository.findById(1L).orElseThrow(CategoryNotFoundException::new);
 
 		assertThat(category.getTitle(), equalTo("IT"));
