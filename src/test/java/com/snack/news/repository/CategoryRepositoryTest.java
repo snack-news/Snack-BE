@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-public class CategoryRepositoryTest extends NewsFixture {
+class CategoryRepositoryTest extends NewsFixture {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -24,7 +24,7 @@ public class CategoryRepositoryTest extends NewsFixture {
 	@Test
 	@DisplayName("ID에 해당하는 Category를 가져올 수 있다")
 	@Transactional
-	public void getCategoryById() {
+	void getCategoryById() {
 		Category category = categoryRepository.findById(1L).orElseThrow(CategoryNotFoundException::new);
 
 		assertThat(category.getTitle(), equalTo("IT"));

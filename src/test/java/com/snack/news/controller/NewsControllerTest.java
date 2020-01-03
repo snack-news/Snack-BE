@@ -47,7 +47,7 @@ public class NewsControllerTest extends NewsFixture {
 	private MockMvc mockMvc;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		mockMvc = MockMvcBuilders.standaloneSetup(newsController)
 				.setHandlerExceptionResolvers(createExceptionResolver())
 				.build();
@@ -67,7 +67,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Test
 	@DisplayName("뉴스 조회 요청이 정상적으로 이루어진다")
-	public void requestCreateNewsTest() throws Exception {
+	void requestCreateNewsTest() throws Exception {
 		mockMvc.perform(get(NEWS_API_URL + "/" + TEST_SOME_ID_LONG)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
@@ -75,7 +75,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Test
 	@DisplayName("뉴스 조회 요청이 ID가 부적절하다면 NOTFOUND 상태코드로 응답한다")
-	public void requestCreateNewsTestWithInvalidNewsId() throws Exception {
+	void requestCreateNewsTestWithInvalidNewsId() throws Exception {
 		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
 		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
@@ -85,7 +85,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Test
 	@DisplayName("뉴스 리스트 조회 요청시 값이 있다면 OK 상태코드로 응답한다")
-	public void requestNewsListTest() throws Exception {
+	void requestNewsListTest() throws Exception {
 		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.singletonList(mockNews));
 
 		mockMvc.perform(get(NEWS_API_URL))
@@ -94,7 +94,7 @@ public class NewsControllerTest extends NewsFixture {
 
 	@Test
 	@DisplayName("뉴스 리스트 조회 요청시 값이 없디면 NOCONTENT 상태코드로 응답한다")
-	public void requestNewsListTestWhenNoneResult() throws Exception {
+	void requestNewsListTestWhenNoneResult() throws Exception {
 		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(Collections.EMPTY_LIST);
 
 		mockMvc.perform(get(NEWS_API_URL))

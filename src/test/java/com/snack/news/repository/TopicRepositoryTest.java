@@ -19,14 +19,14 @@ import static org.hamcrest.Matchers.equalTo;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-public class TopicRepositoryTest {
+class TopicRepositoryTest {
 	@Autowired
 	private TopicRepository topicRepository;
 
 	@Test
 	@DisplayName("토픽 타입에 해당하는 토픽 리스트를 반환한다")
 	@Transactional
-	public void getTopicListTestByTopicType() {
+	void getTopicListTestByTopicType() {
 		List<Topic> actualTopicList = topicRepository.findAllByTypeIs(TopicType.CORP);
 
 		List<Topic> allTopicList = topicRepository.findAll();
@@ -40,7 +40,7 @@ public class TopicRepositoryTest {
 	@Test
 	@DisplayName("토픽ID 리스트에 해당하는 토픽 리스트를 반환한다")
 	@Transactional
-	public void getTopicListTestByTopicId() {
+	void getTopicListTestByTopicId() {
 		final List<Long> topicIds = Arrays.asList(1L, 3L);
 		List<Topic> actualTopicList = topicRepository.findByIdIn(topicIds);
 

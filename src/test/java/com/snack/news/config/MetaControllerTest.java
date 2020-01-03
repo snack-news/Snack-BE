@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class MetaControllerTest {
+class MetaControllerTest {
 	private final static String PROFILE_API_URL = "/meta/profile";
 
 	@Autowired
@@ -42,7 +42,7 @@ public class MetaControllerTest {
 
 	@Test
 	@DisplayName("Profile를 확인할 수 있다")
-	public void profileTest() {
+	void profileTest() {
 		String profile = this.restTemplate.getForObject(PROFILE_API_URL, String.class);
 
 		assertThat(profile).isEqualTo("local");

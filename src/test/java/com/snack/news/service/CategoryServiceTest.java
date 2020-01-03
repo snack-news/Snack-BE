@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,8 +28,7 @@ class CategoryServiceTest {
 	@Test
 	@DisplayName("카테고리를 생성할 수 있다")
 	void createCategoryTest() {
-		final String testCategoryTitle = "some category title";
-		CategoryDto categoryDto = CategoryDto.builder().title(testCategoryTitle).build();
+		CategoryDto categoryDto = CategoryDto.builder().title(anyString()).build();
 
 		categoryService.createCategory(categoryDto);
 		verify(categoryRepository).save(any(Category.class));
@@ -51,7 +50,7 @@ class CategoryServiceTest {
 		long invalidId = 999L;
 		CategoryDto invalidIdDto = CategoryDto.builder().id(invalidId).build();
 
-		when(categoryRepository.existsById(any())).thenReturn(false);
+		when(categoryRepository.existsById(anyLong())).thenReturn(false);
 		assertThrows(CategoryNotFoundException.class, () -> categoryService.updateCategory(invalidIdDto));
 	}
 }

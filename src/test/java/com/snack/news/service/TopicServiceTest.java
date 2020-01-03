@@ -162,7 +162,7 @@ class TopicServiceTest extends TopicFixture {
 
 	@Test
 	@DisplayName("토픽이름에 해당하는 토픽이 없으면 새 토픽을 생성한 후 반환한다")
-	public void createTopicTestWhenNonExistTopicName() {
+	void createTopicTestWhenNonExistTopicName() {
 		final String newTopicName = "없는 토픽";
 		final List<String> validTopicNames = Collections.singletonList(newTopicName);
 
