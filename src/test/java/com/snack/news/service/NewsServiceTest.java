@@ -71,7 +71,8 @@ class NewsServiceTest extends NewsFixture {
 	}
 
 	@Test
-	void 뉴스를_조회시_ID가_부적절하면_예외가_발생한다() {
+	@DisplayName("뉴스를 조회시 ID가 부적절하면 예외가 발생한다")
+	void getNewsListTestWhenInvalidId() {
 		when(newsRepository.findById(anyLong())).thenThrow(NewsNotFoundException.class);
 		assertThrows(NewsNotFoundException.class, () -> newsService.getNews(TEST_SOME_ID_LONG));
 	}

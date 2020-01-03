@@ -6,9 +6,9 @@ import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.fixture.NewsFixture;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -34,15 +33,16 @@ import static org.hamcrest.Matchers.equalTo;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-public class NewsRepositoryTest extends NewsFixture {
+class NewsRepositoryTest extends NewsFixture {
 
 	private static final LocalDateTime TEST_TIME = LocalDateTime.of(2019, 7, 1, 0, 0);
 	@Autowired
 	private NewsRepository newsRepository;
 
 	@Test
+	@DisplayName("News를 저장할수있다")
 	@Transactional
-	public void News를_저장할수있다() {
+	void saveNewsTest() {
 		int originalSize = (int) newsRepository.count();
 		newsRepository.save(mockNews);
 
@@ -51,16 +51,18 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("ID에 해당하는 뉴스를 가져온다")
 	@Transactional
-	public void ID에_해당하는_뉴스를_가져온다() {
+	void getNewsTestById() {
 		final long validNewsId = 1L;
 		News resultNews = newsRepository.findById(validNewsId).orElseThrow(RuntimeException::new);
 		assertThat(resultNews.getId(), equalTo(validNewsId));
 	}
 
 	@Test
+	@DisplayName("해당 카테고리의 뉴스 리스트를 가져온다")
 	@Transactional
-	public void 해당_카테고리의_뉴스_리스트를_가져온다() {
+	void getNewsListTestByCategory() {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 
 		NewsDto queryNewsDtoWithCategory = NewsDto.builder().categoryId(category.getId()).build();
@@ -78,8 +80,9 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("해당 날짜사이의 뉴스 리스트를 업로드예약일 역순으로 정렬하여 가져온다")
 	@Transactional
-	public void 해당_날짜사이의_뉴스_리스트를_업로드예약일_역순으로_정렬하여_가져온다() {
+	void getNewsListTestByPeriodInReverseOrderOfNewsId() {
 		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 25, 0, 0);
 		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 30, 11, 59);
 
@@ -102,8 +105,9 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("해당 토픽들의 뉴스 리스트를 가져온다")
 	@Transactional
-	public void 해당_토픽들의_뉴스_리스트를_가져온다() {
+	void getNewsListTestByTopic() {
 		List<Long> testTopicIds = Collections.singletonList(1L);
 
 		NewsDto queryNewsDtoWithTopic = NewsDto.builder()
@@ -127,8 +131,9 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("해당 태그들의 뉴스 리스트를 가져온다")
 	@Transactional
-	public void 해당_태그들의_뉴스_리스트를_가져온다() {
+	void getNewsListTestByTag() {
 		List<Long> testTagIds = Collections.singletonList(1L);
 
 		NewsDto queryNewsDtoWithTag = NewsDto.builder()
@@ -152,8 +157,9 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("여러 조건에 해당하는 뉴스 리스트를 가져온다")
 	@Transactional
-	public void 여러_조건에_해당하는_뉴스_리스트를_가져온다() {
+	void getNewsListTest() {
 		final List<Long> testTopicIds = Arrays.asList(1L, 2L);
 		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
 		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
@@ -193,8 +199,9 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("뉴스리스트를 페이징 처리할 수 있다")
 	@Transactional
-	public void 뉴스리스트를_페이징_처리할_수_있다() {
+	void getAdminNewsListTestWithPaging() {
 		final int pageSize = 10;
 
 		Pageable firstPageable = PageRequest.of(0, pageSize);
@@ -215,8 +222,9 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("어드민에서 뉴스리스트를 생성일 역순으로 정렬할 수 있다")
 	@Transactional
-	public void 어드민에서_뉴스리스트를_생성일_역순으로_정렬할_수_있다() {
+	void getAdminNewsListTestInReverseOrderOfCreatedDate() {
 		final int pageSize = 5;
 		List<News> expectedListFistNewsPage = newsRepository.findAll()
 				.stream().sorted(Comparator.comparing(News::getId).reversed()).limit(pageSize).collect(toList());
@@ -235,16 +243,18 @@ public class NewsRepositoryTest extends NewsFixture {
 	}
 
 	@Test
+	@DisplayName("뉴스를 삭제할 수 있다")
 	@Transactional
-	public void 뉴스를_삭제할_수_있다() {
+	void deleteNewsTest() {
 		long originSize = newsRepository.count();
 		newsRepository.deleteById(1L);
 		assertThat(newsRepository.count(), equalTo(originSize - 1));
 	}
 
 	@Test
+	@DisplayName("뉴스를 수정할 수 있다")
 	@Transactional
-	public void 뉴스를_수정할_수_있다() {
+	public void updateNewsTest() {
 		News someNews = newsRepository.getOne(1L);
 		final String changedTitle = "This is changed title.";
 
