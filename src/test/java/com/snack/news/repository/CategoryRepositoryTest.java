@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -27,6 +26,6 @@ class CategoryRepositoryTest extends NewsFixture {
 	void getCategoryById() {
 		Category category = categoryRepository.findById(1L).orElseThrow(CategoryNotFoundException::new);
 
-		assertThat(category.getTitle(), equalTo("IT"));
+		assertThat(category.getTitle()).isEqualTo("IT");
 	}
 }

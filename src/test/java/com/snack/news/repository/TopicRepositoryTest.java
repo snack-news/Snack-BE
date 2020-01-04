@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -34,7 +33,7 @@ class TopicRepositoryTest {
 				.filter(t -> t.getType().equals(TopicType.CORP))
 				.collect(toList());
 
-		assertThat(actualTopicList, equalTo(expectedTopicList));
+		assertThat(actualTopicList).isEqualTo(expectedTopicList);
 	}
 
 	@Test
@@ -49,6 +48,6 @@ class TopicRepositoryTest {
 				.filter(t -> topicIds.contains(t.getId()))
 				.collect(toList());
 
-		assertThat(actualTopicList, equalTo(expectedTopicList));
+		assertThat(actualTopicList).isEqualTo(expectedTopicList);
 	}
 }

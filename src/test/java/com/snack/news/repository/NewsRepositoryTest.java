@@ -24,12 +24,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
-import static com.snack.news.matcher.EqualsInOrder.equalsInOrder;
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -47,7 +43,7 @@ class NewsRepositoryTest extends NewsFixture {
 		newsRepository.save(mockNews);
 
 		List<News> newsList = newsRepository.findAll();
-		assertThat(newsList.size(), equalTo(originalSize + 1));
+		assertThat(newsList.size()).isEqualTo(originalSize + 1);
 	}
 
 	@Test
@@ -56,7 +52,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsTestById() {
 		final long validNewsId = 1L;
 		News resultNews = newsRepository.findById(validNewsId).orElseThrow(RuntimeException::new);
-		assertThat(resultNews.getId(), equalTo(validNewsId));
+		assertThat(resultNews.getId()).isEqualTo(validNewsId);
 	}
 
 	@Test
@@ -76,7 +72,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
+		assertThat(actualResultNewsIdList).containsExactlyInAnyOrderElementsOf(expectedResultNewsList);
 	}
 
 	@Test
@@ -101,7 +97,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIdList, equalsInOrder(expectedResultNewsList));
+		assertThat(actualResultNewsIdList).containsExactlyInAnyOrderElementsOf(expectedResultNewsList);
 	}
 
 	@Test
@@ -127,7 +123,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
+		assertThat(actualResultNewsIdList).containsExactlyInAnyOrderElementsOf(expectedResultNewsList);
 	}
 
 	@Test
@@ -153,7 +149,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIdList, containsInAnyOrder(expectedResultNewsList));
+		assertThat(actualResultNewsIdList).containsExactlyInAnyOrderElementsOf(expectedResultNewsList);
 	}
 
 	@Test
@@ -195,7 +191,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.map(News::getId)
 				.collect(toList());
 
-		assertThat(actualResultNewsIds, containsInAnyOrder(expectedResultNewsIds));
+		assertThat(actualResultNewsIds).containsExactlyInAnyOrderElementsOf(expectedResultNewsIds);
 	}
 
 	@Test
@@ -216,9 +212,9 @@ class NewsRepositoryTest extends NewsFixture {
 		Pageable lastPageable = PageRequest.of(totalPage - 1, pageSize);
 		Page<News> lastNewsPage = newsRepository.findAll(lastPageable);
 
-		assertThat(firstNewsPage.get().count(), equalTo((long) pageSize));
-		assertThat(middleNewsPage.get().count(), equalTo((long) pageSize));
-		assertThat(lastNewsPage.get().count(), equalTo((totalElements % pageSize)));
+		assertThat(firstNewsPage.get().count()).isEqualTo((long) pageSize);
+		assertThat(middleNewsPage.get().count()).isEqualTo((long) pageSize);
+		assertThat(lastNewsPage.get().count()).isEqualTo((totalElements % pageSize));
 	}
 
 	@Test
@@ -238,8 +234,7 @@ class NewsRepositoryTest extends NewsFixture {
 		Pageable pageableDesc = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		List<News> result = newsRepository.findAll(pageableDesc).getContent();
 
-		assertThat(result.stream().map(News::getId).collect(toList()),
-				contains(lastNewsId1, lastNewsId2, lastNewsId3, lastNewsId4, lastNewsId5));
+		assertThat(result.stream().map(News::getId).collect(toList())).contains((lastNewsId1), lastNewsId2, lastNewsId3, lastNewsId4, lastNewsId5);
 	}
 
 	@Test
@@ -248,7 +243,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void deleteNewsTest() {
 		long originSize = newsRepository.count();
 		newsRepository.deleteById(1L);
-		assertThat(newsRepository.count(), equalTo(originSize - 1));
+		assertThat(newsRepository.count()).isEqualTo(originSize - 1);
 	}
 
 	@Test
@@ -270,6 +265,6 @@ class NewsRepositoryTest extends NewsFixture {
 
 		newsRepository.save(someNews);
 
-		assertThat(newsRepository.getOne(1L).getTitle(), equalTo(changedTitle));
+		assertThat(newsRepository.getOne(1L).getTitle()).isEqualTo(changedTitle);
 	}
 }
