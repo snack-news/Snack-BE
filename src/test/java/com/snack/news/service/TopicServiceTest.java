@@ -26,7 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +55,7 @@ class TopicServiceTest extends TopicFixture {
 		List<Topic> resultTopicList = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.NAME);
 		assertThat(resultTopicList).containsExactlyInAnyOrder(testTopic01, testTopic02, testTopic03);
 	}
+
 	@Test
 	@DisplayName("토픽들을 ID순으로 조회할 수 있다")
 	void getTopicListTestSortedByTopicId() {
