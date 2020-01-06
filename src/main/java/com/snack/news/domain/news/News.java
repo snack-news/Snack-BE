@@ -52,7 +52,7 @@ public class News extends BaseTimeEntity {
 	private LocalDateTime publishAt;
 
 	@Builder
-	public News(String title, String content, String link, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
+	public News(String title, String content, String link, LocalDateTime createAt, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
 		this.title = title;
 		this.content = content;
 		this.link = link;
@@ -61,6 +61,7 @@ public class News extends BaseTimeEntity {
 		this.topics = topics;
 		this.tags = tags;
 		this.publishAt = Objects.nonNull(publishAt) ? publishAt : LocalDateTime.now();
+		setCreateAt(createAt);
 	}
 
 	public News updateNews(String title, String content, String link, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
