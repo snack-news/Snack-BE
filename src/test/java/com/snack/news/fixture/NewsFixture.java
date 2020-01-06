@@ -41,8 +41,6 @@ public abstract class NewsFixture {
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.link(TEST_LINK)
-				.startDateTime(VALID_START_DATE)
-				.endDateTime(VALID_END_DATE)
 				.build();
 
 	}
