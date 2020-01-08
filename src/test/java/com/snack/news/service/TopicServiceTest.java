@@ -155,7 +155,7 @@ class TopicServiceTest extends TopicFixture {
 		Topic topicKakao = TopicDto.builder().name(topicNameKakao).type(TopicType.CORP).build().getTopicNewEntity();
 		final List<Topic> dummyResult = Collections.singletonList(topicKakao);
 
-		when(topicRepository.existsByName(anyString())).thenReturn(true);
+		when(topicRepository.existsByNameNot(anyString())).thenReturn(false);
 		when(topicRepository.findByName(anyString())).thenReturn(topicKakao);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
@@ -173,7 +173,7 @@ class TopicServiceTest extends TopicFixture {
 
 		final List<Topic> dummyResult = Collections.singletonList(newTopic);
 
-		when(topicRepository.existsByName(anyString())).thenReturn(false);
+		when(topicRepository.existsByNameNot(anyString())).thenReturn(true);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
 		verify(topicRepository, times(1)).save(newTopic);
