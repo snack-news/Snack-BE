@@ -37,7 +37,9 @@ public class AdminNewsDto {
 	private List<String> topicNames;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime createAt;
+	private LocalDateTime startDateTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime endDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime publishAt;
 

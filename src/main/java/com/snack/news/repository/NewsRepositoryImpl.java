@@ -39,15 +39,15 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		}
 
 		if (newsDto.getStartDateTime() != null) {
-			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt"), newsDto.getStartDateTime()));
+			criteria.add(builder.greaterThan(nr.get("publishAt"), newsDto.getStartDateTime()));
 		}
 
 		if (newsDto.getEndDateTime() != null) {
-			criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt"), newsDto.getEndDateTime()));
+			criteria.add(builder.lessThan(nr.get("publishAt"), newsDto.getEndDateTime()));
 		}
 
 		if (newsDto.getPublishAt() != null) {
-			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt").as(LocalDateTime.class), now));
+			criteria.add(builder.greaterThan(nr.get("publishAt").as(LocalDateTime.class), now));
 		}
 
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
