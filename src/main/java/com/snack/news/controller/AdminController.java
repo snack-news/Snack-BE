@@ -1,10 +1,12 @@
 package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
+import com.snack.news.domain.picks.Pick;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.AdminService;
+import com.snack.news.service.PicksService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,10 @@ import javax.validation.Valid;
 @RequestMapping("admin/api")
 public class AdminController {
 
+	private final long DEFAULT_PAGE_SIZE = 1L;
+
 	private final AdminService adminService;
+	private final PicksService picksService;
 
 	@PostMapping("/news")
 	public ResponseEntity<NewsDto> createNews(@Valid @RequestBody AdminNewsDto newsDto) {
@@ -26,7 +31,6 @@ public class AdminController {
 
 	@GetMapping("/news")
 	public ResponseEntity<Page<News>> getNewsList() {
-		final long DEFAULT_PAGE_SIZE = 1L;
 		return getNewsList(DEFAULT_PAGE_SIZE);
 	}
 
@@ -48,5 +52,19 @@ public class AdminController {
 	public ResponseEntity<NewsDto> deleteNews(@PathVariable long id) {
 		adminService.deleteNews(id);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/picks")
+	public ResponseEntity<Page<Pick>> getPickPage() {
+		return getPickPage(DEFAULT_PAGE_SIZE);
+	}
+
+	@GetMapping("/picks/{page}")
+	public ResponseEntity<Page<Pick>> getPickPage(@PathVariable long page) {
+		Page<Pick> result = picksService.getPickPage(page);
+		if (result.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return WrappedResponse.ok(result);
 	}
 }

@@ -32,7 +32,7 @@ public class AdminService {
 	private final TagService tagService;
 
 	@Transactional
-	public NewsDto createNews(AdminNewsDto newsDto) {
+	public NewsDto  createNews(AdminNewsDto newsDto) {
 		News news = generateNews(newsDto);
 		newsRepository.save(news);
 
@@ -65,6 +65,7 @@ public class AdminService {
 	}
 
 	private News generateNews(AdminNewsDto newsDto) {
+		System.out.println("generateNews - " + newsDto);
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
