@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -25,7 +27,7 @@ class PicksServiceTest {
 	@Test
 	@DisplayName("pick 리스트를 날짜순으로 정렬하여 보여줄 수 있다")
 	void test() {
-		picksService.getPickPage(anyLong());
-		verify(picksRepository).findAll(any(Sort.class));
+		picksService.getPickPage(1);
+		verify(picksRepository).findAll((Pageable) any());
 	}
 }

@@ -12,8 +12,12 @@ public class SnackApplication {
 			+ "/home/ec2-user/snack-be/config/real-application.yml";
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(SnackApplication.class)
-				.properties(APPLICATION_LOCATIONS)
-				.run(args);
+		try {
+			new SpringApplicationBuilder(SnackApplication.class)
+					.properties(APPLICATION_LOCATIONS)
+					.run(args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

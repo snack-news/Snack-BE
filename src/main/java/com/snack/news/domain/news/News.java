@@ -1,6 +1,5 @@
 package com.snack.news.domain.news;
 
-import com.snack.news.domain.base.BaseTimeEntity;
 import com.snack.news.domain.category.Category;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
@@ -14,14 +13,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@DiscriminatorValue("news")
 @NoArgsConstructor
 @Getter
 @ToString
-@Entity
-public class News extends BaseTimeEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class News extends Post {
 
 	@Column(nullable = false)
 	private String title;
@@ -29,27 +26,11 @@ public class News extends BaseTimeEntity {
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
 
-	@Column
-	private String link;
-
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category category;
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "news_topic",
-			joinColumns = @JoinColumn(name = "news_id"),
-			inverseJoinColumns = @JoinColumn(name = "topic_id"))
-	private List<Topic> topics;
-
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "news_tag",
 			joinColumns = @JoinColumn(name = "news_id"),
 			inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags;
-
-	@Column
-	private LocalDateTime publishAt;
 
 	@Builder
 	public News(String title, String content, String link, LocalDateTime createAt, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
