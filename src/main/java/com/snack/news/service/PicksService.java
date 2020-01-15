@@ -22,5 +22,10 @@ public class PicksService {
 		Pageable pageable = PageRequest.of((int) page - 1, DEFAULT_PAGING_SIZE, SORT_BY_ID);
 		return picksRepository.findAll(pageable);
 	}
+
+	public Page<Pick> getPickPage(long lastPickId, int size) {
+		PageRequest pageRequest = PageRequest.of(0, size);
+		return picksRepository.findByIdLessThanOrderByIdDesc(lastPickId, pageRequest);
+	}
 }
 
