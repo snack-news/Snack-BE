@@ -15,8 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.filter;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -35,11 +33,13 @@ class PicksRepositoryTest {
 	@Test
 	@DisplayName("마지막으로 본 것 이후의 pick을 차례대로 가져온다")
 	void getPicksListTestForInfinityScroll() {
-		PageRequest pageRequest = PageRequest.of(0, 2);
 
-		final int lastPage = 3;
-		Page<Pick> pickPage = picksRepository.findByIdLessThanOrderByIdDesc(lastPage, pageRequest);
+		final int pageSize = 4;
+		PageRequest pageRequest = PageRequest.of(0, pageSize);
 
-		assertThat(pickPage.stream().map(Pick::getId)).containsExactly(2L, 1L);
+		final int lastPickId = 8;
+		Page<Pick> pickPage = picksRepository.findByIdLessThanOrderByIdDesc(lastPickId, pageRequest);
+
+		assertThat(pickPage.stream().map(Pick::getId)).containsExactly(7L, 6L, 5L, 4L);
 	}
 }

@@ -2,12 +2,14 @@ package com.snack.news.service;
 
 import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
+import com.snack.news.domain.picks.Pick;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
+import com.snack.news.repository.PicksRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ public class AdminService {
 	private final static int DEFAULT_PAGING_SIZE = 10;
 
 	private final NewsRepository newsRepository;
+	private final PicksRepository picksRepository;
 	private final CategoryService categoryService;
 	private final TopicService topicService;
 	private final TagService tagService;
@@ -86,5 +89,10 @@ public class AdminService {
 				category,
 				topics,
 				tags);
+	}
+
+	public Page<Pick> getPickPage(int page) {
+		Pageable pageable = PageRequest.of(page - 1, DEFAULT_PAGING_SIZE, SORT_BY_ID);
+		return picksRepository.findAll(pageable);
 	}
 }

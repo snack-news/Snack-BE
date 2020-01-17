@@ -7,9 +7,12 @@ import com.snack.news.exception.TagNotFoundException;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
+import com.snack.news.repository.PicksRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,6 +36,9 @@ class AdminServiceTest extends NewsFixture {
 
 	@Mock
 	private NewsRepository newsRepository;
+
+	@Mock
+	private PicksRepository picksRepository;
 
 	@Mock
 	private CategoryService categoryService;
@@ -110,5 +116,13 @@ class AdminServiceTest extends NewsFixture {
 	void deleteNewsTestWhenNotExistNewsId() {
 		doThrow(new IllegalArgumentException()).when(newsRepository).deleteById(anyLong());
 		assertThrows(NewsNotFoundException.class, () -> adminService.deleteNews(anyLong()));
+	}
+
+	@ParameterizedTest
+	@DisplayName("Admin에서 pick 리스트를 페이지별로 조회할 수 있다")
+	@ValueSource(ints = {1, Integer.MAX_VALUE})
+	void getPickListTestOrderByDate(final int page) {
+		adminService.getPickPage(page);
+		verify(picksRepository).findAll(any(Pageable.class));
 	}
 }
