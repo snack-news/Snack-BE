@@ -7,6 +7,7 @@ import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.PickDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import com.snack.news.repository.PicksRepository;
@@ -68,7 +69,6 @@ public class AdminService {
 	}
 
 	private News generateNews(AdminNewsDto newsDto) {
-		System.out.println("generateNews - " + newsDto);
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
@@ -89,6 +89,19 @@ public class AdminService {
 				category,
 				topics,
 				tags);
+	}
+
+	@Transactional
+	public PickDto createPick(PickDto pickDto) {
+		Pick pick = generatePick(pickDto);
+		picksRepository.save(pick);
+
+		return PickDto.builder().id(pick.getId()).build();
+	}
+
+	private Pick generatePick(PickDto pickDto) {
+		List<Topic> topics = topicService.getTopicList(pickDto.getTopicNames());
+		return pickDto.toEntity(topics);
 	}
 
 	public Page<Pick> getPickPage(int page) {

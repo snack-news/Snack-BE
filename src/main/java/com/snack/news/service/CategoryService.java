@@ -19,13 +19,13 @@ public class CategoryService {
 	@Transactional
 	public Category createCategory(CategoryDto categoryDto) {
 		Category category = categoryDto.getNewEntity();
-
 		return categoryRepository.save(category);
 	}
 
 	public Category getCategory(Long id) {
-		Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new);
-		return categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
+		return categoryRepository.findById(
+				Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new))
+				.orElseThrow(CategoryNotFoundException::new);
 	}
 
 

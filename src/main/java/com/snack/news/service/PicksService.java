@@ -1,7 +1,7 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.picks.Pick;
-import com.snack.news.dto.PicksDto;
+import com.snack.news.dto.PicksCursorResult;
 import com.snack.news.repository.PicksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -19,15 +19,15 @@ public class PicksService {
 
 	private final PicksRepository picksRepository;
 
-	public PicksDto getPickScrollPage(long lastPickId) {
+	public PicksCursorResult getPickScrollPage(long lastPickId) {
 		return getPickScrollPage(lastPickId, DEFAULT_PAGING_SIZE);
 	}
 
-	public PicksDto getPickScrollPage(long lastPickId, int pageSize) {
+	public PicksCursorResult getPickScrollPage(long lastPickId, int pageSize) {
 		PageRequest pageRequest = PageRequest.of(0, pageSize + 1);
 		List<Pick> pickList = picksRepository.findByIdLessThanOrderByIdDesc(lastPickId, pageRequest).getContent();
 
-		return new PicksDto(pickList, hasNextPicks(pickList));
+		return new PicksCursorResult(pickList, hasNextPicks(pickList));
 	}
 
 	private boolean hasNextPicks(List<Pick> pickList) {

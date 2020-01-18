@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class PicksDto {
+public class PicksCursorResult {
 	private List<Pick> pickList;
 	private boolean hasNext;
 

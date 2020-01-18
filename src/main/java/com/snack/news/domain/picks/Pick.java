@@ -1,7 +1,6 @@
 package com.snack.news.domain.picks;
 
 import com.snack.news.domain.base.BaseTimeEntity;
-import com.snack.news.domain.category.Category;
 import com.snack.news.domain.topic.Topic;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +22,6 @@ public class Pick extends BaseTimeEntity {
 
 	@Column(nullable = false)
 	private String link;
-
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category category;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "pick_topic",
