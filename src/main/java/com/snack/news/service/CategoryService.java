@@ -36,7 +36,7 @@ public class CategoryService {
 
 	@Transactional
 	public Category updateCategory(CategoryDto categoryDto) {
-		if(!categoryRepository.existsById(categoryDto.getId())) {
+		if (!categoryRepository.existsById(categoryDto.getId())) {
 			throw new CategoryNotFoundException();
 		}
 		return categoryRepository.save(categoryDto.getUpdateEntity());

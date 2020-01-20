@@ -1,6 +1,8 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.PickDto;
 import com.snack.news.domain.news.News;
+import com.snack.news.domain.picks.Pick;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.TagNotFoundException;
@@ -118,11 +120,21 @@ class AdminServiceTest extends NewsFixture {
 		assertThrows(NewsNotFoundException.class, () -> adminService.deleteNews(anyLong()));
 	}
 
+
 	@ParameterizedTest
 	@DisplayName("Admin에서 pick 리스트를 페이지별로 조회할 수 있다")
 	@ValueSource(ints = {1, Integer.MAX_VALUE})
 	void getPickListTestOrderByDate(final int page) {
 		adminService.getPickPage(page);
 		verify(picksRepository).findAll(any(Pageable.class));
+	}
+
+	@Test
+	@DisplayName("Pick을 추가할 수 있다")
+	void createPickTest() {
+		final PickDto validPickDto = PickDto.builder().build();
+
+		adminService.createPick(validPickDto);
+		verify(picksRepository).save(any(Pick.class));
 	}
 }
