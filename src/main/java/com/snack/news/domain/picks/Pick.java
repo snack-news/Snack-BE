@@ -24,10 +24,6 @@ public class Pick extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String link;
 
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category category;
-
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "pick_topic",
 			joinColumns = @JoinColumn(name = "pick_id"),

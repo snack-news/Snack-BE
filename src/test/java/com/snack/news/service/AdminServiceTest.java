@@ -1,12 +1,15 @@
 package com.snack.news.service;
 
+import com.snack.news.domain.PickDto;
 import com.snack.news.domain.news.News;
+import com.snack.news.domain.picks.Pick;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.TagNotFoundException;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
+import com.snack.news.repository.PicksRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +45,9 @@ class AdminServiceTest extends NewsFixture {
 
 	@Mock
 	private TagService tagService;
+
+	@Mock
+	private PicksRepository picksRepository;
 
 	@Test
 	@DisplayName("뉴스를 생성할 수 있다")
@@ -110,5 +116,14 @@ class AdminServiceTest extends NewsFixture {
 	void deleteNewsTestWhenNotExistNewsId() {
 		doThrow(new IllegalArgumentException()).when(newsRepository).deleteById(anyLong());
 		assertThrows(NewsNotFoundException.class, () -> adminService.deleteNews(anyLong()));
+	}
+
+	@Test
+	@DisplayName("Pick을 추가할 수 있다")
+	void createPickTest() {
+		final PickDto validPickDto = PickDto.builder().build();
+
+		adminService.createPick(validPickDto);
+		verify(picksRepository).save(any(Pick.class));
 	}
 }

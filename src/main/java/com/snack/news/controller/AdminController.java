@@ -1,5 +1,6 @@
 package com.snack.news.controller;
 
+import com.snack.news.domain.PickDto;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.picks.Pick;
 import com.snack.news.dto.AdminNewsDto;
@@ -19,7 +20,7 @@ import javax.validation.Valid;
 @RequestMapping("admin/api")
 public class AdminController {
 
-	private final long DEFAULT_PAGE_SIZE = 1L;
+	private final long DEFAULT_PAGE_NUM = 1L;
 
 	private final AdminService adminService;
 	private final PicksService picksService;
@@ -31,7 +32,7 @@ public class AdminController {
 
 	@GetMapping("/news")
 	public ResponseEntity<Page<News>> getNewsList() {
-		return getNewsList(DEFAULT_PAGE_SIZE);
+		return getNewsList(DEFAULT_PAGE_NUM);
 	}
 
 	@GetMapping("/news/{page}")
@@ -54,9 +55,14 @@ public class AdminController {
 		return ResponseEntity.ok().build();
 	}
 
+	@PostMapping("/picks")
+	public ResponseEntity<PickDto> createPick(@Valid @RequestBody PickDto pickDto) {
+		return WrappedResponse.ok(adminService.createPick(pickDto));
+	}
+
 	@GetMapping("/picks")
 	public ResponseEntity<Page<Pick>> getPickPage() {
-		return getPickPage(DEFAULT_PAGE_SIZE);
+		return getPickPage(DEFAULT_PAGE_NUM);
 	}
 
 	@GetMapping("/picks/{page}")

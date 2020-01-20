@@ -33,7 +33,6 @@ public class AdminNewsDto {
 	private String link;
 	@NotNull(message = "Category ID")
 	private Long categoryId;
-	private TopicType type;
 	private List<String> topicNames;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
