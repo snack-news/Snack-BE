@@ -3,7 +3,7 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.ListCursorResult;
-import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.RequestNewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
@@ -76,29 +76,31 @@ public class NewsControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 조회 요청이 ID가 부적절하다면 NOTFOUND 상태코드로 응답한다")
 	void requestCreateNewsTestWithInvalidNewsId() throws Exception {
-		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
+			when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
-		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNotFound());
-	}
+			mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
+					.contentType(MediaType.APPLICATION_JSON))
+					.andExpect(status().isNotFound());
+		}
 
-	@Test
-	@DisplayName("뉴스 리스트 조회 요청시 값이 있다면 OK 상태코드로 응답한다")
-	void requestNewsListTest() throws Exception {
-		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(mockNewsResult);
+		@Test
+		@DisplayName("뉴스 리스트 조회 요청시 값이 있다면 OK 상태코드로 응답한다")
+		void requestNewsListTest() throws Exception {
+			when(newsService.getNewsList(any(RequestNewsDto.class))).thenReturn(mockNewsResult);
 
-		mockMvc.perform(get(NEWS_API_URL))
-				.andExpect(status().isOk());
+			final String necessaryQueryString = "?startDateTime=2019-07-01T00:00";
+			mockMvc.perform(get(NEWS_API_URL + necessaryQueryString))
+					.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("뉴스 리스트 조회 요청시 값이 없다면 NOCONTENT 상태코드로 응답한다")
 	void requestNewsListTestWhenNoneResult() throws Exception {
-		final ListCursorResult<News> emptyResult = new ListCursorResult<>(Collections.emptyList(), false);
-		when(newsService.getNewsList(any(NewsDto.class))).thenReturn(emptyResult);
+		ListCursorResult<News> emptyResult = new ListCursorResult<>(Collections.emptyList(), false);
+		when(newsService.getNewsList(any(RequestNewsDto.class))).thenReturn(emptyResult);
 
-		mockMvc.perform(get(NEWS_API_URL))
+		final String necessaryQueryString = "?startDateTime=2019-07-01T00:00";
+		mockMvc.perform(get(NEWS_API_URL + necessaryQueryString))
 				.andExpect(status().isNoContent());
 	}
 }

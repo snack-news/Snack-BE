@@ -2,12 +2,14 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.ListCursorResult;
-import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.RequestNewsDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
@@ -16,7 +18,7 @@ public class NewsController {
 	private final NewsService newsService;
 
 	@GetMapping
-	public ResponseEntity<ListCursorResult<News>> getNewsList(@ModelAttribute NewsDto newsDto) {
+	public ResponseEntity<ListCursorResult<News>> getNewsList(@ModelAttribute @Valid RequestNewsDto newsDto) {
 		ListCursorResult<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();

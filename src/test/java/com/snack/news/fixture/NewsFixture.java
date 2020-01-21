@@ -4,6 +4,7 @@ import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.ListCursorResult;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.RequestNewsDto;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public abstract class NewsFixture {
 
 	protected News mockNews;
 	protected NewsDto mockNewsDto;
+	protected RequestNewsDto mockRequestNewsDto;
 	protected AdminNewsDto mockAdminNewsDto;
 	protected List<News> mockNewsList;
 	protected ListCursorResult<News> mockNewsResult;
@@ -34,12 +36,15 @@ public abstract class NewsFixture {
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.link(TEST_LINK)
-				.startDateTime(VALID_START_DATE)
-				.endDateTime(VALID_END_DATE)
-				.limitSize(TEST_LIMIT_SIZE)
 				.build();
 
 		mockNews = mockNewsDto.toEntity(null, null, null);
+
+		mockRequestNewsDto = RequestNewsDto.builder()
+				.startDateTime(VALID_START_DATE)
+				.lastNewsId(TEST_SOME_ID_LONG)
+				.limitSize(100)
+				.build();
 
 		mockAdminNewsDto = AdminNewsDto.builder()
 				.title(TEST_TITLE)

@@ -4,7 +4,7 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.RequestNewsDto;
 import com.snack.news.fixture.NewsFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DataJpaTest
 class NewsRepositoryTest extends NewsFixture {
 
-	private static final LocalDateTime TEST_TIME = LocalDateTime.of(2019, 7, 1, 0, 0);
+	private static final LocalDateTime TEST_TIME = LocalDateTime.of(2020, 1, 20, 0, 0);
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -62,7 +62,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByCategory() {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 
-		NewsDto queryNewsDtoWithCategory = NewsDto.builder().categoryId(category.getId()).build();
+		RequestNewsDto queryNewsDtoWithCategory = RequestNewsDto.builder().categoryId(category.getId()).build();
 		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory, TEST_TIME)
 				.stream()
 				.map(News::getId)
@@ -83,7 +83,7 @@ class NewsRepositoryTest extends NewsFixture {
 		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 25, 0, 0);
 		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 30, 11, 59);
 
-		NewsDto queryNewsDtoWithDate = NewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
+		RequestNewsDto queryNewsDtoWithDate = RequestNewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
 		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, TEST_TIME)
 				.stream()
@@ -93,7 +93,7 @@ class NewsRepositoryTest extends NewsFixture {
 		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
 				.filter(n -> n.getPublishAt().isBefore(endDate))
 				.filter(n -> n.getPublishAt().isAfter(startDate))
-				.filter(n -> n.getPublishAt().isAfter(TEST_TIME))
+				.filter(n -> n.getPublishAt().isBefore(TEST_TIME))
 				.sorted(Comparator.comparing(News::getPublishAt).reversed())
 				.map(News::getId)
 				.collect(toList());
@@ -107,7 +107,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByTopic() {
 		List<Long> testTopicIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDtoWithTopic = NewsDto.builder()
+		RequestNewsDto queryNewsDtoWithTopic = RequestNewsDto.builder()
 				.topicIds(testTopicIds)
 				.build();
 
@@ -133,7 +133,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByTag() {
 		List<Long> testTagIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDtoWithTag = NewsDto.builder()
+		RequestNewsDto queryNewsDtoWithTag = RequestNewsDto.builder()
 				.tagIds(testTagIds)
 				.build();
 
@@ -163,7 +163,7 @@ class NewsRepositoryTest extends NewsFixture {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 		final List<Long> tagIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDto = NewsDto.builder()
+		RequestNewsDto queryNewsDto = RequestNewsDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
 				.categoryId(category.getId())
@@ -274,7 +274,7 @@ class NewsRepositoryTest extends NewsFixture {
 	@Transactional
 	void newsLimitSizeTest() {
 		final int limitNewsSize = 5;
-		NewsDto queryNewsDto = NewsDto.builder()
+		RequestNewsDto queryNewsDto = RequestNewsDto.builder()
 				.limitSize(limitNewsSize)
 				.build();
 

@@ -2,8 +2,8 @@ package com.snack.news.service;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.ListCursorResult;
-import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.Period;
+import com.snack.news.dto.RequestNewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
@@ -17,23 +17,26 @@ public class NewsService {
 
 	private final NewsRepository newsRepository;
 
-	public ListCursorResult<News> getNewsList(NewsDto newsDto) {
+	public ListCursorResult<News> getNewsList(RequestNewsDto newsDto) {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
 		List<News> newsList = newsRepository.findByNewsDto(newsDto);
-		return new ListCursorResult<>(newsList, hasNext(newsList, newsDto));
+		return new ListCursorResult<>(newsList, hasNext(newsList));
 	}
 
-	private boolean hasNext(List<News> list, NewsDto newsDto) {
-		newsDto.setLimitSize(1);
-		newsDto.setId(getLastElementInList(list).getId());
+	private boolean hasNext(List<News> list) {
+		if (list.isEmpty()) {
+			return false;
+		}
 
-		return !newsRepository.findByNewsDto(newsDto).isEmpty();
+		RequestNewsDto requestDto = RequestNewsDto.builder()
+				.limitSize(1)
+				.lastNewsId(getLastElementInList(list).getId())
+				.build();
+
+		return !newsRepository.findByNewsDto(requestDto).isEmpty();
 	}
 
 	private <E> E getLastElementInList(List<E> list) {
-		if(list == null) throw new IllegalArgumentException();
-		if(list.isEmpty()) throw new IllegalArgumentException();
-
 		return list.get(list.size() - 1);
 	}
 
