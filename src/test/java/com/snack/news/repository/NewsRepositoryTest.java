@@ -26,6 +26,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -157,8 +158,8 @@ class NewsRepositoryTest extends NewsFixture {
 	@Transactional
 	void getNewsListTest() {
 		final List<Long> testTopicIds = Arrays.asList(1L, 2L);
-		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
-		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
+		final LocalDateTime start = LocalDateTime.of(2019, 11, 25, 0, 0);
+		final LocalDateTime end = LocalDateTime.of(2019, 11, 30, 0, 0);
 		final Category category = Category.builder().id(2L).title("커머스").build();
 		final List<Long> tagIds = Collections.singletonList(1L);
 
@@ -266,5 +267,23 @@ class NewsRepositoryTest extends NewsFixture {
 		newsRepository.save(someNews);
 
 		assertThat(newsRepository.getOne(1L).getTitle()).isEqualTo(changedTitle);
+	}
+
+	@Test
+	@DisplayName("뉴스 개수를 정하여 가져올 수 있다.")
+	@Transactional
+	void newsLimitSizeTest() {
+		final int limitNewsSize = 5;
+		NewsDto queryNewsDto = NewsDto.builder()
+				.limitSize(limitNewsSize)
+				.build();
+
+		List<News> actualResultNewsList = newsRepository.findByNewsDto(queryNewsDto, TEST_TIME);
+		List<News> originNewsList = newsRepository.findAll();
+
+		assertAll(
+				() -> assertThat(originNewsList.size()).isNotEqualTo(limitNewsSize),
+				() -> assertThat(actualResultNewsList.size()).isEqualTo(limitNewsSize)
+		);
 	}
 }

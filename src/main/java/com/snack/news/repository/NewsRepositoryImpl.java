@@ -5,6 +5,7 @@ import com.snack.news.dto.NewsDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -50,13 +51,22 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt").as(LocalDateTime.class), now));
 		}
 
+		if(newsDto.getId() != null) {
+			criteria.add(builder.lessThan(nr.get("id"), newsDto.getId()));
+		}
+
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
 
 		query.where(builder.and(conditionOfDto))
 				.orderBy(builder.desc(nr.get("publishAt")))
 				.distinct(true);
 
-		return em.createQuery(query).getResultList();
+		TypedQuery<News> typedQuery = em.createQuery(query);
+		if(newsDto.getLimitSize() != 0) {
+			typedQuery.setMaxResults(newsDto.getLimitSize());
+		}
+
+		return typedQuery.getResultList();
 	}
 
 	@Override
