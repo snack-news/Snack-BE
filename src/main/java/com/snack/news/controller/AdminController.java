@@ -2,7 +2,6 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
-import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.AdminService;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,7 @@ public class AdminController {
 	private final AdminService adminService;
 
 	@PostMapping("/news")
-	public ResponseEntity<NewsDto> createNews(@Valid @RequestBody AdminNewsDto newsDto) {
+	public ResponseEntity<AdminNewsDto> createNews(@Valid @RequestBody AdminNewsDto newsDto) {
 		return WrappedResponse.ok(adminService.createNews(newsDto));
 	}
 
@@ -40,12 +39,12 @@ public class AdminController {
 	}
 
 	@PutMapping("/news/{newsId}")
-	public ResponseEntity<NewsDto> updateNews(@PathVariable long newsId, @Valid @RequestBody AdminNewsDto newsDto) {
+	public ResponseEntity<AdminNewsDto> updateNews(@PathVariable long newsId, @Valid @RequestBody AdminNewsDto newsDto) {
 		return WrappedResponse.ok(adminService.updateNews(newsId, newsDto));
 	}
 
 	@DeleteMapping("/news/{id}")
-	public ResponseEntity<NewsDto> deleteNews(@PathVariable long id) {
+	public ResponseEntity<AdminNewsDto> deleteNews(@PathVariable long id) {
 		adminService.deleteNews(id);
 		return ResponseEntity.ok().build();
 	}

@@ -61,9 +61,9 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 				.distinct(true);
 
 		TypedQuery<News> typedQuery = em.createQuery(query);
-		/*if(requestNewsDto.getLimitSize() != 0) {
+		if(requestNewsDto.getLimitSize() != 0) {
 			typedQuery.setMaxResults(requestNewsDto.getLimitSize());
-		}*/
+		}
 
 		return typedQuery.getResultList();
 	}
