@@ -12,53 +12,36 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PeriodTest {
 
 	@Test
-	@DisplayName("두 날짜가 한주 내에 포함되고 같은 달이고 월요일로 시작한다")
-	void periodValidationTestWhenDatesWithinOneWeekAndStartMonday() {
+	@DisplayName("시작일과 마지막일이 주어지고 시작일보다 마지막일이 나중이다")
+	void periodValidationTestWithStartDateAndEndDate() {
 		LocalDateTime startOfMonday = LocalDateTime.of(2019, 7, 29, 0, 0);
 		LocalDateTime endOfWednesday = LocalDateTime.of(2019, 7, 31, 0, 0);
 
-		assertDoesNotThrow(() -> new Period(startOfMonday, endOfWednesday).validationCheck());
+		 assertDoesNotThrow(() -> new Period(startOfMonday, endOfWednesday).validationCheck());
 	}
 
 	@Test
-	@DisplayName("두 날짜가 한주 내에 포함되고 같은 달이고 일요일로 끝난다")
-	void periodValidationTestWhenDatesWithinOneWeekEndSunday() {
-		LocalDateTime startOfWednesday = LocalDateTime.of(2019, 8, 1, 0, 0);
-		LocalDateTime endOfSunday = LocalDateTime.of(2019, 8, 4, 0, 0);
-
-		assertDoesNotThrow(() -> new Period(startOfWednesday, endOfSunday).validationCheck());
-	}
-
-	@Test
-	@DisplayName("두 날짜가 한주 내에 포함되고 같은 달이지만 월요일로 시작하지 않고 일요일로 끝나지 않으면 예외가 발생한다")
-	void periodValidationTestWhenDatesWithinOneWeekButInvalidBothDate() {
-		LocalDateTime start = LocalDateTime.of(2019, 8, 1, 0, 0);
-		LocalDateTime endOfSaturday = LocalDateTime.of(2019, 8, 3, 0, 0);
-
-		assertThrows(NewsBadRequestException.class, () -> new Period(start, endOfSaturday).validationCheck());
-	}
-
-	@Test
-	@DisplayName("두 날짜가 한주 내에 포함되지만 달이 다르면 예외가 발생한다")
-	void periodValidationTestWhenDatesWithinOneWeekButDifferentMonth() {
+	@DisplayName("시작일만 주어지고 시작일보다 마지막일이 나중이다")
+	void periodValidationTestWithStartDate() {
 		LocalDateTime startOfMonday = LocalDateTime.of(2019, 7, 29, 0, 0);
-		LocalDateTime endOfSunday = LocalDateTime.of(2019, 8, 4, 0, 0);
 
-		assertThrows(NewsBadRequestException.class, () -> new Period(startOfMonday, endOfSunday).validationCheck());
+		assertDoesNotThrow(() -> new Period(startOfMonday, null).validationCheck());
 	}
 
 	@Test
-	@DisplayName("두 날짜의 차가 일주일이 넘으면 예외가 발생한다")
-	void periodValidationTestWhenExceedOneWeek() {
+	@DisplayName("시작일이 없다면 예외가 발생한다")
+	void periodValidationTestWhenNoneStartDate() {
+		LocalDateTime endOfWednesday = LocalDateTime.of(2019, 7, 31, 0, 0);
+
+		assertThrows(NewsBadRequestException.class, () -> new Period(null, endOfWednesday).validationCheck());
+	}
+
+	@Test
+	@DisplayName("마지막일이 시작일보다 이른경우 예외가 발생한다")
+	void periodValidationTestWhenStartDateAfterThenEndDate() {
 		LocalDateTime startOfMonday = LocalDateTime.of(2019, 7, 29, 0, 0);
-		LocalDateTime startOfNextMonday = LocalDateTime.of(2019, 8, 5, 0, 0);
+		LocalDateTime endOfWednesday = LocalDateTime.of(2019, 7, 28, 0, 0);
 
-		assertThrows(NewsBadRequestException.class, () -> new Period(startOfMonday, startOfNextMonday).validationCheck());
-	}
-
-	@Test
-	@DisplayName("날짜 값이 입력되지 않았다면 예외가 발생한다")
-	void periodValidationTestWhenNoneValue() {
-		assertThrows(NewsBadRequestException.class, () -> new Period(null, null).validationCheck());
+		assertThrows(NewsBadRequestException.class, () -> new Period(startOfMonday, endOfWednesday).validationCheck());
 	}
 }
