@@ -9,6 +9,7 @@ import com.snack.news.domain.topic.TopicType;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,11 +34,16 @@ public class NewsDto {
 	private List<Long> topicIds;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime publishAt;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime startDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime endDateTime;
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime publishAt;
+
+	@NotNull
+	@Max(value = 100)
+	private int limitSize;
 
 	@JsonIgnore
 	public News toEntity(Category category, List<Topic> topics, List<Tag> tags) {

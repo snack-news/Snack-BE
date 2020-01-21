@@ -15,10 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class NewsServiceTest extends NewsFixture {
@@ -33,10 +31,10 @@ class NewsServiceTest extends NewsFixture {
 	@DisplayName("뉴스 리스트를 조회할 수 있다")
 	void getNewsListTest() {
 		NewsDto newsDtoWithValidDates = mockNewsDto;
-		when(newsRepository.findByNewsDto(newsDtoWithValidDates)).thenReturn(any());
+		when(newsRepository.findByNewsDto(newsDtoWithValidDates)).thenReturn(mockNewsList);
 
 		newsService.getNewsList(newsDtoWithValidDates);
-		verify(newsRepository).findByNewsDto(any(NewsDto.class));
+		verify(newsRepository, times(2)).findByNewsDto(any(NewsDto.class));
 	}
 
 	@Test
