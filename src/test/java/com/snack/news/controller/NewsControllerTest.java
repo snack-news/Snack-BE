@@ -76,21 +76,22 @@ public class NewsControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 조회 요청이 ID가 부적절하다면 NOTFOUND 상태코드로 응답한다")
 	void requestCreateNewsTestWithInvalidNewsId() throws Exception {
-			when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
+		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
-			mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
-					.contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isNotFound());
-		}
+		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+	}
 
-		@Test
-		@DisplayName("뉴스 리스트 조회 요청시 값이 있다면 OK 상태코드로 응답한다")
-		void requestNewsListTest() throws Exception {
-			when(newsService.getNewsList(any(RequestNewsDto.class))).thenReturn(mockNewsResult);
+	@Test
+	@DisplayName("뉴스 리스트 조회 요청시 값이 있다면 OK 상태코드로 응답한다")
+	void requestNewsListTest() throws Exception {
 
-			final String necessaryQueryString = "?startDateTime=2019-07-01T00:00";
-			mockMvc.perform(get(NEWS_API_URL + necessaryQueryString))
-					.andExpect(status().isOk());
+		when(newsService.getNewsList(any(RequestNewsDto.class))).thenReturn(mockNewsResult);
+
+		final String necessaryQueryString = "?startDateTime=2019-07-01T00:00";
+		mockMvc.perform(get(NEWS_API_URL + necessaryQueryString))
+				.andExpect(status().isOk());
 	}
 
 	@Test
