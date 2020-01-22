@@ -4,66 +4,53 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.dto.CategoryDto;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.repository.CategoryRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.concurrent.ThreadLocalRandom;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+@ExtendWith(MockitoExtension.class)
+class CategoryServiceTest {
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class CategoryServiceTest {
-
-	@Autowired
+	@InjectMocks
 	private CategoryService categoryService;
 
-	@Autowired
+	@Mock
 	private CategoryRepository categoryRepository;
 
 	@Test
-	@Transactional
-	public void 카테고리를_생성할_수_있다() {
-		final String testCategoryTitle = Long.toString(ThreadLocalRandom.current().nextLong());
-		CategoryDto categoryDto = CategoryDto.builder().title(testCategoryTitle).build();
-		Category savedCategory = categoryService.createCategory(categoryDto);
+	@DisplayName("카테고리를 생성할 수 있다")
+	void createCategoryTest() {
+		CategoryDto categoryDto = CategoryDto.builder().title(anyString()).build();
 
-		Category expectedCategory = findCategoryByIdOrElseThrowException(savedCategory.getId());
-		assertThat(expectedCategory.getTitle(), equalTo(testCategoryTitle));
+		categoryService.createCategory(categoryDto);
+		verify(categoryRepository).save(any(Category.class));
 	}
 
 	@Test
-	@Transactional
-	public void 카테고리를_수정할_수_있다() {
-		final String originTestCategoryTitle = Long.toString(ThreadLocalRandom.current().nextLong());
-		CategoryDto originCategoryDto = CategoryDto.builder().title(originTestCategoryTitle).build();
+	@DisplayName("카테고리를 수정할 수 있다")
+	void updateCategoryTest() {
+		CategoryDto originCategoryDto = CategoryDto.builder().build();
+		when(categoryRepository.existsById(any())).thenReturn(true);
 
-		Category savedCategory = categoryRepository.save(originCategoryDto.getNewEntity());
-
-		final String updatedTestCategoryTitle = Long.toString(ThreadLocalRandom.current().nextLong());
-		CategoryDto updateCategoryDto = CategoryDto.builder().id(savedCategory.getId()).title(updatedTestCategoryTitle).build();
-
-		categoryService.updateCategory(updateCategoryDto);
-		Category expectedCategory = findCategoryByIdOrElseThrowException(savedCategory.getId());
-
-		assertThat(expectedCategory.getTitle(), equalTo(updatedTestCategoryTitle));
+		categoryService.updateCategory(originCategoryDto);
+		verify(categoryRepository).save(originCategoryDto.getUpdateEntity());
 	}
 
-	private Category findCategoryByIdOrElseThrowException(long id) {
-		return categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
-	}
-
-	@Test(expected = CategoryNotFoundException.class)
-	@Transactional
-	public void 카테고리_ID가_유효하지_않다면_예외를_반환한다() {
-		final long invalidId = ThreadLocalRandom.current().nextLong();
+	@Test
+	@DisplayName("카테고리 수정 시 Category id가 유효하지 않다면 예외를 반환한다")
+	void updateCategoryTestWhenIllegalCategoryId() {
+		long invalidId = 999L;
 		CategoryDto invalidIdDto = CategoryDto.builder().id(invalidId).build();
 
-		categoryService.updateCategory(invalidIdDto);
+		when(categoryRepository.existsById(anyLong())).thenReturn(false);
+		assertThrows(CategoryNotFoundException.class, () -> categoryService.updateCategory(invalidIdDto));
 	}
 }

@@ -1,14 +1,15 @@
 package com.snack.news.config;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,9 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class MetaControllerTest {
+class MetaControllerTest {
 	private final static String PROFILE_API_URL = "/meta/profile";
 
 	@Autowired
@@ -34,19 +35,22 @@ public class MetaControllerTest {
 
 	private MockMvc mockMvc;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 
-	public void Profile를_확인할_수_있다() {
+	@Test
+	@DisplayName("Profile를 확인할 수 있다")
+	void profileTest() {
 		String profile = this.restTemplate.getForObject(PROFILE_API_URL, String.class);
 
 		assertThat(profile).isEqualTo("local");
 	}
 
 	@Test
-	public void Profile_API는_CORS를_허용한다() throws Exception {
+	@DisplayName("Profil API는 CORS를 허용한다")
+	void corsTest() throws Exception {
 		mockMvc.perform(get(PROFILE_API_URL)
 				.header(HttpHeaders.ORIGIN, "http://cross.domain")
 				.header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.GET)

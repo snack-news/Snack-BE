@@ -61,11 +61,12 @@ public class TopicService {
 	}
 
 	private Topic createTopicIfAbsent(String topicName) {
-		if (topicRepository.existsByNameNot(topicName)) {
-			TopicDto topic = TopicDto.builder().name(topicName).type(TopicType.CORP).build();
-			return createTopic(topic);
+		if (topicRepository.existsByName(topicName)) {
+			return topicRepository.findByName(topicName);
 		}
-		return topicRepository.findByName(topicName);
+
+		TopicDto topic = TopicDto.builder().name(topicName).type(TopicType.CORP).build();
+		return createTopic(topic);
 	}
 
 	@Transactional

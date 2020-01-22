@@ -3,7 +3,7 @@ package com.snack.news.fixture;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +21,7 @@ public abstract class NewsFixture {
 	protected NewsDto mockNewsDto;
 	protected AdminNewsDto mockAdminNewsDto;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		mockNewsDto = NewsDto.builder()
 				.title(TEST_TITLE)
@@ -42,6 +42,5 @@ public abstract class NewsFixture {
 				.content(TEST_CONTENT)
 				.link(TEST_LINK)
 				.build();
-
 	}
 }

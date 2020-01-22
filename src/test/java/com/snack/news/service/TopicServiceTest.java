@@ -8,11 +8,12 @@ import com.snack.news.dto.TopicDto;
 import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.TopicFixture;
 import com.snack.news.repository.TopicRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Arrays;
@@ -20,18 +21,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.snack.news.matcher.ContainsInAnyOrder.containsInAnyOrder;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 
-@RunWith(MockitoJUnitRunner.class)
-public class TopicServiceTest extends TopicFixture {
+
+@ExtendWith(MockitoExtension.class)
+class TopicServiceTest extends TopicFixture {
 
 	@InjectMocks
 	private TopicService topicService;
@@ -40,39 +41,41 @@ public class TopicServiceTest extends TopicFixture {
 	private TopicRepository topicRepository;
 
 	@Test
-	public void 회사토픽들을_토픽명순으로_조회할_수_있다() {
+	@DisplayName("회사토픽들을 토픽명순으로 조회할 수 있다")
+	void getTopicListTestSortedByTopicName() {
 		Topic testTopic01 = Topic.builder().name(PublishedCorpTopic.YANOLJA.getName()).type(TopicType.CORP).build();
 		Topic testTopic02 = Topic.builder().name(PublishedCorpTopic.WOOWA_BROS.getName()).type(TopicType.CORP).build();
 		Topic testTopic03 = Topic.builder().name(PublishedCorpTopic.WEMAKEPRICE.getName()).type(TopicType.CORP).build();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
-		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
+		assertThat(unsortedTopicList).doesNotContainSequence(testTopic01, testTopic02, testTopic03);
 
 		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(unsortedTopicList);
 
 		List<Topic> resultTopicList = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.NAME);
-
-		assertThat(resultTopicList, contains(testTopic01, testTopic02, testTopic03));
+		assertThat(resultTopicList).containsExactlyInAnyOrder(testTopic01, testTopic02, testTopic03);
 	}
 
 	@Test
-	public void 토픽들을_ID순으로_조회할_수_있다() {
+	@DisplayName("토픽들을 ID순으로 조회할 수 있다")
+	void getTopicListTestSortedByTopicId() {
 		Topic testTopic01 = TopicDto.builder().name(PublishedCorpTopic.COUPANG.getName()).id(1L).type(TopicType.CORP).build().getTopicUpdateEntity();
 		Topic testTopic02 = TopicDto.builder().name(PublishedCorpTopic.YANOLJA.getName()).id(2L).type(TopicType.CORP).build().getTopicUpdateEntity();
 		Topic testTopic03 = TopicDto.builder().name(PublishedCorpTopic.VIVA_REPUBLICA.getName()).id(3L).type(TopicType.CORP).build().getTopicUpdateEntity();
 
 		List<Topic> unsortedTopicList = Arrays.asList(testTopic02, testTopic03, testTopic01);
-		assertThat(unsortedTopicList, not(contains(testTopic01, testTopic02, testTopic03)));
+		assertThat(unsortedTopicList).doesNotContainSequence(testTopic01, testTopic02, testTopic03);
 
 		when(topicRepository.findAllByTypeIs(eq(TopicType.CORP))).thenReturn(unsortedTopicList);
 
 		List<Topic> resultTopicListSortedByID = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.ID);
 
-		assertThat(resultTopicListSortedByID, contains(testTopic01, testTopic02, testTopic03));
+		assertThat(resultTopicListSortedByID).containsExactlyInAnyOrder(testTopic01, testTopic02, testTopic03);
 	}
 
 	@Test
-	public void 노출가능한_토픽들만_조회가_가능하다() {
+	@DisplayName("노출가능한 토픽들만 조회가 가능하다")
+	void getTopicListTestOnlyTopicToBeExposure() {
 		Topic publishedTopic1 = Topic.builder().name(PublishedCorpTopic.YANOLJA.getName()).type(TopicType.CORP).build();
 		Topic unPublishedTopic = Topic.builder().name("노출이되지않는회사이름").type(TopicType.CORP).build();
 		Topic publishedTopic2 = Topic.builder().name(PublishedCorpTopic.WOOWA_BROS.getName()).type(TopicType.CORP).build();
@@ -81,31 +84,35 @@ public class TopicServiceTest extends TopicFixture {
 
 		List<Topic> resultTopicList = topicService.getTypeTopicList(TopicType.CORP, TopicSorting.NAME);
 
-		assertThat(resultTopicList, contains(publishedTopic1, publishedTopic2));
+		assertThat(resultTopicList).contains(publishedTopic1, publishedTopic2);
 	}
 
 	@Test
-	public void 토픽을_등록할_수_있다() {
+	@DisplayName("토픽을 등록할 수 있다")
+	void createTopicTest() {
 		TopicDto topicDto = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		Topic topicEntityByDto = topicDto.getTopicNewEntity();
 
 		when(topicRepository.save(topicEntityByDto)).thenReturn(topicEntityByDto);
 		Topic resultTopic = topicService.createTopic(topicDto);
 
-		assertThat(topicEntityByDto, equalTo(resultTopic));
+		assertEquals(topicEntityByDto, resultTopic);
 	}
 
-	@Test(expected = TopicNotFoundException.class)
-	public void 토픽_등록시_중복된_이름이라면_예외가_발생한다() {
+	@Test
+	@DisplayName("토픽 등록시 중복된 이름이라면 예외가 발생한다")
+	void createTopicTestWhenDuplicateTopicName() {
 		TopicDto topicDto = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
 		Topic topicEntityByDto = topicDto.getTopicNewEntity();
 
 		when(topicRepository.save(topicEntityByDto)).thenThrow(DataIntegrityViolationException.class);
-		topicService.createTopic(topicDto);
+
+		assertThrows(TopicNotFoundException.class, () -> topicService.createTopic(topicDto));
 	}
 
 	@Test
-	public void 토픽을_수정_할_수_있다() {
+	@DisplayName("토픽을 수정 할 수 있다")
+	void updateTopicTest() {
 		final String updatedDataWithTopicName = "UPDATE_TOPIC_NAME";
 		long savedTopicId = SOME_SAVED_TEST_TOPIC.getId();
 
@@ -120,11 +127,12 @@ public class TopicServiceTest extends TopicFixture {
 		when(topicRepository.save(editedTopic)).thenReturn(editedTopic);
 
 		Topic resultTopic = topicService.updateTopic(editedTopicDto);
-		assertThat(resultTopic.getName(), equalTo(updatedDataWithTopicName));
+		assertEquals(resultTopic.getName(), updatedDataWithTopicName);
 	}
 
-	@Test(expected = TopicNotFoundException.class)
-	public void 수정을_시도한_토픽이_존재하지_않는다면_예외가_발생한다() {
+	@Test
+	@DisplayName("수정을 시도한 토픽이 존재하지 않는다면 예외가 발생한다")
+	void updateTopicTestWhenNoneExistTopic() {
 		final String updatedDataWithTopicName = "UPDATE_TOPIC_NAME";
 		long savedTopicId = SOME_SAVED_TEST_TOPIC.getId();
 
@@ -135,28 +143,29 @@ public class TopicServiceTest extends TopicFixture {
 				.build();
 
 		when(topicRepository.findById(savedTopicId)).thenThrow(TopicNotFoundException.class);
-
-		topicService.updateTopic(editedTopicDto);
+		assertThrows(TopicNotFoundException.class, () -> topicService.updateTopic(editedTopicDto));
 	}
 
 	@Test
-	public void 토픽이름를_받아_토픽_리스트를_반환한다() {
+	@DisplayName("토픽이름을 받아 토픽 리스트를 반환한다")
+	void getTopicListTest() {
 		final String topicNameKakao = "카카오";
 		final List<String> validTopicNames = Collections.singletonList(topicNameKakao);
 
 		Topic topicKakao = TopicDto.builder().name(topicNameKakao).type(TopicType.CORP).build().getTopicNewEntity();
 		final List<Topic> dummyResult = Collections.singletonList(topicKakao);
 
-		when(topicRepository.existsByNameNot(anyString())).thenReturn(false);
+		when(topicRepository.existsByName(anyString())).thenReturn(true);
 		when(topicRepository.findByName(anyString())).thenReturn(topicKakao);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
 		verify(topicRepository, times(0)).save(topicKakao);
-		assertThat(realResult, containsInAnyOrder(dummyResult));
+		assertThat(realResult).containsExactlyInAnyOrderElementsOf(dummyResult);
 	}
 
 	@Test
-	public void 토픽이름에_해당하는_토픽이_없으면_새_토픽을_생성한_후_반환한다() {
+	@DisplayName("토픽이름에 해당하는 토픽이 없으면 새 토픽을 생성한 후 반환한다")
+	void createTopicTestWhenNonExistTopicName() {
 		final String newTopicName = "없는 토픽";
 		final List<String> validTopicNames = Collections.singletonList(newTopicName);
 
@@ -164,10 +173,10 @@ public class TopicServiceTest extends TopicFixture {
 
 		final List<Topic> dummyResult = Collections.singletonList(newTopic);
 
-		when(topicRepository.existsByNameNot(anyString())).thenReturn(true);
+		when(topicRepository.existsByName(anyString())).thenReturn(false);
 
 		List<Topic> realResult = topicService.getTopicList(validTopicNames);
 		verify(topicRepository, times(1)).save(newTopic);
-		assertThat(realResult, containsInAnyOrder(dummyResult));
+		assertThat(realResult).containsExactlyInAnyOrderElementsOf(dummyResult);
 	}
 }
