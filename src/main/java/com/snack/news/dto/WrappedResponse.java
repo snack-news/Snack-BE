@@ -20,7 +20,7 @@ public class WrappedResponse<T> {
 
 	@AllArgsConstructor
 	@Getter
-	private static class Wrapper<R> {
-		private R data;
+	private static class Wrapper<T> {
+		private T data;
 	}
 }

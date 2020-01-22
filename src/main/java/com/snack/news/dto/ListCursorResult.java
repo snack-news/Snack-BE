@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ListCursorResult<R> {
-	private List<R> list;
+public class ListCursorResult<T> {
+	private List<T> list;
 	private boolean hasNext;
 
 	public boolean isEmpty() {
