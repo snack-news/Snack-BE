@@ -18,6 +18,8 @@ import java.util.List;
 public class RequestNewsDto {
 
 	public static final int DEFAULT_LIMIT_NEWS_LIST_SIZE = 10;
+	public static final int MIN_LIMIT_NEWS_LIST_SIZE = 1;
+	public static final int MAX_LIMIT_NEWS_LIST_SIZE = 100;
 
 	private Long lastNewsId = Long.MAX_VALUE;
 	@NotNull
@@ -30,7 +32,7 @@ public class RequestNewsDto {
 	private List<Long> topicIds;
 	private List<Long> tagIds;
 
-	@Min(1)
-	@Max(100)
+	@Min(MIN_LIMIT_NEWS_LIST_SIZE)
+	@Max(MAX_LIMIT_NEWS_LIST_SIZE)
 	private int limitSize = DEFAULT_LIMIT_NEWS_LIST_SIZE;
 }
