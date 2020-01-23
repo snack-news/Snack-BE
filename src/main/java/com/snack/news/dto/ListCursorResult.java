@@ -8,10 +8,10 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class ListCursorResult<T> {
-	private List<T> list;
+	private List<T> data;
 	private boolean hasNext;
 
 	public boolean isEmpty() {
-		return list.isEmpty();
+		return data.isEmpty();
 	}
 }

@@ -23,7 +23,8 @@ public class NewsController {
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
-		return WrappedResponse.ok(result);
+
+		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/{newsId}")
