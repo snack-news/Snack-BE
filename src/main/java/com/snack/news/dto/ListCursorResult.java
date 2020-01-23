@@ -1,17 +1,18 @@
 package com.snack.news.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
-public class ListCursorResult<T> {
-	private List<T> data;
+public class ListCursorResult<T> extends Wrapper<List<T>> {
 	private boolean hasNext;
 
+	public ListCursorResult(List<T> data) {
+		super(data);
+	}
+
 	public boolean isEmpty() {
-		return data.isEmpty();
+		return getData().isEmpty();
 	}
 }

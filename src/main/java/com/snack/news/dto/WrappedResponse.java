@@ -1,6 +1,5 @@
 package com.snack.news.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
@@ -13,14 +12,7 @@ public class WrappedResponse<T> {
 		this.data = data;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T> ResponseEntity<T> ok(T body) {
-		return (ResponseEntity<T>) ResponseEntity.ok(new Wrapper(body));
-	}
-
-	@AllArgsConstructor
-	@Getter
-	private static class Wrapper<T> {
-		private T data;
+	public static <T> ResponseEntity<Wrapper<T>> ok(T body) {
+		return ResponseEntity.ok(new Wrapper<>(body));
 	}
 }
