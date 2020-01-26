@@ -3,6 +3,7 @@ package com.snack.news.controller;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.WrappedResponse;
+import com.snack.news.dto.Wrapper;
 import com.snack.news.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,18 +20,18 @@ public class AdminController {
 	private final AdminService adminService;
 
 	@PostMapping("/news")
-	public ResponseEntity<AdminNewsDto> createNews(@Valid @RequestBody AdminNewsDto newsDto) {
+	public ResponseEntity<Wrapper<AdminNewsDto>> createNews(@Valid @RequestBody AdminNewsDto newsDto) {
 		return WrappedResponse.ok(adminService.createNews(newsDto));
 	}
 
 	@GetMapping("/news")
-	public ResponseEntity<Page<News>> getNewsList() {
+	public ResponseEntity<Wrapper<Page<News>>> getNewsList() {
 		final long DEFAULT_PAGE_SIZE = 1L;
 		return getNewsList(DEFAULT_PAGE_SIZE);
 	}
 
 	@GetMapping("/news/{page}")
-	public ResponseEntity<Page<News>> getNewsList(@PathVariable long page) {
+	public ResponseEntity<Wrapper<Page<News>>> getNewsList(@PathVariable long page) {
 		Page<News> result = adminService.getNewsList(page);
 		if (result.isEmpty()) {
 			return ResponseEntity.noContent().build();
@@ -39,7 +40,7 @@ public class AdminController {
 	}
 
 	@PutMapping("/news/{newsId}")
-	public ResponseEntity<AdminNewsDto> updateNews(@PathVariable long newsId, @Valid @RequestBody AdminNewsDto newsDto) {
+	public ResponseEntity<Wrapper<AdminNewsDto>> updateNews(@PathVariable long newsId, @Valid @RequestBody AdminNewsDto newsDto) {
 		return WrappedResponse.ok(adminService.updateNews(newsId, newsDto));
 	}
 

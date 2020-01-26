@@ -8,8 +8,9 @@ import java.util.List;
 public class ListCursorResult<T> extends Wrapper<List<T>> {
 	private boolean hasNext;
 
-	public ListCursorResult(List<T> data) {
+	public ListCursorResult(List<T> data, boolean hasNext) {
 		super(data);
+		this.hasNext = hasNext;
 	}
 
 	public boolean isEmpty() {
