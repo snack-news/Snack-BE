@@ -21,7 +21,7 @@ public class RequestNewsDto {
 	public static final int MIN_LIMIT_NEWS_LIST_SIZE = 1;
 	public static final int MAX_LIMIT_NEWS_LIST_SIZE = 100;
 
-	private Long lastNewsId = Long.MAX_VALUE;
+	private Long lastNewsId;
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime startDateTime;

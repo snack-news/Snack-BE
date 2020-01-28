@@ -20,7 +20,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 	private EntityManager em;
 
 
- 	@Override
+	@Override
 	public List<News> findByNewsDto(RequestNewsDto requestNewsDto, LocalDateTime now) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<News> query = builder.createQuery(News.class);
@@ -45,14 +45,10 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		}
 
 		if (requestNewsDto.getEndDateTime() != null) {
-			criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt"), requestNewsDto.getEndDateTime()));
+			criteria.add(builder.lessThan(nr.get("publishAt"), requestNewsDto.getEndDateTime()));
 		}
 
 		criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt").as(LocalDateTime.class), now));
-
-		if(requestNewsDto.getLastNewsId() != null) {
-			criteria.add(builder.lessThan(nr.get("id"), requestNewsDto.getLastNewsId()));
-		}
 
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
 
@@ -61,7 +57,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 				.distinct(true);
 
 		TypedQuery<News> typedQuery = em.createQuery(query);
-		if(requestNewsDto.getLimitSize() != 0) {
+		if (requestNewsDto.getLimitSize() != 0) {
 			typedQuery.setMaxResults(requestNewsDto.getLimitSize());
 		}
 

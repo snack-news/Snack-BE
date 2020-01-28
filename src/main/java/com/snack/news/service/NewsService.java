@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -19,21 +20,20 @@ public class NewsService {
 
 	public ListCursorResult<News> getNewsList(RequestNewsDto newsDto) {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
-		List<News> newsList = newsRepository.findByNewsDto(newsDto);
-		return new ListCursorResult<>(newsList, hasNext(newsList));
-	}
 
-	private boolean hasNext(List<News> list) {
-		if (list.isEmpty()) {
-			return false;
+		if (Objects.nonNull(newsDto.getLastNewsId())) {
+			newsDto.setEndDateTime(newsRepository.findById(newsDto.getLastNewsId()).orElseThrow(NewsNotFoundException::new).getPublishAt());
 		}
 
-		RequestNewsDto requestDto = RequestNewsDto.builder()
-				.limitSize(1)
-				.lastNewsId(getLastElementInList(list).getId())
-				.build();
+		List<News> newsList = newsRepository.findByNewsDto(newsDto);
+		return new ListCursorResult<>(newsList, hasNext(newsList, newsDto));
+	}
 
-		return !newsRepository.findByNewsDto(requestDto).isEmpty();
+	private boolean hasNext(List<News> list, RequestNewsDto newsDto) {
+		if(list.isEmpty() || list.size() < newsDto.getLimitSize()) {
+			return false;
+		}
+		return newsRepository.existsByPublishAtBefore(getLastElementInList(list).getPublishAt());
 	}
 
 	private <E> E getLastElementInList(List<E> list) {
