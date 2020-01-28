@@ -1,11 +1,10 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.picks.Pick;
-import com.snack.news.dto.PicksCursorResult;
+import com.snack.news.dto.ListCursorResult;
 import com.snack.news.repository.PicksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,24 +13,15 @@ import java.util.List;
 @Service
 public class PicksService {
 
-	private final static Sort SORT_BY_ID = Sort.by(Sort.Direction.DESC, "publish_at");
-	private final static int DEFAULT_PAGING_SIZE = 5;
-
 	private final PicksRepository picksRepository;
 
-	public PicksCursorResult getPickScrollPage(long lastPickId) {
-		return getPickScrollPage(lastPickId, DEFAULT_PAGING_SIZE);
-	}
-
-	public PicksCursorResult getPickScrollPage(long lastPickId, int pageSize) {
+	public ListCursorResult<Pick> getPickScrollPage(long lastPickId, int pageSize) {
 		PageRequest pageRequest = PageRequest.of(0, pageSize + 1);
-		List<Pick> pickList = picksRepository.findByIdLessThanOrderByIdDesc(lastPickId, pageRequest).getContent();
-
-		return new PicksCursorResult(pickList, hasNextPicks(pickList));
+		List<Pick> pickList = picksRepository.findByIdLessThanOrderByPublishAtDesc(lastPickId, pageRequest).getContent();
+		return new ListCursorResult<>(pickList, hasNextPicks(pickList, pageSize));
 	}
 
-	private boolean hasNextPicks(List<Pick> pickList) {
-		return pickList.size() < DEFAULT_PAGING_SIZE;
+	private boolean hasNextPicks(List<Pick> pickList, int pageSize) {
+		return pickList.size() > pageSize;
 	}
 }
-

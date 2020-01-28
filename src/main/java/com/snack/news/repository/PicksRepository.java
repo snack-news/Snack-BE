@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PicksRepository extends JpaRepository<Pick, Long> {
 	Pick findFirstByOrderByIdDesc();
-	Page<Pick> findByIdLessThanOrderByIdDesc(long id, Pageable pageable);
+	Page<Pick> findByIdLessThanOrderByPublishAtDesc(long id, Pageable pageable);
 }

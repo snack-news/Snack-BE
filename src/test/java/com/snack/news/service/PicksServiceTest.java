@@ -32,8 +32,8 @@ class PicksServiceTest {
 	@ValueSource(longs = {1, 2, Long.MAX_VALUE})
 	void getPickListTestForInfinityScrolling(final long lastPickId) {
 		final int somePageSize = 10;
-		when(picksRepository.findByIdLessThanOrderByIdDesc(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
+		when(picksRepository.findByIdLessThanOrderByPublishAtDesc(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
 		picksService.getPickScrollPage(lastPickId, somePageSize);
-		verify(picksRepository).findByIdLessThanOrderByIdDesc(anyLong(), any(Pageable.class));
+		verify(picksRepository).findByIdLessThanOrderByPublishAtDesc(anyLong(), any(Pageable.class));
 	}
 }

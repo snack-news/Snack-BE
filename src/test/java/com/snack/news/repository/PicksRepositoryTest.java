@@ -48,7 +48,7 @@ class PicksRepositoryTest {
 		PageRequest pageRequest = PageRequest.of(0, pageSize);
 
 		final int lastPickId = 8;
-		Page<Pick> pickPage = picksRepository.findByIdLessThanOrderByIdDesc(lastPickId, pageRequest);
+		Page<Pick> pickPage = picksRepository.findByIdLessThanOrderByPublishAtDesc(lastPickId, pageRequest);
 
 		assertThat(pickPage.stream().map(Pick::getId)).containsExactly(7L, 6L, 5L, 4L);
 	}
