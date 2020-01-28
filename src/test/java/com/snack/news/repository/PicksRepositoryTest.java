@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,16 +41,22 @@ class PicksRepositoryTest {
 		List<Pick> pickList = picksRepository.findAll(Sort.by(Sort.Direction.DESC, "publishAt"));
 		assertThat(pickList.stream().map(Pick::getPublishAt)).isSortedAccordingTo(Comparator.reverseOrder());
 	}
+
 	@Test
 	@DisplayName("마지막으로 본 것 이후의 pick을 차례대로 가져온다")
 	void getPicksListTestForInfinityScroll() {
 
 		final int pageSize = 4;
-		PageRequest pageRequest = PageRequest.of(0, pageSize);
-
 		final int lastPickId = 8;
-		Page<Pick> pickPage = picksRepository.findByIdLessThanOrderByPublishAtDesc(lastPickId, pageRequest);
+		PageRequest pageRequest = PageRequest.of(0, pageSize);
+		Page<Pick> actualPicksResult = picksRepository.findByIdLessThanOrderByPublishAtDesc(lastPickId, pageRequest);
 
-		assertThat(pickPage.stream().map(Pick::getId)).containsExactly(7L, 6L, 5L, 4L);
+		List<Pick> expectedPicksResult = picksRepository.findAll().stream()
+				.filter(p -> p.getId() < lastPickId)
+				.sorted(Comparator.comparing(Pick::getPublishAt).reversed())
+				.limit(pageSize)
+				.collect(Collectors.toList());
+
+		assertThat(actualPicksResult).containsExactlyInAnyOrderElementsOf(expectedPicksResult);
 	}
 }
