@@ -1,18 +1,29 @@
 package com.snack.news.dto;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter
-public class WrappedResponse<T> {
+public class WrappedResponse<T> extends ResponseEntity<Wrapper<T>> {
 
-	private T data;
-
-	public WrappedResponse(T data) {
-		this.data = data;
+	public WrappedResponse(HttpStatus status) {
+		super(status);
 	}
 
-	public static <T> ResponseEntity<Wrapper<T>> ok(T body) {
-		return ResponseEntity.ok(new Wrapper<>(body));
+	public WrappedResponse(Wrapper<T> body, HttpStatus status) {
+		super(body, status);
+	}
+
+	public static <W> WrappedResponse<W> ok(Wrapper<W> body) {
+		return new WrappedResponse<>(body, HttpStatus.OK);
+	}
+
+	public static <W> WrappedResponse<W> okEmpty() {
+		return new WrappedResponse<>(HttpStatus.OK);
+	}
+
+	public static <W> WrappedResponse<W> noContents() {
+		return new WrappedResponse<>(HttpStatus.NO_CONTENT);
 	}
 }
