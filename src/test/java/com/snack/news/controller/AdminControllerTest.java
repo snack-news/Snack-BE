@@ -1,9 +1,9 @@
 package com.snack.news.controller;
 
-import com.snack.news.domain.PickDto;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.PickDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;

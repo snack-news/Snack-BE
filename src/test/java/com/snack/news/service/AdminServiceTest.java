@@ -1,8 +1,8 @@
 package com.snack.news.service;
 
-import com.snack.news.domain.PickDto;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.picks.Pick;
+import com.snack.news.dto.PickDto;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.TagNotFoundException;
