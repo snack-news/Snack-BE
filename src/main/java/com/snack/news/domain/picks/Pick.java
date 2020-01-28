@@ -2,14 +2,12 @@ package com.snack.news.domain.picks;
 
 import com.snack.news.domain.base.BaseTimeEntity;
 import com.snack.news.domain.topic.Topic;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @NoArgsConstructor
 @Getter
@@ -36,6 +34,6 @@ public class Pick extends BaseTimeEntity {
 	public Pick(String link, List<Topic> topics, LocalDateTime publishAt) {
 		this.link = link;
 		this.topics = topics;
-		this.publishAt = publishAt;
+		this.publishAt = Optional.ofNullable(publishAt).orElse(LocalDateTime.now());
 	}
 }
