@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -54,8 +55,8 @@ public class AdminController {
 	}
 
 	@PostMapping("/picks")
-	public WrappedResponse<PickDto> createPick(@Valid @RequestBody PickDto pickDto) {
-		return WrappedResponse.ok(Wrapper.valueOf(adminService.createPick(pickDto)));
+	public WrappedResponse<List<PickDto>> createPick(@Valid @RequestBody List<PickDto> pickDtoList) {
+		return WrappedResponse.ok(Wrapper.valueOf(adminService.createPick(pickDtoList)));
 	}
 
 	@GetMapping("/picks")

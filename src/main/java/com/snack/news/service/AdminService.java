@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -91,15 +92,22 @@ public class AdminService {
 	}
 
 	@Transactional
-	public PickDto createPick(PickDto pickDto) {
-		Pick pick = generatePick(pickDto);
-		picksRepository.save(pick);
+	public List<PickDto> createPick(List<PickDto> pickDtoList) {
+		List<PickDto> createPickResult = new ArrayList<>();
 
-		return PickDto.builder().id(pick.getId()).build();
+		for(PickDto pickDto : pickDtoList) {
+			Pick pick = generatePick(pickDto);
+			picksRepository.save(pick);
+			createPickResult.add(PickDto.builder().id(pick.getId()).build());
+		}
+
+		return createPickResult;
 	}
 
 	private Pick generatePick(PickDto pickDto) {
-		return pickDto.toEntity(topicService.getTopicList(pickDto.getTopicNames()));
+		return pickDto.toEntity(
+				topicService.getTopicList(pickDto.getTopicNames())
+		);
 	}
 
 	public Page<Pick> getPickPage(int page) {
