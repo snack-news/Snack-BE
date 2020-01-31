@@ -2,7 +2,6 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
-import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
@@ -72,7 +71,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청이 정상적으로 이루어진다")
 	void requestCreateNewsTest() throws Exception {
-		NewsDto correctRequestNewsDtoForCreate = NewsDto.builder()
+		AdminNewsDto correctRequestNewsDtoForCreate = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
@@ -90,7 +89,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청시 제목을 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
 	void requestCreateNewsTestWithoutTitle() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
@@ -105,7 +104,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청시 내용을 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
 	void requestCreateNewsWithoutContent() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
@@ -120,7 +119,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청시 카테고리ID를 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
 	void requestCreateNewsTestWithoutCategoryId() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.build();
@@ -155,7 +154,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 수정 요청이 정상적으로 이루어진다")
 	void requestNewsListTest() throws Exception {
-		NewsDto correctRequestNewsDtoForUpdate = NewsDto.builder()
+		AdminNewsDto correctRequestNewsDtoForUpdate = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
