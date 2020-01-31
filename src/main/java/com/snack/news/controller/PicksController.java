@@ -2,7 +2,7 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.picks.Pick;
 import com.snack.news.dto.ListCursorResult;
-import com.snack.news.dto.RequestNewsDto;
+import com.snack.news.dto.RequestInquiryDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.service.PicksService;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class PicksController {
 	private final PicksService picksService;
 
 	@GetMapping
-	public WrappedResponse<List<Pick>> getPicksList(@ModelAttribute @Valid RequestNewsDto newsDto) {
+	public WrappedResponse<List<Pick>> getPicksList(@ModelAttribute @Valid RequestInquiryDto newsDto) {
 		ListCursorResult<Pick> picks = picksService.getPickScrollPage(newsDto.getLastNewsId(), newsDto.getLimitSize());
 		return WrappedResponse.ok(picks);
 	}

@@ -1,7 +1,7 @@
 package com.snack.news.repository;
 
 import com.snack.news.domain.news.News;
-import com.snack.news.dto.RequestNewsDto;
+import com.snack.news.dto.RequestInquiryDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,37 +21,37 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 
 
  	@Override
-	public List<News> findByNewsDto(RequestNewsDto requestNewsDto, LocalDateTime now) {
+	public List<News> findByNewsDto(RequestInquiryDto requestInquiryDto, LocalDateTime now) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<News> query = builder.createQuery(News.class);
 
 		List<Predicate> criteria = new ArrayList<>();
 		Root<News> nr = query.from(News.class);
 
-		if (requestNewsDto.getCategoryId() != null) {
-			criteria.add(builder.equal(nr.get("category").get("id"), requestNewsDto.getCategoryId()));
+		if (requestInquiryDto.getCategoryId() != null) {
+			criteria.add(builder.equal(nr.get("category").get("id"), requestInquiryDto.getCategoryId()));
 		}
 
-		if (requestNewsDto.getTopicIds() != null) {
-			criteria.add(nr.join("topics").get("id").in(requestNewsDto.getTopicIds()));
+		if (requestInquiryDto.getTopicIds() != null) {
+			criteria.add(nr.join("topics").get("id").in(requestInquiryDto.getTopicIds()));
 		}
 
-		if (requestNewsDto.getTagIds() != null) {
-			criteria.add(nr.join("tags").get("id").in(requestNewsDto.getTagIds()));
+		if (requestInquiryDto.getTagIds() != null) {
+			criteria.add(nr.join("tags").get("id").in(requestInquiryDto.getTagIds()));
 		}
 
-		if (requestNewsDto.getStartDateTime() != null) {
-			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt"), requestNewsDto.getStartDateTime()));
+		if (requestInquiryDto.getStartDateTime() != null) {
+			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt"), requestInquiryDto.getStartDateTime()));
 		}
 
-		if (requestNewsDto.getEndDateTime() != null) {
-			criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt"), requestNewsDto.getEndDateTime()));
+		if (requestInquiryDto.getEndDateTime() != null) {
+			criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt"), requestInquiryDto.getEndDateTime()));
 		}
 
 		criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt").as(LocalDateTime.class), now));
 
-		if(requestNewsDto.getLastNewsId() != null) {
-			criteria.add(builder.lessThan(nr.get("id"), requestNewsDto.getLastNewsId()));
+		if(requestInquiryDto.getLastNewsId() != null) {
+			criteria.add(builder.lessThan(nr.get("id"), requestInquiryDto.getLastNewsId()));
 		}
 
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
@@ -61,15 +61,15 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 				.distinct(true);
 
 		TypedQuery<News> typedQuery = em.createQuery(query);
-		if(requestNewsDto.getLimitSize() != 0) {
-			typedQuery.setMaxResults(requestNewsDto.getLimitSize());
+		if(requestInquiryDto.getLimitSize() != 0) {
+			typedQuery.setMaxResults(requestInquiryDto.getLimitSize());
 		}
 
 		return typedQuery.getResultList();
 	}
 
 	@Override
-	public List<News> findByNewsDto(RequestNewsDto newsDto) {
+	public List<News> findByNewsDto(RequestInquiryDto newsDto) {
 		return findByNewsDto(newsDto, LocalDateTime.now());
 	}
 }

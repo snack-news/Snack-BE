@@ -2,7 +2,6 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
-import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.PickDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
@@ -28,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHan
 
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -185,13 +185,11 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("Pick 생성 요청이 정상적으로 이루어진다")
 	void requestCreatePickTest() throws Exception {
-		NewsDto correctRequestNewsDtoForCreate = NewsDto.builder()
+		List<PickDto> correctRequestNewsDtoForCreate = Collections.singletonList(PickDto.builder()
 				.link("test link")
-				.build();
+				.build());
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
-
-		when(adminService.createPick(any(PickDto.class))).thenReturn(PickDto.builder().build());
 
 		mockMvc.perform(post(ADMIN_API_URL + "/picks")
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))

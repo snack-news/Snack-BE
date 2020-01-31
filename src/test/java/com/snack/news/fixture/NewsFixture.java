@@ -3,7 +3,7 @@ package com.snack.news.fixture;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.ListCursorResult;
-import com.snack.news.dto.RequestNewsDto;
+import com.snack.news.dto.RequestInquiryDto;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public abstract class NewsFixture {
 
 	protected News mockNews;
 	protected AdminNewsDto mockNewsDto;
-	protected RequestNewsDto mockRequestNewsDto;
+	protected RequestInquiryDto mockRequestInquiryDto;
 	protected AdminNewsDto mockAdminNewsDto;
 	protected List<News> mockNewsList;
 	protected ListCursorResult<News> mockNewsResult;
@@ -39,7 +39,7 @@ public abstract class NewsFixture {
 
 		mockNews = mockNewsDto.toEntity(null, null, null);
 
-		mockRequestNewsDto = RequestNewsDto.builder()
+		mockRequestInquiryDto = RequestInquiryDto.builder()
 				.startDateTime(VALID_START_DATE)
 				.lastNewsId(TEST_SOME_ID_LONG)
 				.limitSize(100)

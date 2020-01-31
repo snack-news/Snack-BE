@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,7 +135,7 @@ class AdminServiceTest extends NewsFixture {
 	void createPickTest() {
 		final PickDto validPickDto = PickDto.builder().build();
 
-		adminService.createPick(validPickDto);
+		adminService.createPick(Collections.singletonList(validPickDto));
 		verify(picksRepository).save(any(Pick.class));
 	}
 }

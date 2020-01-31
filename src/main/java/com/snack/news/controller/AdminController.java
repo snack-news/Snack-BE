@@ -16,7 +16,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("admin/api")
+@RequestMapping("/admin/api")
 public class AdminController {
 
 	private final int DEFAULT_PAGE_NUM = 1;

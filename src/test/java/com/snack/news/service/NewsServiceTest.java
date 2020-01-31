@@ -1,6 +1,6 @@
 package com.snack.news.service;
 
-import com.snack.news.dto.RequestNewsDto;
+import com.snack.news.dto.RequestInquiryDto;
 
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsFixture;
@@ -29,11 +29,11 @@ class NewsServiceTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 리스트를 조회할 수 있다")
 	void getNewsListTest() {
-		RequestNewsDto newsDtoWithValidDates = mockRequestNewsDto;
+		RequestInquiryDto newsDtoWithValidDates = mockRequestInquiryDto;
 		when(newsRepository.findByNewsDto(newsDtoWithValidDates)).thenReturn(mockNewsList);
 
 		newsService.getNewsList(newsDtoWithValidDates);
-		verify(newsRepository, times(2)).findByNewsDto(any(RequestNewsDto.class));
+		verify(newsRepository, times(2)).findByNewsDto(any(RequestInquiryDto.class));
 	}
 
 	@Test
