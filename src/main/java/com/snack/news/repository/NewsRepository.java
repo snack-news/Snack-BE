@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NewsRepository extends JpaRepository<News, Long>, NewsRepositoryCustom {
@@ -13,4 +14,6 @@ public interface NewsRepository extends JpaRepository<News, Long>, NewsRepositor
 	List<News> findByNewsDto(RequestInquiryDto requestInquiryDto);
 
 	Page<News> findAll(Pageable newsDto);
+
+	boolean existsByPublishAtBefore(LocalDateTime publishAt);
 }

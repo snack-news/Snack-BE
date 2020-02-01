@@ -1,6 +1,6 @@
 package com.snack.news.service;
 
-import com.snack.news.dto.RequestInquiryDto;
+import com.snack.news.dto.RequestNewsDto;
 
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.fixture.NewsFixture;
@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,11 +31,11 @@ class NewsServiceTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 리스트를 조회할 수 있다")
 	void getNewsListTest() {
-		RequestInquiryDto newsDtoWithValidDates = mockRequestInquiryDto;
-		when(newsRepository.findByNewsDto(newsDtoWithValidDates)).thenReturn(mockNewsList);
+		final RequestNewsDto newsDtoWithValidDates = mockRequestNewsDto;
+		when(newsRepository.findById(anyLong())).thenReturn(Optional.of(mockNews));
 
 		newsService.getNewsList(newsDtoWithValidDates);
-		verify(newsRepository, times(2)).findByNewsDto(any(RequestInquiryDto.class));
+		verify(newsRepository, atLeast(1)).findByNewsDto(any(RequestNewsDto.class));
 	}
 
 	@Test

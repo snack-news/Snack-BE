@@ -3,13 +3,14 @@ package com.snack.news.service;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.ListCursorResult;
 import com.snack.news.dto.Period;
-import com.snack.news.dto.RequestInquiryDto;
+import com.snack.news.dto.RequestNewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -17,23 +18,22 @@ public class NewsService {
 
 	private final NewsRepository newsRepository;
 
-	public ListCursorResult<News> getNewsList(RequestInquiryDto newsDto) {
+	public ListCursorResult<News> getNewsList(RequestNewsDto newsDto) {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
-		List<News> newsList = newsRepository.findByNewsDto(newsDto);
-		return new ListCursorResult<>(newsList, hasNext(newsList));
-	}
 
-	private boolean hasNext(List<News> list) {
-		if (list.isEmpty()) {
-			return false;
+		if (Objects.nonNull(newsDto.getLastNewsId())) {
+			newsDto.setEndDateTime(newsRepository.findById(newsDto.getLastNewsId()).orElseThrow(NewsNotFoundException::new).getPublishAt());
 		}
 
-		RequestInquiryDto requestDto = RequestInquiryDto.builder()
-				.limitSize(1)
-				.lastNewsId(getLastElementInList(list).getId())
-				.build();
+		List<News> newsList = newsRepository.findByNewsDto(newsDto);
+		return new ListCursorResult<>(newsList, hasNext(newsList, newsDto));
+	}
 
-		return !newsRepository.findByNewsDto(requestDto).isEmpty();
+	private boolean hasNext(List<News> list, RequestNewsDto newsDto) {
+		if(list.isEmpty() || list.size() < newsDto.getLimitSize()) {
+			return false;
+		}
+		return newsRepository.existsByPublishAtBefore(getLastElementInList(list).getPublishAt());
 	}
 
 	private <E> E getLastElementInList(List<E> list) {
