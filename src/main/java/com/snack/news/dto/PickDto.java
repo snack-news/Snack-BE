@@ -22,6 +22,8 @@ public class PickDto {
 	@NotNull(message = "Link")
 	private String link;
 	private List<String> topicNames;
+	@NotNull(message = "Category ID")
+	private Long categoryId;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime startDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

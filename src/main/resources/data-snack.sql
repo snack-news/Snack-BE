@@ -193,7 +193,7 @@ insert into news_tag(news_id, tag_id) values (47, 2);
 insert into news_tag(news_id, tag_id) values (48, 1);
 insert into news_tag(news_id, tag_id) values (48, 2);
 
-insert into pick(id, link, publish_at) values (1, '픽스 링크 - A', '2020-01-02 00:00:00');
+insert into pick(id, link, publish_at) values (1, '픽스 링크 - A', '2020-01-02 00:00:01');
 insert into pick(id, link, publish_at) values (2, '픽스 링크 - B', '2020-01-01 00:00:00');
 insert into pick(id, link, publish_at) values (3, '픽스 링크 - C', '2020-01-03 00:00:00');
 insert into pick(id, link, publish_at) values (4, '픽스 링크 - D', '2020-01-04 00:00:00');

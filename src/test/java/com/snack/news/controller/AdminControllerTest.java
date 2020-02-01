@@ -185,14 +185,19 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("Pick 생성 요청이 정상적으로 이루어진다")
 	void requestCreatePickTest() throws Exception {
-		List<PickDto> correctRequestNewsDtoForCreate = Collections.singletonList(PickDto.builder()
-				.link("test link")
-				.build());
+		List<PickDto> correctRequestNewsDtoForCreate = Collections.singletonList(PickDto.builder().build());
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
 
 		mockMvc.perform(post(ADMIN_API_URL + "/picks")
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("Pick 조회 요청이 정상적으로 이루어진다")
+	void requestGetPickListTest() throws Exception {
+		mockMvc.perform(get(ADMIN_API_URL + "/picks"))
 				.andExpect(status().isOk());
 	}
 }

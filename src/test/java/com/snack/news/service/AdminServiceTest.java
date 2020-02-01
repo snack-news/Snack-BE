@@ -133,9 +133,9 @@ class AdminServiceTest extends NewsFixture {
 	@Test
 	@DisplayName("Pick을 추가할 수 있다")
 	void createPickTest() {
-		final PickDto validPickDto = PickDto.builder().build();
+		final List<PickDto> validPickDtoList = Collections.singletonList(PickDto.builder().build());
 
-		adminService.createPick(Collections.singletonList(validPickDto));
+		adminService.createPick(validPickDtoList);
 		verify(picksRepository).save(any(Pick.class));
 	}
 }

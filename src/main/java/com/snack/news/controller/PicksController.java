@@ -22,8 +22,8 @@ public class PicksController {
 	private final PicksService picksService;
 
 	@GetMapping
-	public WrappedResponse<List<Pick>> getPicksList(@ModelAttribute @Valid RequestInquiryDto newsDto) {
-		ListCursorResult<Pick> picks = picksService.getPickScrollPage(newsDto.getLastNewsId(), newsDto.getLimitSize());
-		return WrappedResponse.ok(picks);
+	public WrappedResponse<List<Pick>> getPicksList(@ModelAttribute @Valid RequestInquiryDto pickDto) {
+		ListCursorResult<Pick> picksList = picksService.getPickList(pickDto);
+		return WrappedResponse.ok(picksList);
 	}
 }

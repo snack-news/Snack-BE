@@ -1,8 +1,12 @@
 package com.snack.news.domain.picks;
 
 import com.snack.news.domain.base.BaseTimeEntity;
+import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +30,12 @@ public class Pick extends BaseTimeEntity {
 			joinColumns = @JoinColumn(name = "pick_id"),
 			inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private List<Topic> topics;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "pick_tag",
+			joinColumns = @JoinColumn(name = "pick_id"),
+			inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private List<Tag> tags;
 
 	@Column
 	private LocalDateTime publishAt;

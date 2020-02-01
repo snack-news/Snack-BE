@@ -211,3 +211,8 @@ insert into pick(id, link, publish_at) values (11, '픽스 링크 - K', '2020-01
 insert into pick_topic(pick_id, topic_id) values (1, 1);
 insert into pick_topic(pick_id, topic_id) values (1, 2);
 insert into pick_topic(pick_id, topic_id) values (2, 2);
+
+insert into pick_tag(pick_id, tag_id) value (3, 1);
+insert into pick_tag(pick_id, tag_id) value (4, 1);
+insert into pick_tag(pick_id, tag_id) value (4, 2);
+

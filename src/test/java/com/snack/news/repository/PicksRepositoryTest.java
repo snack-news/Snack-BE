@@ -1,14 +1,13 @@
 package com.snack.news.repository;
 
 import com.snack.news.domain.picks.Pick;
+import com.snack.news.dto.RequestInquiryDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Comparator;
@@ -47,12 +46,12 @@ class PicksRepositoryTest {
 	void getPicksListTestForInfinityScroll() {
 
 		final int pageSize = 4;
-		final int lastPickId = 8;
-		PageRequest pageRequest = PageRequest.of(0, pageSize);
-		Page<Pick> actualPicksResult = picksRepository.findByIdLessThanOrderByPublishAtDesc(lastPickId, pageRequest);
+		final long lastPickId = 8;
+		RequestInquiryDto dto = RequestInquiryDto.builder().limitSize(pageSize).lastNewsId(lastPickId).build();
+
+		List<Pick> actualPicksResult = picksRepository.findByPickDto(dto);
 
 		List<Pick> expectedPicksResult = picksRepository.findAll().stream()
-				.filter(p -> p.getId() < lastPickId)
 				.sorted(Comparator.comparing(Pick::getPublishAt).reversed())
 				.limit(pageSize)
 				.collect(Collectors.toList());
