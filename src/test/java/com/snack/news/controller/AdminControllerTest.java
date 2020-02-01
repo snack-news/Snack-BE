@@ -193,11 +193,4 @@ class AdminControllerTest extends NewsFixture {
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}
-
-	@Test
-	@DisplayName("Pick 조회 요청이 정상적으로 이루어진다")
-	void requestGetPickListTest() throws Exception {
-		mockMvc.perform(get(ADMIN_API_URL + "/picks"))
-				.andExpect(status().isOk());
-	}
 }

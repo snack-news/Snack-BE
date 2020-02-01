@@ -1,6 +1,5 @@
 package com.snack.news.service;
 
-import com.snack.news.domain.picks.Pick;
 import com.snack.news.dto.RequestInquiryDto;
 import com.snack.news.exception.PicksNotFoundException;
 import com.snack.news.repository.PicksRepository;
@@ -13,12 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PicksServiceTest {
@@ -30,7 +26,7 @@ class PicksServiceTest {
 	private PicksRepository picksRepository;
 
 	@ParameterizedTest
-	@DisplayName("pick리스트 요청시 마지막 요청한 pick의 id가 없다면 예외가 발생한다")
+	@DisplayName("pick 리스트 요청시 마지막 요청한 pick의 id가 없다면 예외가 발생한다")
 	@ValueSource(longs = {1})
 	void getPickListTestForInfinityScrolling(final long invalidPickId) {
 		RequestInquiryDto dto = RequestInquiryDto.builder().lastNewsId(invalidPickId).build();
@@ -38,8 +34,9 @@ class PicksServiceTest {
 	}
 
 	@Test
+	@DisplayName("pick")
 	void getPicksListTest() {
-		when(picksRepository.findById(any())).thenReturn(Optional.ofNullable(any(Pick.class)));
+//		when(picksRepository.findById(any())).thenReturn(Optional.of(Pick.builder().build()));
 		picksService.getPickList(RequestInquiryDto.builder().build());
 		verify(picksRepository).findByPickDto(any(RequestInquiryDto.class));
 	}

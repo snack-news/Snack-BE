@@ -36,10 +36,6 @@ public class PicksRepositoryImpl implements PicksRepositoryCustom {
 			criteria.add(nr.join("topics").get("id").in(requestPostDto.getTopicIds()));
 		}
 
-		if (requestPostDto.getTagIds() != null) {
-			criteria.add(nr.join("tags").get("id").in(requestPostDto.getTagIds()));
-		}
-
 		if (requestPostDto.getStartDateTime() != null) {
 			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt"), requestPostDto.getStartDateTime()));
 		}
