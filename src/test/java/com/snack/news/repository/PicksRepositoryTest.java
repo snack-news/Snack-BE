@@ -47,7 +47,7 @@ class PicksRepositoryTest {
 
 		final int pageSize = 4;
 		final long lastPickId = 8;
-		RequestInquiryDto dto = RequestInquiryDto.builder().limitSize(pageSize).lastNewsId(lastPickId).build();
+		RequestInquiryDto dto = RequestInquiryDto.builder().limitSize(pageSize).lastId(lastPickId).build();
 
 		List<Pick> actualPicksResult = picksRepository.findByPickDto(dto);
 

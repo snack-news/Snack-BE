@@ -18,8 +18,8 @@ public class PicksService {
 	private final PicksRepository picksRepository;
 
 	public ListCursorResult<Pick> getPickList(RequestInquiryDto requestInquiryDto) {
-		if (Objects.nonNull(requestInquiryDto.getLastNewsId())) {
-			requestInquiryDto.setEndDateTime(picksRepository.findById(requestInquiryDto.getLastNewsId()).orElseThrow(PicksNotFoundException::new).getPublishAt());
+		if (Objects.nonNull(requestInquiryDto.getLastId())) {
+			requestInquiryDto.setEndDateTime(picksRepository.findById(requestInquiryDto.getLastId()).orElseThrow(PicksNotFoundException::new).getPublishAt());
 		}
 
 		List<Pick> picksList = picksRepository.findByPickDto(requestInquiryDto);

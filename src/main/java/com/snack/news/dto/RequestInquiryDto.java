@@ -20,7 +20,7 @@ public class RequestInquiryDto {
 	public static final int MIN_LIMIT_NEWS_LIST_SIZE = 1;
 	public static final int MAX_LIMIT_NEWS_LIST_SIZE = 100;
 
-	private Long lastNewsId;
+	private Long lastId;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime startDateTime = LocalDateTime.of(1900, 1, 1, 0, 0);
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

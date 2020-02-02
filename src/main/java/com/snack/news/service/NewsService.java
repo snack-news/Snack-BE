@@ -21,8 +21,8 @@ public class NewsService {
 	public ListCursorResult<News> getNewsList(RequestInquiryDto newsDto) {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
 
-		if (Objects.nonNull(newsDto.getLastNewsId())) {
-			newsDto.setEndDateTime(newsRepository.findById(newsDto.getLastNewsId()).orElseThrow(NewsNotFoundException::new).getPublishAt());
+		if (Objects.nonNull(newsDto.getLastId())) {
+			newsDto.setEndDateTime(newsRepository.findById(newsDto.getLastId()).orElseThrow(NewsNotFoundException::new).getPublishAt());
 		}
 
 		List<News> newsList = newsRepository.findByNewsDto(newsDto);

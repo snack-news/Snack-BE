@@ -50,8 +50,8 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 
 		criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt").as(LocalDateTime.class), now));
 
-		if(requestInquiryDto.getLastNewsId() != null) {
-			criteria.add(builder.lessThan(nr.get("id"), requestInquiryDto.getLastNewsId()));
+		if(requestInquiryDto.getLastId() != null) {
+			criteria.add(builder.lessThan(nr.get("id"), requestInquiryDto.getLastId()));
 		}
 
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);

@@ -41,7 +41,7 @@ public abstract class NewsFixture {
 
 		mockRequestInquiryDto = RequestInquiryDto.builder()
 				.startDateTime(VALID_START_DATE)
-				.lastNewsId(TEST_SOME_ID_LONG)
+				.lastId(TEST_SOME_ID_LONG)
 				.limitSize(100)
 				.build();
 
