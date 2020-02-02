@@ -1,7 +1,7 @@
 package com.snack.news.repository;
 
 import com.snack.news.domain.picks.Pick;
-import com.snack.news.dto.RequestInquiryDto;
+import com.snack.news.dto.RequestQueryDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ class PicksRepositoryTest {
 
 		final int pageSize = 4;
 		final long lastPickId = 8;
-		RequestInquiryDto dto = RequestInquiryDto.builder().limitSize(pageSize).lastId(lastPickId).build();
+		RequestQueryDto dto = RequestQueryDto.builder().limitSize(pageSize).lastId(lastPickId).build();
 
 		List<Pick> actualPicksResult = picksRepository.findByPickDto(dto);
 

@@ -1,6 +1,6 @@
 package com.snack.news.service;
 
-import com.snack.news.dto.RequestInquiryDto;
+import com.snack.news.dto.RequestQueryDto;
 import com.snack.news.exception.PicksNotFoundException;
 import com.snack.news.repository.PicksRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -29,16 +29,15 @@ class PicksServiceTest {
 	@DisplayName("pick 리스트 요청시 마지막 요청한 pick의 id가 없다면 예외가 발생한다")
 	@ValueSource(longs = {1})
 	void getPickListTestForInfinityScrolling(final long invalidPickId) {
-		RequestInquiryDto dto = RequestInquiryDto.builder().lastId(invalidPickId).build();
+		RequestQueryDto dto = RequestQueryDto.builder().lastId(invalidPickId).build();
 		assertThrows(PicksNotFoundException.class, () -> picksService.getPickList(dto));
 	}
 
 	@Test
 	@DisplayName("pick")
 	void getPicksListTest() {
-//		when(picksRepository.findById(any())).thenReturn(Optional.of(Pick.builder().build()));
-		picksService.getPickList(RequestInquiryDto.builder().build());
-		verify(picksRepository).findByPickDto(any(RequestInquiryDto.class));
+		picksService.getPickList(RequestQueryDto.builder().build());
+		verify(picksRepository).findByPickDto(any(RequestQueryDto.class));
 	}
 
 }

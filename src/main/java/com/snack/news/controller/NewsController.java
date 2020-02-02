@@ -16,7 +16,7 @@ public class NewsController {
 	private final NewsService newsService;
 
 	@GetMapping
-	public WrappedResponse<List<News>> getNewsList(@ModelAttribute @Valid RequestInquiryDto newsDto) {
+	public WrappedResponse<List<News>> getNewsList(@ModelAttribute @Valid RequestQueryDto newsDto) {
 		ListCursorResult<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
 			return WrappedResponse.noContents();

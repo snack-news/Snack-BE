@@ -1,7 +1,7 @@
 package com.snack.news.repository;
 
 import com.snack.news.domain.picks.Pick;
-import com.snack.news.dto.RequestInquiryDto;
+import com.snack.news.dto.RequestQueryDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +21,7 @@ public class PicksRepositoryImpl implements PicksRepositoryCustom {
 
 
  	@Override
-	public List<Pick> findByPickDto(RequestInquiryDto requestPostDto, LocalDateTime now) {
+	public List<Pick> findByPickDto(RequestQueryDto requestPostDto, LocalDateTime now) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Pick> query = builder.createQuery(Pick.class);
 
@@ -61,7 +61,7 @@ public class PicksRepositoryImpl implements PicksRepositoryCustom {
 	}
 
 	@Override
-	public List<Pick> findByPickDto(RequestInquiryDto requestPickDto) {
+	public List<Pick> findByPickDto(RequestQueryDto requestPickDto) {
 		return findByPickDto(requestPickDto, LocalDateTime.now());
 	}
 }

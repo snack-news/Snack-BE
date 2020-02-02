@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestInquiryDto {
+public class RequestQueryDto {
 
 	public static final int DEFAULT_LIMIT_NEWS_LIST_SIZE = 10;
 	public static final int MIN_LIMIT_NEWS_LIST_SIZE = 1;

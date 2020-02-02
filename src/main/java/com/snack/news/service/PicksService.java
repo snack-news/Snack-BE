@@ -2,7 +2,7 @@ package com.snack.news.service;
 
 import com.snack.news.domain.picks.Pick;
 import com.snack.news.dto.ListCursorResult;
-import com.snack.news.dto.RequestInquiryDto;
+import com.snack.news.dto.RequestQueryDto;
 import com.snack.news.exception.PicksNotFoundException;
 import com.snack.news.repository.PicksRepository;
 import lombok.AllArgsConstructor;
@@ -17,16 +17,16 @@ public class PicksService {
 
 	private final PicksRepository picksRepository;
 
-	public ListCursorResult<Pick> getPickList(RequestInquiryDto requestInquiryDto) {
-		if (Objects.nonNull(requestInquiryDto.getLastId())) {
-			requestInquiryDto.setEndDateTime(picksRepository.findById(requestInquiryDto.getLastId()).orElseThrow(PicksNotFoundException::new).getPublishAt());
+	public ListCursorResult<Pick> getPickList(RequestQueryDto requestQueryDto) {
+		if (Objects.nonNull(requestQueryDto.getLastId())) {
+			requestQueryDto.setEndDateTime(picksRepository.findById(requestQueryDto.getLastId()).orElseThrow(PicksNotFoundException::new).getPublishAt());
 		}
 
-		List<Pick> picksList = picksRepository.findByPickDto(requestInquiryDto);
-		return new ListCursorResult<>(picksList, hasNext(picksList, requestInquiryDto));
+		List<Pick> picksList = picksRepository.findByPickDto(requestQueryDto);
+		return new ListCursorResult<>(picksList, hasNext(picksList, requestQueryDto));
 	}
 
-	private boolean hasNext(List<Pick> list, RequestInquiryDto newsDto) {
+	private boolean hasNext(List<Pick> list, RequestQueryDto newsDto) {
 		if(list.isEmpty() || list.size() < newsDto.getLimitSize()) {
 			return false;
 		}
