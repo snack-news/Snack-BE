@@ -19,12 +19,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHan
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+import static com.snack.news.controller.ApiUrl.Domain.PICKS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class PicksControllerTest {
-	private final static String PICK_API_URL = "/api";
 
 	@InjectMocks
 	private PicksController picksController;
@@ -55,7 +55,7 @@ public class PicksControllerTest {
 	@Test
 	@DisplayName("Pick 조회 요청이 정상적으로 이루어진다")
 	void requestGetPickListTest() throws Exception {
-		mockMvc.perform(get(PICK_API_URL + "/picks"))
+		mockMvc.perform(get(ApiUrl.builder().get(PICKS).list().build()))
 				.andExpect(status().isOk());
 	}
 }

@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.snack.news.controller.ApiUrl.Domain.NEWS;
+import static com.snack.news.controller.ApiUrl.Domain.PICKS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
@@ -39,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class AdminControllerTest extends NewsFixture {
-	private final static String ADMIN_API_URL = "/admin/api";
 
 	@InjectMocks
 	private AdminController adminController;
@@ -80,7 +81,7 @@ class AdminControllerTest extends NewsFixture {
 
 		when(adminService.createNews(any(AdminNewsDto.class))).thenReturn(mockNewsDto);
 
-		mockMvc.perform(post(ADMIN_API_URL + "/news")
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}
@@ -95,7 +96,7 @@ class AdminControllerTest extends NewsFixture {
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		mockMvc.perform(post(ADMIN_API_URL + "/news")
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isBadRequest());
 	}
@@ -110,7 +111,7 @@ class AdminControllerTest extends NewsFixture {
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		mockMvc.perform(post(ADMIN_API_URL + "/news")
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isBadRequest());
 	}
@@ -125,7 +126,7 @@ class AdminControllerTest extends NewsFixture {
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		mockMvc.perform(post(ADMIN_API_URL + "/news")
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isBadRequest());
 	}
@@ -136,7 +137,7 @@ class AdminControllerTest extends NewsFixture {
 		Page<News> dummyNewsPage = new PageImpl<>(Collections.singletonList(News.builder().build()));
 		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
-		mockMvc.perform(get(ADMIN_API_URL + "/news/1"))
+		mockMvc.perform(get(ApiUrl.builder().getFromAdmin(NEWS).list(1).build()))
 				.andExpect(status().isOk());
 	}
 
@@ -146,7 +147,7 @@ class AdminControllerTest extends NewsFixture {
 		Page<News> dummyNewsPage = new PageImpl<>(Collections.singletonList(News.builder().build()));
 		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
-		mockMvc.perform(get(ADMIN_API_URL + "/news"))
+		mockMvc.perform(get(ApiUrl.builder().getFromAdmin(NEWS).list().build()))
 				.andExpect(status().isOk());
 	}
 
@@ -162,7 +163,7 @@ class AdminControllerTest extends NewsFixture {
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForUpdate);
 
 		final long anyLong = 1;
-		mockMvc.perform(put(ADMIN_API_URL + "/news/" + anyLong)
+		mockMvc.perform(put(ApiUrl.builder().update(NEWS).id(anyLong).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}
@@ -170,7 +171,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 삭제 요청시 정상적으로 동작한다")
 	void requestDeleteNewsTest() throws Exception {
-		mockMvc.perform(delete(ADMIN_API_URL + "/news/" + anyLong()))
+		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isOk());
 	}
 
@@ -178,7 +179,7 @@ class AdminControllerTest extends NewsFixture {
 	@DisplayName("뉴스 삭제 요청시 ID가 없으면 NOTFOUND 상태코드로 응답한다")
 	void requestDeleteNewsTestWithoutNewsId() throws Exception {
 		doThrow(new NewsNotFoundException()).when(adminService).deleteNews(anyLong());
-		mockMvc.perform(delete(ADMIN_API_URL + "/news/" + anyLong()))
+		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isNotFound());
 	}
 
@@ -189,7 +190,7 @@ class AdminControllerTest extends NewsFixture {
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
 
-		mockMvc.perform(post(ADMIN_API_URL + "/picks")
+		mockMvc.perform(post(ApiUrl.builder().create(PICKS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}

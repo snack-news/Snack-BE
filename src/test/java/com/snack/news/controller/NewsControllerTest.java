@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Objects;
 
+import static com.snack.news.controller.ApiUrl.Domain.NEWS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -38,8 +39,6 @@ public class NewsControllerTest extends NewsFixture {
 
 	@InjectMocks
 	private NewsController newsController;
-
-	private final static String NEWS_API_URL = "/api/news";
 
 	@Mock
 	private NewsService newsService;
@@ -68,7 +67,7 @@ public class NewsControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 조회 요청이 정상적으로 이루어진다")
 	void requestCreateNewsTest() throws Exception {
-		mockMvc.perform(get(NEWS_API_URL + "/" + TEST_SOME_ID_LONG)
+		mockMvc.perform(get(ApiUrl.builder().get(NEWS).id(TEST_SOME_ID_LONG).build())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
@@ -78,7 +77,7 @@ public class NewsControllerTest extends NewsFixture {
 	void requestCreateNewsTestWithInvalidNewsId() throws Exception {
 		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
-		mockMvc.perform(get(NEWS_API_URL + "/" + anyLong())
+		mockMvc.perform(get(ApiUrl.builder().get(NEWS).id(anyLong()).build())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
@@ -90,7 +89,7 @@ public class NewsControllerTest extends NewsFixture {
 		when(newsService.getNewsList(any(RequestQueryDto.class))).thenReturn(mockNewsResult);
 
 		final String necessaryQueryString = "?startDateTime=2019-07-01T00:00";
-		mockMvc.perform(get(NEWS_API_URL + necessaryQueryString))
+		mockMvc.perform(get(ApiUrl.builder().get(NEWS).list().query(necessaryQueryString).build()))
 				.andExpect(status().isOk());
 	}
 
@@ -101,7 +100,7 @@ public class NewsControllerTest extends NewsFixture {
 		when(newsService.getNewsList(any(RequestQueryDto.class))).thenReturn(emptyResult);
 
 		final String necessaryQueryString = "?startDateTime=2019-07-01T00:00";
-		mockMvc.perform(get(NEWS_API_URL + necessaryQueryString))
+		mockMvc.perform(get(ApiUrl.builder().get(NEWS).list().query(necessaryQueryString).build()))
 				.andExpect(status().isNoContent());
 	}
 }
