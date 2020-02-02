@@ -6,6 +6,7 @@ import com.snack.news.dto.Period;
 import com.snack.news.dto.RequestQueryDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
+import com.snack.news.util.CollectionHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +34,7 @@ public class NewsService {
 		if(list.isEmpty() || list.size() < newsDto.getLimitSize()) {
 			return false;
 		}
-		return newsRepository.existsByPublishAtBefore(getLastElementInList(list).getPublishAt());
-	}
-
-	private <E> E getLastElementInList(List<E> list) {
-		return list.get(list.size() - 1);
+		return newsRepository.existsByPublishAtBefore(CollectionHelper.getLastElementInList(list).getPublishAt());
 	}
 
 	public News getNews(Long newsId) {
