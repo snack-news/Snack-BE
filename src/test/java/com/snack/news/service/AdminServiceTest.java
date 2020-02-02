@@ -3,10 +3,7 @@ package com.snack.news.service;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.picks.Pick;
 import com.snack.news.dto.PickDto;
-import com.snack.news.exception.CategoryNotFoundException;
-import com.snack.news.exception.NewsNotFoundException;
-import com.snack.news.exception.TagNotFoundException;
-import com.snack.news.exception.TopicNotFoundException;
+import com.snack.news.exception.*;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
 import com.snack.news.repository.PicksRepository;
@@ -128,6 +125,13 @@ class AdminServiceTest extends NewsFixture {
 	void getPickListTestOrderByDate(final int page) {
 		adminService.getPickPage(page);
 		verify(picksRepository).findAll(any(Pageable.class));
+	}
+
+	@ParameterizedTest
+	@DisplayName("Admin에서 pick 리스트를 조회할 때 0보다 작은 페이지를 요청하면 예외가 발생한다.")
+	@ValueSource(ints = {-1})
+	void getPickListTestOrderByDateWhenLessThenZero(final int page) {
+		assertThrows(IllegalArgumentException.class, () -> adminService.getPickPage(page));
 	}
 
 	@Test
