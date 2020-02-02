@@ -39,9 +39,11 @@ public class Pick extends BaseTimeEntity {
 	private LocalDateTime publishAt;
 
 	@Builder
-	public Pick(String link, List<Topic> topics, LocalDateTime publishAt) {
+	public Pick(String link, Category category, List<Topic> topics, LocalDateTime publishAt, LocalDateTime createAt) {
 		this.link = link;
+		this.category = category;
 		this.topics = topics;
 		this.publishAt = Optional.ofNullable(publishAt).orElse(LocalDateTime.now());
+		setCreateAt(createAt);
 	}
 }

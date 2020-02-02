@@ -1,6 +1,7 @@
 package com.snack.news.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.snack.news.domain.category.Category;
 import com.snack.news.domain.picks.Pick;
 import com.snack.news.domain.topic.Topic;
 import lombok.AllArgsConstructor;
@@ -32,8 +33,9 @@ public class PickDto {
 	private LocalDateTime publishAt;
 
 	@JsonIgnore
-	public Pick toEntity(List<Topic> topics) {
+	public Pick toEntity(Category category, List<Topic> topics) {
 		return Pick.builder()
+				.category(category)
 				.topics(topics)
 				.link(link)
 				.publishAt(publishAt)

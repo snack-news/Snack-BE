@@ -24,8 +24,8 @@ public class CategoryService {
 
 	public Category getCategory(Long id) {
 		return categoryRepository.findById(
-				Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new))
-				.orElseThrow(CategoryNotFoundException::new);
+				Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new)
+		).orElseThrow(CategoryNotFoundException::new);
 	}
 
 

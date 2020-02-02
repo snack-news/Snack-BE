@@ -3,7 +3,7 @@ package com.snack.news.service;
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.ListCursorResult;
 import com.snack.news.dto.Period;
-import com.snack.news.dto.RequestNewsDto;
+import com.snack.news.dto.RequestInquiryDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class NewsService {
 
 	private final NewsRepository newsRepository;
 
-	public ListCursorResult<News> getNewsList(RequestNewsDto newsDto) {
+	public ListCursorResult<News> getNewsList(RequestInquiryDto newsDto) {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
 
 		if (Objects.nonNull(newsDto.getLastNewsId())) {
@@ -29,7 +29,7 @@ public class NewsService {
 		return new ListCursorResult<>(newsList, hasNext(newsList, newsDto));
 	}
 
-	private boolean hasNext(List<News> list, RequestNewsDto newsDto) {
+	private boolean hasNext(List<News> list, RequestInquiryDto newsDto) {
 		if(list.isEmpty() || list.size() < newsDto.getLimitSize()) {
 			return false;
 		}

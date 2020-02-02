@@ -106,6 +106,7 @@ public class AdminService {
 
 	private Pick generatePick(PickDto pickDto) {
 		return pickDto.toEntity(
+				categoryService.getCategory(pickDto.getCategoryId()),
 				topicService.getTopicList(pickDto.getTopicNames())
 		);
 	}
