@@ -1,3 +1,5 @@
+# noinspection SqlNoDataSourceInspectionForFile
+
 -- Category 테스트 데이터
 insert into category (id, title) values (1, 'IT');
 insert into category (id, title) values (2, '커머스');
@@ -193,3 +195,19 @@ insert into news_tag(news_id, tag_id) values (46, 1);
 insert into news_tag(news_id, tag_id) values (47, 2);
 insert into news_tag(news_id, tag_id) values (48, 1);
 insert into news_tag(news_id, tag_id) values (48, 2);
+
+insert into pick(id, link, publish_at) values (1, '픽스 링크 - A', '2020-01-02 00:00:00');
+insert into pick(id, link, publish_at) values (2, '픽스 링크 - B', '2020-01-01 00:00:00');
+insert into pick(id, link, publish_at) values (3, '픽스 링크 - C', '2020-01-03 00:00:00');
+insert into pick(id, link, publish_at) values (4, '픽스 링크 - D', '2020-01-04 00:00:00');
+insert into pick(id, link, publish_at) values (5, '픽스 링크 - E', '2020-01-06 00:00:00');
+insert into pick(id, link, publish_at) values (6, '픽스 링크 - F', '2020-01-05 00:00:00');
+insert into pick(id, link, publish_at) values (7, '픽스 링크 - G', '2020-01-07 00:00:00');
+insert into pick(id, link, publish_at) values (8, '픽스 링크 - H', '2020-01-09 00:00:00');
+insert into pick(id, link, publish_at) values (9, '픽스 링크 - I', '2020-01-08 00:00:00');
+insert into pick(id, link, publish_at) values (10, '픽스 링크 - J', '2020-01-11 00:00:00');
+insert into pick(id, link, publish_at) values (11, '픽스 링크 - K', '2020-01-10 00:00:00');
+
+insert into pick_topic(pick_id, topic_id) values (1, 1);
+insert into pick_topic(pick_id, topic_id) values (1, 2);
+insert into pick_topic(pick_id, topic_id) values (2, 2);

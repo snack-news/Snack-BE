@@ -18,15 +18,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static com.snack.news.controller.ApiUrl.Domain.TOPIC;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class TopicControllerTest extends TopicFixture {
-	private final static String TOPIC_API_URL = "/api/topic";
 
 	@InjectMocks
 	private TopicController topicController;
@@ -42,19 +40,6 @@ class TopicControllerTest extends TopicFixture {
 	}
 
 	@Test
-	@DisplayName("토픽 생성 요청이 정상적으로 이루어진다")
-	void requestCreateTopicTest() throws Exception {
-		TopicDto topicDtoWithNameAndType = TopicFixture.TEST_TOPIC_DTO_FOR_CORRECT_REQUEST;
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(topicDtoWithNameAndType);
-
-		when(topicService.createTopic(any(TopicDto.class))).thenReturn(TopicFixture.DUMMY);
-
-		mockMvc.perform(post(TOPIC_API_URL)
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isOk());
-	}
-
-	@Test
 	@DisplayName("토픽 타입이 없다면 토픽 생성요청이 실패한다")
 	void requestTopicTestWithoutTopicType() throws Exception {
 		final String randomTopicName = Long.toString(ThreadLocalRandom.current().nextLong());
@@ -63,7 +48,7 @@ class TopicControllerTest extends TopicFixture {
 		TopicDto requestTopicDto = TopicDto.builder().name(randomTopicName).type(testTopicType).build();
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(requestTopicDto).replace(testTopicType.name(), "SOME_WRONG_TYPE");
 
-		mockMvc.perform(post(TOPIC_API_URL)
+		mockMvc.perform(post(ApiUrl.builder().create(TOPIC).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().is4xxClientError()); // todo: 자세한 오류 메시지 명시
 	}
@@ -71,21 +56,21 @@ class TopicControllerTest extends TopicFixture {
 	@Test
 	@DisplayName("원하는 타입의 토픽 리스트를 가져온다")
 	void requestTopicListAsTopicType() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "/CORP"))
+		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("/CORP").build()))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("원하는 타입의 토픽 리스트를 ID순으로 가져온다")
 	void requestTopicListAsTopicTypeInOrderOfId() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "/CORP"+ "?sort=ID"))
+		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("/CORP" + "?sort=ID").build()))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("원하는 타입의 토픽 리스트를 이름순으로 가져온다")
 	void requestTopicListAsTopicTypeInOrderOfName() throws Exception {
-		mockMvc.perform(get(TOPIC_API_URL + "/CORP" + "?sort=NAME"))
+		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("/CORP" + "?sort=NAME").build()))
 				.andExpect(status().isOk());
 	}
 }

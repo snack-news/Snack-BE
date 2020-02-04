@@ -2,11 +2,14 @@ package com.snack.news.service;
 
 import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
+import com.snack.news.domain.picks.Pick;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.AdminNewsDto;
+import com.snack.news.dto.PickDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
+import com.snack.news.repository.PicksRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +30,7 @@ public class AdminService {
 	private final static int DEFAULT_PAGING_SIZE = 10;
 
 	private final NewsRepository newsRepository;
+	private final PicksRepository picksRepository;
 	private final CategoryService categoryService;
 	private final TopicService topicService;
 	private final TagService tagService;
@@ -84,5 +89,30 @@ public class AdminService {
 				category,
 				topics,
 				tags);
+	}
+
+	@Transactional
+	public List<PickDto> createPick(List<PickDto> pickDtoList) {
+		List<PickDto> createPickResult = new ArrayList<>();
+
+		for(PickDto pickDto : pickDtoList) {
+			Pick pick = generatePick(pickDto);
+			picksRepository.save(pick);
+			createPickResult.add(PickDto.builder().id(pick.getId()).build());
+		}
+
+		return createPickResult;
+	}
+
+	private Pick generatePick(PickDto pickDto) {
+		return pickDto.toEntity(
+				categoryService.getCategory(pickDto.getCategoryId()),
+				topicService.getTopicList(pickDto.getTopicNames())
+		);
+	}
+
+	public Page<Pick> getPickPage(int page) {
+		Pageable pageable = PageRequest.of(page - 1, DEFAULT_PAGING_SIZE, SORT_BY_ID);
+		return picksRepository.findAll(pageable);
 	}
 }

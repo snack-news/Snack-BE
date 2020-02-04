@@ -4,7 +4,7 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import com.snack.news.dto.RequestNewsDto;
+import com.snack.news.dto.RequestQueryDto;
 import com.snack.news.fixture.NewsFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByCategory() {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 
-		RequestNewsDto queryNewsDtoWithCategory = RequestNewsDto.builder().categoryId(category.getId()).build();
+		RequestQueryDto queryNewsDtoWithCategory = RequestQueryDto.builder().categoryId(category.getId()).build();
 		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory, TEST_TIME)
 				.stream()
 				.map(News::getId)
@@ -83,7 +83,7 @@ class NewsRepositoryTest extends NewsFixture {
 		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 25, 0, 0);
 		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 30, 11, 59);
 
-		RequestNewsDto queryNewsDtoWithDate = RequestNewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
+		RequestQueryDto queryNewsDtoWithDate = RequestQueryDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
 		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, TEST_TIME)
 				.stream()
@@ -107,7 +107,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByTopic() {
 		List<Long> testTopicIds = Collections.singletonList(1L);
 
-		RequestNewsDto queryNewsDtoWithTopic = RequestNewsDto.builder()
+		RequestQueryDto queryNewsDtoWithTopic = RequestQueryDto.builder()
 				.topicIds(testTopicIds)
 				.build();
 
@@ -133,7 +133,7 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByTag() {
 		List<Long> testTagIds = Collections.singletonList(1L);
 
-		RequestNewsDto queryNewsDtoWithTag = RequestNewsDto.builder()
+		RequestQueryDto queryNewsDtoWithTag = RequestQueryDto.builder()
 				.tagIds(testTagIds)
 				.build();
 
@@ -163,7 +163,7 @@ class NewsRepositoryTest extends NewsFixture {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 		final List<Long> tagIds = Collections.singletonList(1L);
 
-		RequestNewsDto queryNewsDto = RequestNewsDto.builder()
+		RequestQueryDto queryNewsDto = RequestQueryDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
 				.categoryId(category.getId())
@@ -274,7 +274,7 @@ class NewsRepositoryTest extends NewsFixture {
 	@Transactional
 	void newsLimitSizeTest() {
 		final int limitNewsSize = 5;
-		RequestNewsDto queryNewsDto = RequestNewsDto.builder()
+		RequestQueryDto queryNewsDto = RequestQueryDto.builder()
 				.limitSize(limitNewsSize)
 				.build();
 

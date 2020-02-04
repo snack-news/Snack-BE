@@ -18,7 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AdminNewsDto {
+public class NewsDto {
+
 	private Long id;
 	@NotNull(message = "News title")
 	private String title;
@@ -27,10 +28,12 @@ public class AdminNewsDto {
 	private String link;
 	@NotNull(message = "Category ID")
 	private Long categoryId;
-	private List<String> topicNames;
+	private List<Long> topicIds;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime createAt;
+	private LocalDateTime startDateTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime endDateTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime publishAt;
 
