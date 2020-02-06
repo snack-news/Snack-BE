@@ -122,8 +122,8 @@ public class AdminService {
 		try {
 			picksRepository.deleteById(picksId);
 		} catch (IllegalArgumentException e) {
-			log.error("Invalid News Id in DeleteNews : {}", picksId, e);
-			throw new NewsNotFoundException();
+			log.error("Invalid Picks Id in DeletePicks : {}", picksId, e);
+			throw new PicksNotFoundException();
 		}
 	}
 
