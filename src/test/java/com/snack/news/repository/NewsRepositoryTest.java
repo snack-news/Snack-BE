@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DataJpaTest
 class NewsRepositoryTest extends NewsFixture {
 
-	private static final LocalDateTime TEST_TIME = LocalDateTime.of(2020, 1, 20, 0, 0);
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -63,7 +62,7 @@ class NewsRepositoryTest extends NewsFixture {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 
 		RequestQueryDto queryNewsDtoWithCategory = RequestQueryDto.builder().categoryId(category.getId()).build();
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -85,7 +84,7 @@ class NewsRepositoryTest extends NewsFixture {
 
 		RequestQueryDto queryNewsDtoWithDate = RequestQueryDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -93,7 +92,28 @@ class NewsRepositoryTest extends NewsFixture {
 		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
 				.filter(n -> n.getPublishAt().isBefore(endDate))
 				.filter(n -> n.getPublishAt().isAfter(startDate))
-				.filter(n -> n.getPublishAt().isBefore(TEST_TIME))
+				.sorted(Comparator.comparing(News::getPublishAt).reversed())
+				.map(News::getId)
+				.collect(toList());
+
+		assertThat(actualResultNewsIdList).containsExactlyInAnyOrderElementsOf(expectedResultNewsList);
+	}
+
+	@Test
+	@DisplayName("업로드예약일이 기준일 이후인 뉴스는 가져오지 않는다")
+	@Transactional
+	void getNewsListTestWhenTodayEarlierThenPublishAt() {
+		LocalDateTime today = LocalDateTime.of(2019, 11, 27, 0, 0);
+
+		RequestQueryDto queryNewsDtoWithDate = RequestQueryDto.builder().build();
+
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, today)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+
+		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
+				.filter(n -> n.getPublishAt().isBefore(today))
 				.sorted(Comparator.comparing(News::getPublishAt).reversed())
 				.map(News::getId)
 				.collect(toList());
@@ -111,7 +131,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.topicIds(testTopicIds)
 				.build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTopic, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTopic)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -137,7 +157,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.tagIds(testTagIds)
 				.build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTag, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTag)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -171,7 +191,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.tagIds(tagIds)
 				.build();
 
-		List<Long> actualResultNewsIds = newsRepository.findByNewsDto(queryNewsDto, TEST_TIME)
+		List<Long> actualResultNewsIds = newsRepository.findByNewsDto(queryNewsDto)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -278,7 +298,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.limitSize(limitNewsSize)
 				.build();
 
-		List<News> actualResultNewsList = newsRepository.findByNewsDto(queryNewsDto, TEST_TIME);
+		List<News> actualResultNewsList = newsRepository.findByNewsDto(queryNewsDto);
 		List<News> originNewsList = newsRepository.findAll();
 
 		assertAll(

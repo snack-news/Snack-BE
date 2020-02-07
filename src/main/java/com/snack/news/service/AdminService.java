@@ -8,6 +8,7 @@ import com.snack.news.domain.topic.Topic;
 import com.snack.news.dto.AdminNewsDto;
 import com.snack.news.dto.PickDto;
 import com.snack.news.exception.NewsNotFoundException;
+import com.snack.news.exception.PicksNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import com.snack.news.repository.PicksRepository;
 import lombok.AllArgsConstructor;
@@ -115,4 +116,34 @@ public class AdminService {
 		Pageable pageable = PageRequest.of(page - 1, DEFAULT_PAGING_SIZE, SORT_BY_ID);
 		return picksRepository.findAll(pageable);
 	}
+
+	@Transactional
+	public void deletePicks(long picksId) {
+		try {
+			picksRepository.deleteById(picksId);
+		} catch (IllegalArgumentException e) {
+			log.error("Invalid Picks Id in DeletePicks : {}", picksId, e);
+			throw new PicksNotFoundException();
+		}
+	}
+
+	@Transactional
+	public PickDto updatePicks(long picksId, PickDto pickDto) {
+		Pick originNews = picksRepository.findById(picksId).orElseThrow(PicksNotFoundException::new);
+		Pick updatedNews = updatePicks(originNews, pickDto);
+
+		picksRepository.save(updatedNews);
+
+		return PickDto.builder().id(picksId).build();
+	}
+
+	private Pick updatePicks(Pick picks, PickDto pickDto) {
+		return picks.updatePicks(
+				pickDto.getLink(),
+				pickDto.getPublishAt(),
+				categoryService.getCategory(pickDto.getCategoryId()),
+				topicService.getTopicList(pickDto.getTopicNames()));
+	}
+
+
 }
