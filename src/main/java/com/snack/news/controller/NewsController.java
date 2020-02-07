@@ -1,13 +1,12 @@
 package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
-import com.snack.news.dto.NewsDto;
-import com.snack.news.dto.WrappedResponse;
+import com.snack.news.dto.*;
 import com.snack.news.service.NewsService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,16 +16,16 @@ public class NewsController {
 	private final NewsService newsService;
 
 	@GetMapping
-	public ResponseEntity<List<News>> getNewsList(@ModelAttribute NewsDto newsDto) {
-		List<News> result = newsService.getNewsList(newsDto);
+	public WrappedResponse<List<News>> getNewsList(@ModelAttribute @Valid RequestQueryDto newsDto) {
+		ListCursorResult<News> result = newsService.getNewsList(newsDto);
 		if (result.isEmpty()) {
-			return ResponseEntity.noContent().build();
+			return WrappedResponse.noContents();
 		}
 		return WrappedResponse.ok(result);
 	}
 
 	@GetMapping("/{newsId}")
-	public ResponseEntity<News> getNews(@PathVariable Long newsId) {
-		return WrappedResponse.ok(newsService.getNews(newsId));
+	public WrappedResponse<News> getNews(@PathVariable Long newsId) {
+		return WrappedResponse.ok(Wrapper.valueOf(newsService.getNews(newsId)));
 	}
 }

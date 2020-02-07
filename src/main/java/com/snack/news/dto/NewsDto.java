@@ -5,7 +5,6 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import com.snack.news.domain.topic.TopicType;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,7 +28,6 @@ public class NewsDto {
 	private String link;
 	@NotNull(message = "Category ID")
 	private Long categoryId;
-	private TopicType type;
 	private List<Long> topicIds;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

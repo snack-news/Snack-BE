@@ -4,7 +4,7 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.RequestQueryDto;
 import com.snack.news.fixture.NewsFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,12 +26,12 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
 class NewsRepositoryTest extends NewsFixture {
 
-	private static final LocalDateTime TEST_TIME = LocalDateTime.of(2019, 7, 1, 0, 0);
 	@Autowired
 	private NewsRepository newsRepository;
 
@@ -61,8 +61,8 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByCategory() {
 		final Category category = Category.builder().id(2L).title("커머스").build();
 
-		NewsDto queryNewsDtoWithCategory = NewsDto.builder().categoryId(category.getId()).build();
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory, TEST_TIME)
+		RequestQueryDto queryNewsDtoWithCategory = RequestQueryDto.builder().categoryId(category.getId()).build();
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithCategory)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -82,9 +82,9 @@ class NewsRepositoryTest extends NewsFixture {
 		final LocalDateTime startDate = LocalDateTime.of(2019, 11, 25, 0, 0);
 		final LocalDateTime endDate = LocalDateTime.of(2019, 11, 30, 11, 59);
 
-		NewsDto queryNewsDtoWithDate = NewsDto.builder().startDateTime(startDate).endDateTime(endDate).build();
+		RequestQueryDto queryNewsDtoWithDate = RequestQueryDto.builder().startDateTime(startDate).endDateTime(endDate).build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -92,7 +92,28 @@ class NewsRepositoryTest extends NewsFixture {
 		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
 				.filter(n -> n.getPublishAt().isBefore(endDate))
 				.filter(n -> n.getPublishAt().isAfter(startDate))
-				.filter(n -> n.getPublishAt().isAfter(TEST_TIME))
+				.sorted(Comparator.comparing(News::getPublishAt).reversed())
+				.map(News::getId)
+				.collect(toList());
+
+		assertThat(actualResultNewsIdList).containsExactlyInAnyOrderElementsOf(expectedResultNewsList);
+	}
+
+	@Test
+	@DisplayName("업로드예약일이 기준일 이후인 뉴스는 가져오지 않는다")
+	@Transactional
+	void getNewsListTestWhenTodayEarlierThenPublishAt() {
+		LocalDateTime today = LocalDateTime.of(2019, 11, 27, 0, 0);
+
+		RequestQueryDto queryNewsDtoWithDate = RequestQueryDto.builder().build();
+
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithDate, today)
+				.stream()
+				.map(News::getId)
+				.collect(toList());
+
+		List<Long> expectedResultNewsList = newsRepository.findAll().stream()
+				.filter(n -> n.getPublishAt().isBefore(today))
 				.sorted(Comparator.comparing(News::getPublishAt).reversed())
 				.map(News::getId)
 				.collect(toList());
@@ -106,11 +127,11 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByTopic() {
 		List<Long> testTopicIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDtoWithTopic = NewsDto.builder()
+		RequestQueryDto queryNewsDtoWithTopic = RequestQueryDto.builder()
 				.topicIds(testTopicIds)
 				.build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTopic, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTopic)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -132,11 +153,11 @@ class NewsRepositoryTest extends NewsFixture {
 	void getNewsListTestByTag() {
 		List<Long> testTagIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDtoWithTag = NewsDto.builder()
+		RequestQueryDto queryNewsDtoWithTag = RequestQueryDto.builder()
 				.tagIds(testTagIds)
 				.build();
 
-		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTag, TEST_TIME)
+		List<Long> actualResultNewsIdList = newsRepository.findByNewsDto(queryNewsDtoWithTag)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -157,12 +178,12 @@ class NewsRepositoryTest extends NewsFixture {
 	@Transactional
 	void getNewsListTest() {
 		final List<Long> testTopicIds = Arrays.asList(1L, 2L);
-		final LocalDateTime start = LocalDateTime.of(2019, 7, 1, 0, 0);
-		final LocalDateTime end = LocalDateTime.of(2019, 8, 31, 0, 0);
+		final LocalDateTime start = LocalDateTime.of(2019, 11, 25, 0, 0);
+		final LocalDateTime end = LocalDateTime.of(2019, 11, 30, 0, 0);
 		final Category category = Category.builder().id(2L).title("커머스").build();
 		final List<Long> tagIds = Collections.singletonList(1L);
 
-		NewsDto queryNewsDto = NewsDto.builder()
+		RequestQueryDto queryNewsDto = RequestQueryDto.builder()
 				.startDateTime(start)
 				.endDateTime(end)
 				.categoryId(category.getId())
@@ -170,7 +191,7 @@ class NewsRepositoryTest extends NewsFixture {
 				.tagIds(tagIds)
 				.build();
 
-		List<Long> actualResultNewsIds = newsRepository.findByNewsDto(queryNewsDto, TEST_TIME)
+		List<Long> actualResultNewsIds = newsRepository.findByNewsDto(queryNewsDto)
 				.stream()
 				.map(News::getId)
 				.collect(toList());
@@ -266,5 +287,23 @@ class NewsRepositoryTest extends NewsFixture {
 		newsRepository.save(someNews);
 
 		assertThat(newsRepository.getOne(1L).getTitle()).isEqualTo(changedTitle);
+	}
+
+	@Test
+	@DisplayName("뉴스 개수를 정하여 가져올 수 있다.")
+	@Transactional
+	void newsLimitSizeTest() {
+		final int limitNewsSize = 5;
+		RequestQueryDto queryNewsDto = RequestQueryDto.builder()
+				.limitSize(limitNewsSize)
+				.build();
+
+		List<News> actualResultNewsList = newsRepository.findByNewsDto(queryNewsDto);
+		List<News> originNewsList = newsRepository.findAll();
+
+		assertAll(
+				() -> assertThat(originNewsList.size()).isNotEqualTo(limitNewsSize),
+				() -> assertThat(actualResultNewsList.size()).isEqualTo(limitNewsSize)
+		);
 	}
 }

@@ -20,5 +20,4 @@ public abstract class BaseTimeEntity {
 	protected void setCreateAt(LocalDateTime createAt) {
 		this.createAt = Optional.ofNullable(createAt).orElse(LocalDateTime.now());
 	}
-
 }

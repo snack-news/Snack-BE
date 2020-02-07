@@ -1,3 +1,5 @@
+# noinspection SqlNoDataSourceInspectionForFile
+
 -- Category 테스트 데이터
 insert into category (id, title) values (1, 'IT');
 insert into category (id, title) values (2, '커머스');
@@ -15,21 +17,21 @@ insert into tag(id, title) values (2,'HOT');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (1, 1, '01 news title', 'news content: IT/카카오/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:01');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (2, 1, '04 news title', 'news content: IT/카카오/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:02');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (3, 1, '05 news title', 'news content: IT/카카오/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:03');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (4, 1, '06 news title', 'news content: IT/카카오/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:04');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (5, 1, '07 news title', 'news content: IT/애플/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:05');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (6, 1, '08 news title', 'news content: IT/애플/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:06');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (7, 1, '09 news title', 'news content: IT/애플/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:07');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (8, 1, '02 news title', 'news content: IT/애플/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:08');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (9, 1, '03 news title', 'news content: IT/카카오/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:09');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (10, 1, '10 news title', 'news content: IT/카카오/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:10');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (11, 1, '11 news title', 'news content: IT/카카오/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:11');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (12, 1, '12 news title', 'news content: IT/카카오/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:12');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (13, 2, '13 news title', 'news content: 커머스/애플/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:13');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (14, 2, '14 news title', 'news content: 커머스/애플/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:14');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (15, 2, '15 news title', 'news content: 커머스/애플/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:15');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (16, 2, '16 news title', 'news content: 커머스/애플/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:16');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (17, 2, '17 news title', 'news content: 커머스/카카오/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:17');
-insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (18, 2, '18 news title', 'news content: 커머스/카카오/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:18');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (4, 1, '06 news title', 'news content: IT/카카오/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-26 00:00:04');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (5, 1, '07 news title', 'news content: IT/애플/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-26 00:00:05');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (6, 1, '08 news title', 'news content: IT/애플/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-26 00:00:06');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (7, 1, '09 news title', 'news content: IT/애플/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-27 00:00:07');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (8, 1, '02 news title', 'news content: IT/애플/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-27 00:00:08');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (9, 1, '03 news title', 'news content: IT/카카오/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-27 00:00:09');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (10, 1, '10 news title', 'news content: IT/카카오/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-28 00:00:10');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (11, 1, '11 news title', 'news content: IT/카카오/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-28 00:00:11');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (12, 1, '12 news title', 'news content: IT/카카오/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-28 00:00:12');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (13, 2, '13 news title', 'news content: 커머스/애플/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-29 00:00:13');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (14, 2, '14 news title', 'news content: 커머스/애플/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-29 00:00:14');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (15, 2, '15 news title', 'news content: 커머스/애플/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-29 00:00:15');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (16, 2, '16 news title', 'news content: 커머스/애플/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-30 00:00:16');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (17, 2, '17 news title', 'news content: 커머스/카카오/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-30 00:00:17');
+insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (18, 2, '18 news title', 'news content: 커머스/카카오/TOP10', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-30 00:00:18');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (19, 2, '19 news title', 'news content: 커머스/카카오/HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:19');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (20, 2, '20 news title', 'news content: 커머스/카카오/TOP10,HOT', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:20');
 insert into news(id, category_id, title, content, create_at, modified_at, publish_at) values (21, 2, '21 news title', 'news content: 커머스/애플/[none]', '2019-07-21 00:00:00', '2019-07-21 00:00:00', '2019-11-25 00:00:21');
@@ -193,3 +195,19 @@ insert into news_tag(news_id, tag_id) values (46, 1);
 insert into news_tag(news_id, tag_id) values (47, 2);
 insert into news_tag(news_id, tag_id) values (48, 1);
 insert into news_tag(news_id, tag_id) values (48, 2);
+
+insert into pick(id, link, publish_at) values (1, '픽스 링크 - A', '2020-01-02 00:00:00');
+insert into pick(id, link, publish_at) values (2, '픽스 링크 - B', '2020-01-01 00:00:00');
+insert into pick(id, link, publish_at) values (3, '픽스 링크 - C', '2020-01-03 00:00:00');
+insert into pick(id, link, publish_at) values (4, '픽스 링크 - D', '2020-01-04 00:00:00');
+insert into pick(id, link, publish_at) values (5, '픽스 링크 - E', '2020-01-06 00:00:00');
+insert into pick(id, link, publish_at) values (6, '픽스 링크 - F', '2020-01-05 00:00:00');
+insert into pick(id, link, publish_at) values (7, '픽스 링크 - G', '2020-01-07 00:00:00');
+insert into pick(id, link, publish_at) values (8, '픽스 링크 - H', '2020-01-09 00:00:00');
+insert into pick(id, link, publish_at) values (9, '픽스 링크 - I', '2020-01-08 00:00:00');
+insert into pick(id, link, publish_at) values (10, '픽스 링크 - J', '2020-01-11 00:00:00');
+insert into pick(id, link, publish_at) values (11, '픽스 링크 - K', '2020-01-10 00:00:00');
+
+insert into pick_topic(pick_id, topic_id) values (1, 1);
+insert into pick_topic(pick_id, topic_id) values (1, 2);
+insert into pick_topic(pick_id, topic_id) values (2, 2);

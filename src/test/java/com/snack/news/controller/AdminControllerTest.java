@@ -2,7 +2,7 @@ package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
 import com.snack.news.dto.AdminNewsDto;
-import com.snack.news.dto.NewsDto;
+import com.snack.news.dto.PickDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
@@ -27,21 +27,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHan
 
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
+import static com.snack.news.controller.ApiUrl.Domain.NEWS;
+import static com.snack.news.controller.ApiUrl.Domain.PICKS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class AdminControllerTest extends NewsFixture {
-	private final static String ADMIN_API_URL = "/admin/api/news";
 
 	@InjectMocks
 	private AdminController adminController;
@@ -72,7 +71,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청이 정상적으로 이루어진다")
 	void requestCreateNewsTest() throws Exception {
-		NewsDto correctRequestNewsDtoForCreate = NewsDto.builder()
+		AdminNewsDto correctRequestNewsDtoForCreate = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
@@ -82,7 +81,7 @@ class AdminControllerTest extends NewsFixture {
 
 		when(adminService.createNews(any(AdminNewsDto.class))).thenReturn(mockNewsDto);
 
-		mockMvc.perform(post(ADMIN_API_URL)
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}
@@ -90,14 +89,14 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청시 제목을 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
 	void requestCreateNewsTestWithoutTitle() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		mockMvc.perform(post(ADMIN_API_URL)
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isBadRequest());
 	}
@@ -105,14 +104,14 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청시 내용을 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
 	void requestCreateNewsWithoutContent() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		mockMvc.perform(post(ADMIN_API_URL)
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isBadRequest());
 	}
@@ -120,14 +119,14 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 생성 요청시 카테고리ID를 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
 	void requestCreateNewsTestWithoutCategoryId() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
+		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.build();
 
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
 
-		mockMvc.perform(post(ADMIN_API_URL)
+		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isBadRequest());
 	}
@@ -138,7 +137,7 @@ class AdminControllerTest extends NewsFixture {
 		Page<News> dummyNewsPage = new PageImpl<>(Collections.singletonList(News.builder().build()));
 		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
-		mockMvc.perform(get(ADMIN_API_URL + "/1"))
+		mockMvc.perform(get(ApiUrl.builder().getFromAdmin(NEWS).list(1).build()))
 				.andExpect(status().isOk());
 	}
 
@@ -148,14 +147,14 @@ class AdminControllerTest extends NewsFixture {
 		Page<News> dummyNewsPage = new PageImpl<>(Collections.singletonList(News.builder().build()));
 		when(adminService.getNewsList(1)).thenReturn(dummyNewsPage);
 
-		mockMvc.perform(get(ADMIN_API_URL))
+		mockMvc.perform(get(ApiUrl.builder().getFromAdmin(NEWS).list().build()))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("뉴스 수정 요청이 정상적으로 이루어진다")
 	void requestNewsListTest() throws Exception {
-		NewsDto correctRequestNewsDtoForUpdate = NewsDto.builder()
+		AdminNewsDto correctRequestNewsDtoForUpdate = AdminNewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
@@ -164,7 +163,7 @@ class AdminControllerTest extends NewsFixture {
 		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForUpdate);
 
 		final long anyLong = 1;
-		mockMvc.perform(put(ADMIN_API_URL + "/" + anyLong)
+		mockMvc.perform(put(ApiUrl.builder().update(NEWS).id(anyLong).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
 	}
@@ -172,7 +171,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 삭제 요청시 정상적으로 동작한다")
 	void requestDeleteNewsTest() throws Exception {
-		mockMvc.perform(delete(ADMIN_API_URL + "/" + anyLong()))
+		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isOk());
 	}
 
@@ -180,7 +179,19 @@ class AdminControllerTest extends NewsFixture {
 	@DisplayName("뉴스 삭제 요청시 ID가 없으면 NOTFOUND 상태코드로 응답한다")
 	void requestDeleteNewsTestWithoutNewsId() throws Exception {
 		doThrow(new NewsNotFoundException()).when(adminService).deleteNews(anyLong());
-		mockMvc.perform(delete(ADMIN_API_URL + "/" + anyLong()))
+		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	@DisplayName("Pick 생성 요청이 정상적으로 이루어진다")
+	void requestCreatePickTest() throws Exception {
+		List<PickDto> correctRequestNewsDtoForCreate = Collections.singletonList(PickDto.builder().build());
+
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
+
+		mockMvc.perform(post(ApiUrl.builder().create(PICKS).build())
+				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
+				.andExpect(status().isOk());
 	}
 }

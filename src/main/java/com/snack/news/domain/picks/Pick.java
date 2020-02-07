@@ -1,8 +1,7 @@
-package com.snack.news.domain.news;
+package com.snack.news.domain.picks;
 
 import com.snack.news.domain.base.BaseTimeEntity;
 import com.snack.news.domain.category.Category;
-import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,18 +17,12 @@ import java.util.Optional;
 @Getter
 @ToString
 @Entity
-public class News extends BaseTimeEntity {
+public class Pick extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false)
-	private String title;
-
-	@Column(columnDefinition = "TEXT", nullable = false)
-	private String content;
-
-	@Column
 	private String link;
 
 	@ManyToOne
@@ -37,40 +30,28 @@ public class News extends BaseTimeEntity {
 	private Category category;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "news_topic",
-			joinColumns = @JoinColumn(name = "news_id"),
+	@JoinTable(name = "pick_topic",
+			joinColumns = @JoinColumn(name = "pick_id"),
 			inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private List<Topic> topics;
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "news_tag",
-			joinColumns = @JoinColumn(name = "news_id"),
-			inverseJoinColumns = @JoinColumn(name = "tag_id"))
-	private List<Tag> tags;
 
 	@Column
 	private LocalDateTime publishAt;
 
 	@Builder
-	public News(String title, String content, String link, LocalDateTime createAt, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
-		this.title = title;
-		this.content = content;
+	public Pick(String link, Category category, List<Topic> topics, LocalDateTime publishAt, LocalDateTime createAt) {
 		this.link = link;
 		this.category = category;
 		this.topics = topics;
-		this.tags = tags;
 		this.publishAt = Optional.ofNullable(publishAt).orElse(LocalDateTime.now());
 		setCreateAt(createAt);
 	}
 
-	public News updateNews(String title, String content, String link, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
-		this.title = title;
-		this.content = content;
+	public Pick updatePicks(String link, LocalDateTime publishAt, Category category, List<Topic> topics) {
 		this.link = link;
 		this.publishAt = publishAt;
 		this.category = category;
 		this.topics = topics;
-		this.tags = tags;
 
 		return this;
 	}

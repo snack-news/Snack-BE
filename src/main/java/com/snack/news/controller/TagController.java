@@ -3,9 +3,9 @@ package com.snack.news.controller;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.dto.TagDto;
 import com.snack.news.dto.WrappedResponse;
+import com.snack.news.dto.Wrapper;
 import com.snack.news.service.TagService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,17 +19,17 @@ public class TagController {
 	private final TagService tagService;
 
 	@PostMapping
-	public ResponseEntity<Tag> createTag(@Valid @RequestBody TagDto tagDto) {
-		return WrappedResponse.ok(tagService.createTag(tagDto));
+	public WrappedResponse<Tag> createTag(@Valid @RequestBody TagDto tagDto) {
+		return WrappedResponse.ok(Wrapper.valueOf(tagService.createTag(tagDto)));
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Tag>> getTopicList() {
-		return WrappedResponse.ok(tagService.getAllTagList());
+	public WrappedResponse<List<Tag>> getTopicList() {
+		return WrappedResponse.ok(Wrapper.valueOf(tagService.getAllTagList()));
 	}
 
 	@PutMapping
-	public ResponseEntity<Tag> updateTopic(@RequestBody TagDto tagDto) {
-		return WrappedResponse.ok(tagService.updateTag(tagDto));
+	public WrappedResponse<Tag> updateTopic(@RequestBody TagDto tagDto) {
+		return WrappedResponse.ok(Wrapper.valueOf(tagService.updateTag(tagDto)));
 	}
 }
