@@ -43,9 +43,9 @@ public class AdminController {
 		return WrappedResponse.ok(Wrapper.valueOf(result));
 	}
 
-	@PutMapping("/news/{newsId}")
-	public WrappedResponse<AdminNewsDto> updateNews(@PathVariable long newsId, @Valid @RequestBody AdminNewsDto newsDto) {
-		return WrappedResponse.ok(Wrapper.valueOf(adminService.updateNews(newsId, newsDto)));
+	@PutMapping("/news/{id}")
+	public WrappedResponse<AdminNewsDto> updateNews(@PathVariable long id, @Valid @RequestBody AdminNewsDto newsDto) {
+		return WrappedResponse.ok(Wrapper.valueOf(adminService.updateNews(id, newsDto)));
 	}
 
 	@DeleteMapping("/news/{id}")
@@ -71,5 +71,16 @@ public class AdminController {
 			return WrappedResponse.noContents();
 		}
 		return WrappedResponse.ok(Wrapper.valueOf(result));
+	}
+
+	@DeleteMapping("/picks/{id}")
+	public WrappedResponse<AdminNewsDto> deletePicks(@PathVariable long id) {
+		adminService.deletePicks(id);
+		return WrappedResponse.okEmpty();
+	}
+
+	@PutMapping("/picks/{id}")
+	public WrappedResponse<PickDto> updateNews(@PathVariable long id, @Valid @RequestBody PickDto pickDto) {
+		return WrappedResponse.ok(Wrapper.valueOf(adminService.updatePicks(id, pickDto)));
 	}
 }
