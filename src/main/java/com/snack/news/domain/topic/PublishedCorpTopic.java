@@ -7,7 +7,9 @@ public enum PublishedCorpTopic {
 	VIVA_REPUBLICA("비바리퍼블리카"),
 	WEMAKEPRICE("위메프"),
 	COUPANG("쿠팡"),
-	YANOLJA("야놀자");
+	YANOLJA("야놀자"),
+	TMON("티몬"),
+	TADA("타다");
 
 	private String name;
 

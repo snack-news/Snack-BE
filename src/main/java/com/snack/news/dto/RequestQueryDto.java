@@ -16,9 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 public class RequestQueryDto {
 
-	public static final int DEFAULT_LIMIT_NEWS_LIST_SIZE = 10;
-	public static final int MIN_LIMIT_NEWS_LIST_SIZE = 1;
-	public static final int MAX_LIMIT_NEWS_LIST_SIZE = 100;
+	public static final int DEFAULT_LIMIT_LIST_SIZE = 50;
+	public static final int MIN_LIMIT_LIST_SIZE = 1;
+	public static final int MAX_LIMIT_LIST_SIZE = 100;
 
 	private Long lastId;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -30,7 +30,7 @@ public class RequestQueryDto {
 	private List<Long> topicIds;
 	private List<Long> tagIds;
 
-	@Min(MIN_LIMIT_NEWS_LIST_SIZE)
-	@Max(MAX_LIMIT_NEWS_LIST_SIZE)
-	private int limitSize = DEFAULT_LIMIT_NEWS_LIST_SIZE;
+	@Min(MIN_LIMIT_LIST_SIZE)
+	@Max(MAX_LIMIT_LIST_SIZE)
+	private int limitSize = DEFAULT_LIMIT_LIST_SIZE;
 }
