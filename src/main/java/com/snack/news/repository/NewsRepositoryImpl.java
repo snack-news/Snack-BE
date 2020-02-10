@@ -6,10 +6,7 @@ import com.snack.news.dto.RequestQueryDto;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +37,17 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 			criteria.add(nr.join("tags").get("id").in(requestQueryDto.getTagIds()));
 		}
 
+		Path<LocalDateTime> publishAtPath = nr.get("publishAt");
+
 		if (requestQueryDto.getStartDateTime() != null) {
-			criteria.add(builder.greaterThanOrEqualTo(nr.get("publishAt"), requestQueryDto.getStartDateTime()));
+			criteria.add(builder.greaterThanOrEqualTo(publishAtPath, requestQueryDto.getStartDateTime()));
 		}
 
 		if (requestQueryDto.getEndDateTime() != null) {
-			criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt"), requestQueryDto.getEndDateTime()));
+			Predicate publishAtBeforeThenEndDate = builder.lessThan(publishAtPath, requestQueryDto.getEndDateTime());
+			Predicate p2 = builder.and(builder.equal(publishAtPath, requestQueryDto.getEndDateTime()), builder.lessThan(nr.get("id"), requestQueryDto.getLastId()));
+
+			criteria.add(builder.or(publishAtBeforeThenEndDate, p2));
 		}
 
  		criteria.add(builder.lessThanOrEqualTo(nr.get("publishAt").as(LocalDateTime.class), now));
@@ -53,7 +55,7 @@ public class NewsRepositoryImpl implements NewsRepositoryCustom {
 		Predicate[] conditionOfDto = criteria.toArray(new Predicate[0]);
 
 		query.where(builder.and(conditionOfDto))
-				.orderBy(builder.desc(nr.get("publishAt")))
+				.orderBy(builder.desc(nr.get("publishAt")), builder.desc(nr.get("id")))
 				.distinct(true);
 
 		TypedQuery<News> typedQuery = em.createQuery(query);
