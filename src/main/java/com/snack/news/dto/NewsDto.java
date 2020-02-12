@@ -23,7 +23,6 @@ public class NewsDto {
 	private Long id;
 	@NotNull(message = "News title")
 	private String title;
-	@NotNull(message = "News content")
 	private String content;
 	private String link;
 	@NotNull(message = "Category ID")
