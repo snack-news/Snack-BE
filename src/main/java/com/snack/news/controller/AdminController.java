@@ -1,7 +1,7 @@
 package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
-import com.snack.news.dto.AdminNewsDto;
+import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.WrappedResponse;
 import com.snack.news.dto.Wrapper;
 import com.snack.news.service.AdminService;
@@ -21,7 +21,7 @@ public class AdminController {
 	private final AdminService adminService;
 
 	@PostMapping("/news")
-	public WrappedResponse<AdminNewsDto> createNews(@Valid @RequestBody AdminNewsDto newsDto) {
+	public WrappedResponse<NewsDto> createNews(@Valid @RequestBody NewsDto newsDto) {
 		return WrappedResponse.ok(Wrapper.valueOf(adminService.createNews(newsDto)));
 	}
 
@@ -41,12 +41,12 @@ public class AdminController {
 	}
 
 	@PutMapping("/news/{id}")
-	public WrappedResponse<AdminNewsDto> updateNews(@PathVariable long id, @Valid @RequestBody AdminNewsDto newsDto) {
+	public WrappedResponse<NewsDto> updateNews(@PathVariable long id, @Valid @RequestBody NewsDto newsDto) {
 		return WrappedResponse.ok(Wrapper.valueOf(adminService.updateNews(id, newsDto)));
 	}
 
 	@DeleteMapping("/news/{id}")
-	public WrappedResponse<AdminNewsDto> deleteNews(@PathVariable long id) {
+	public WrappedResponse<NewsDto> deleteNews(@PathVariable long id) {
 		adminService.deleteNews(id);
 		return WrappedResponse.okEmpty();
 	}

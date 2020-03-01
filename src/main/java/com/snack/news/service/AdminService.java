@@ -4,7 +4,7 @@ import com.snack.news.domain.category.Category;
 import com.snack.news.domain.news.News;
 import com.snack.news.domain.tag.Tag;
 import com.snack.news.domain.topic.Topic;
-import com.snack.news.dto.AdminNewsDto;
+import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.repository.NewsRepository;
 import lombok.AllArgsConstructor;
@@ -31,11 +31,11 @@ public class AdminService {
 	private final TagService tagService;
 
 	@Transactional
-	public AdminNewsDto createNews(AdminNewsDto newsDto) {
+	public NewsDto createNews(NewsDto newsDto) {
 		News news = generateNews(newsDto);
 		newsRepository.save(news);
 
-		return AdminNewsDto.builder().id(news.getId()).build();
+		return NewsDto.builder().id(news.getId()).build();
 	}
 
 	public Page<News> getNewsList(long page) {
@@ -44,13 +44,13 @@ public class AdminService {
 	}
 
 	@Transactional
-	public AdminNewsDto updateNews(long newsId, AdminNewsDto newsDto) {
+	public NewsDto updateNews(long newsId, NewsDto newsDto) {
 		News originNews = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
 		News updatedNews = updateNews(originNews, newsDto);
 
 		newsRepository.save(updatedNews);
 
-		return AdminNewsDto.builder().id(newsId).build();
+		return NewsDto.builder().id(newsId).build();
 	}
 
 	@Transactional
@@ -63,7 +63,7 @@ public class AdminService {
 		}
 	}
 
-	private News generateNews(AdminNewsDto newsDto) {
+	private News generateNews(NewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());
@@ -71,7 +71,7 @@ public class AdminService {
 		return newsDto.toEntity(category, topics, tags);
 	}
 
-	private News updateNews(News news, AdminNewsDto newsDto) {
+	private News updateNews(News news, NewsDto newsDto) {
 		Category category = categoryService.getCategory(newsDto.getCategoryId());
 		List<Topic> topics = topicService.getTopicList(newsDto.getTopicNames());
 		List<Tag> tags = tagService.getTagList(newsDto.getTagIds());

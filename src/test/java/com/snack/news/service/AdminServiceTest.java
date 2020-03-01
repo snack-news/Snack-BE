@@ -46,7 +46,7 @@ class AdminServiceTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스를 생성할 수 있다")
 	void createNewsTest() {
-		adminService.createNews(mockAdminNewsDto);
+		adminService.createNews(mockNewsDto);
 		verify(newsRepository).save(any(News.class));
 	}
 
@@ -54,21 +54,21 @@ class AdminServiceTest extends NewsFixture {
 	@DisplayName("뉴스 생성시 Category id가 부적절하다면 예외가 발생한다")
 	void createNewsTestWhenIllegalCategoryId() {
 		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
-		assertThrows(CategoryNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
+		assertThrows(CategoryNotFoundException.class, () -> adminService.createNews(mockNewsDto));
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Topic id가 부적절하다면 예외가 발생한다")
 	void createNewsTestWhenIllegalTopicId() {
-		when(topicService.getTopicList(mockAdminNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
-		assertThrows(TopicNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
+		when(topicService.getTopicList(mockNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
+		assertThrows(TopicNotFoundException.class, () -> adminService.createNews(mockNewsDto));
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Tag id가 부적절하다면 예외가 발생한다")
 	void createNewsTestWhenIllegalTagId() {
 		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
-		assertThrows(TagNotFoundException.class, () -> adminService.createNews(mockAdminNewsDto));
+		assertThrows(TagNotFoundException.class, () -> adminService.createNews(mockNewsDto));
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class AdminServiceTest extends NewsFixture {
 		final long anyLong = 1L;
 		when(newsRepository.findById(anyLong)).thenReturn(Optional.of(mockNews));
 
-		adminService.updateNews(anyLong, mockAdminNewsDto);
+		adminService.updateNews(anyLong, mockNewsDto);
 		verify(newsRepository).save(any(News.class));
 	}
 
