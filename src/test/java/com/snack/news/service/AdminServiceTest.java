@@ -1,17 +1,15 @@
 package com.snack.news.service;
 
 import com.snack.news.domain.news.News;
-import com.snack.news.domain.picks.Pick;
-import com.snack.news.dto.PickDto;
-import com.snack.news.exception.*;
+import com.snack.news.exception.CategoryNotFoundException;
+import com.snack.news.exception.NewsNotFoundException;
+import com.snack.news.exception.TagNotFoundException;
+import com.snack.news.exception.TopicNotFoundException;
 import com.snack.news.fixture.NewsFixture;
 import com.snack.news.repository.NewsRepository;
-import com.snack.news.repository.PicksRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +33,6 @@ class AdminServiceTest extends NewsFixture {
 
 	@Mock
 	private NewsRepository newsRepository;
-
-	@Mock
-	private PicksRepository picksRepository;
 
 	@Mock
 	private CategoryService categoryService;
@@ -116,30 +110,5 @@ class AdminServiceTest extends NewsFixture {
 	void deleteNewsTestWhenNotExistNewsId() {
 		doThrow(new IllegalArgumentException()).when(newsRepository).deleteById(anyLong());
 		assertThrows(NewsNotFoundException.class, () -> adminService.deleteNews(anyLong()));
-	}
-
-
-	@ParameterizedTest
-	@DisplayName("Admin에서 pick 리스트를 페이지별로 조회할 수 있다")
-	@ValueSource(ints = {1, Integer.MAX_VALUE})
-	void getPickListTestOrderByDate(final int page) {
-		adminService.getPickPage(page);
-		verify(picksRepository).findAll(any(Pageable.class));
-	}
-
-	@ParameterizedTest
-	@DisplayName("Admin에서 pick 리스트를 조회할 때 0보다 작은 페이지를 요청하면 예외가 발생한다.")
-	@ValueSource(ints = {-1})
-	void getPickListTestOrderByDateWhenLessThenZero(final int page) {
-		assertThrows(IllegalArgumentException.class, () -> adminService.getPickPage(page));
-	}
-
-	@Test
-	@DisplayName("Pick을 추가할 수 있다")
-	void createPickTest() {
-		final List<PickDto> validPickDtoList = Collections.singletonList(PickDto.builder().build());
-
-		adminService.createPick(validPickDtoList);
-		verify(picksRepository).save(any(Pick.class));
 	}
 }
