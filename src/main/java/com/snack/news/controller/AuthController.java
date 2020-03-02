@@ -38,7 +38,7 @@ public class AuthController {
 		String jwt = tokenProvider.createToken(authentication);
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+		httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, JWTFilter.AUTHORIZATION_BODY_HEAD + jwt);
 
 		return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
 	}

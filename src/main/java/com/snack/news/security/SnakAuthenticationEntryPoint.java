@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Handling Not Allow Auth
- */
 @Component
 public class SnakAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

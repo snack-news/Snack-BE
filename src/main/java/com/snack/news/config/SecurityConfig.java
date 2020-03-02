@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.Filter;
 
 
 @EnableWebSecurity
@@ -20,11 +23,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private SnakAuthenticationEntryPoint entryPoint;
 	private SnakAccessDeniedHandler accessDeniedHandler;
 	private JWTProvider tokenProvider;
+	private Filter corsFilter;
 
-	public SecurityConfig(SnakAuthenticationEntryPoint entryPoint, SnakAccessDeniedHandler accessDeniedHandler, JWTProvider tokenProvider) {
+	public SecurityConfig(SnakAuthenticationEntryPoint entryPoint,
+						  SnakAccessDeniedHandler accessDeniedHandler,
+						  JWTProvider tokenProvider,
+						  Filter corsFilter
+	) {
 		this.entryPoint = entryPoint;
 		this.accessDeniedHandler = accessDeniedHandler;
 		this.tokenProvider = tokenProvider;
+		this.corsFilter = corsFilter;
 	}
 
 	@Bean
@@ -32,12 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	private JWTConfigurer securityConfigurerAdapter() {
+		return new JWTConfigurer(tokenProvider);
+	}
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
-				.csrf().disable()
 				.httpBasic().disable()
-//				.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+				.csrf().disable()
+				.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling()
 				.authenticationEntryPoint(entryPoint)
 				.accessDeniedHandler(accessDeniedHandler)
@@ -59,9 +72,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.and()
 				.apply(securityConfigurerAdapter());
-	}
-
-	private JWTConfigurer securityConfigurerAdapter() {
-		return new JWTConfigurer(tokenProvider);
 	}
 }
