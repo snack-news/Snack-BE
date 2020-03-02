@@ -74,9 +74,9 @@ class AdminControllerTest extends NewsFixture {
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(Collections.singletonList(correctRequestNewsDtoForCreate));
 
-		when(adminService.createNews(any(NewsDto.class))).thenReturn(mockNewsDto);
+		when(adminService.createNews(any())).thenReturn(Collections.singletonList(mockNewsDto));
 
 		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
@@ -91,7 +91,7 @@ class AdminControllerTest extends NewsFixture {
 				.content(TEST_CONTENT)
 				.build();
 
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(Collections.singletonList(incorrectRequestNewsDtoForCreateNews));
 
 		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))

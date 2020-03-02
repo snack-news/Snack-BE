@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -31,11 +32,19 @@ public class AdminService {
 	private final TagService tagService;
 
 	@Transactional
-	public NewsDto createNews(NewsDto newsDto) {
-		News news = generateNews(newsDto);
-		newsRepository.save(news);
+	public List<NewsDto> createNews(List<NewsDto> newsDtoList) {
+		List<News> newsList = newsDtoList.stream()
+				.map(this::generateNews)
+				.collect(Collectors.toList());
 
-		return NewsDto.builder().id(news.getId()).build();
+		newsRepository.saveAll(newsList);
+
+		List<NewsDto> response = newsList.stream()
+				.map(News::getId)
+				.map(id -> NewsDto.builder().id(id).build())
+				.collect(Collectors.toList());
+
+		return response;
 	}
 
 	public Page<News> getNewsList(long page) {

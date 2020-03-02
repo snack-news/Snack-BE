@@ -53,6 +53,7 @@ public class News extends BaseTimeEntity {
 
 	@Builder
 	public News(String title, String content, String link, LocalDateTime createAt, LocalDateTime publishAt, Category category, List<Topic> topics, List<Tag> tags) {
+		// Optional.ofNullable(category).orElseThrow(NewsNotFoundException::new);
 		this.title = title;
 		this.content = content;
 		this.link = link;

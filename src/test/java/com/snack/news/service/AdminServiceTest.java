@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,29 +47,29 @@ class AdminServiceTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스를 생성할 수 있다")
 	void createNewsTest() {
-		adminService.createNews(mockNewsDto);
-		verify(newsRepository).save(any(News.class));
+		adminService.createNews(Collections.singletonList(mockNewsDto));
+		verify(newsRepository).saveAll(any());
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Category id가 부적절하다면 예외가 발생한다")
 	void createNewsTestWhenIllegalCategoryId() {
 		when(categoryService.getCategory(any())).thenThrow(CategoryNotFoundException.class);
-		assertThrows(CategoryNotFoundException.class, () -> adminService.createNews(mockNewsDto));
+		assertThrows(CategoryNotFoundException.class, () -> adminService.createNews(Collections.singletonList(mockNewsDto)));
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Topic id가 부적절하다면 예외가 발생한다")
 	void createNewsTestWhenIllegalTopicId() {
 		when(topicService.getTopicList(mockNewsDto.getTopicNames())).thenThrow(TopicNotFoundException.class);
-		assertThrows(TopicNotFoundException.class, () -> adminService.createNews(mockNewsDto));
+		assertThrows(TopicNotFoundException.class, () -> adminService.createNews(Collections.singletonList(mockNewsDto)));
 	}
 
 	@Test
 	@DisplayName("뉴스 생성시 Tag id가 부적절하다면 예외가 발생한다")
 	void createNewsTestWhenIllegalTagId() {
 		when(tagService.getTagList(mockNewsDto.getTagIds())).thenThrow(TagNotFoundException.class);
-		assertThrows(TagNotFoundException.class, () -> adminService.createNews(mockNewsDto));
+		assertThrows(TagNotFoundException.class, () -> adminService.createNews(Collections.singletonList(mockNewsDto)));
 	}
 
 	@Test

@@ -7,21 +7,22 @@ import com.snack.news.dto.Wrapper;
 import com.snack.news.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@Validated(NewsDto.class)
 @RequestMapping("/admin/api")
 public class AdminController {
-
-	private final int DEFAULT_PAGE_NUM = 1;
 
 	private final AdminService adminService;
 
 	@PostMapping("/news")
-	public WrappedResponse<NewsDto> createNews(@Valid @RequestBody NewsDto newsDto) {
+	public WrappedResponse<List<NewsDto>> createNews(@RequestBody List<@Valid NewsDto> newsDto) {
 		return WrappedResponse.ok(Wrapper.valueOf(adminService.createNews(newsDto)));
 	}
 
