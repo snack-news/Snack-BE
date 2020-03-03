@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -37,14 +36,7 @@ public class AuthControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("token")));
 	}
-
-	@Test
-	@WithMockUser(username = "user", roles = "user")
-	public void test_meta_profile() throws Exception {
-		getMockMvc().perform(post("/api/tag"))
-				.andExpect(status().isUnauthorized());
-	}
-
+	
 	public MockMvc getMockMvc() {
 		return mockMvc;
 	}
