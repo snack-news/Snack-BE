@@ -19,6 +19,8 @@ public class CorsConfig {
 		config.addAllowedMethod("*");
 
 		source.registerCorsConfiguration("/api/**", config);
+		source.registerCorsConfiguration("/meta/profile", config);
+
 		return new CorsFilter(source);
 	}
 }

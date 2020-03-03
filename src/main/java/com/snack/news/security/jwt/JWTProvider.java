@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -25,16 +27,16 @@ public class JWTProvider implements InitializingBean {
 
 	private static final String AUTHORITIES_KEY = "auth";
 	private final String base64Secret;
-	private final long tokenValidityInMilliseconds;
+	private final long tokenLifeCycleBySecond;
 
 	private Key key;
 
 	public JWTProvider(
-			@Value("${jwt.base64-secret}") String base64Secret,
-			@Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds
+			@Value("${jwt.secret-key}") String base64Secret,
+			@Value("${jwt.token-lifecycle}") long tokenLifeCycleBySecond
 	) {
 		this.base64Secret = base64Secret;
-		this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+		this.tokenLifeCycleBySecond = tokenLifeCycleBySecond;
 	}
 
 	@Override
@@ -48,36 +50,37 @@ public class JWTProvider implements InitializingBean {
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));
 
-		long now = (new Date()).getTime();
-		Date validity = new Date(now + this.tokenValidityInMilliseconds);
+		LocalDateTime test = LocalDateTime.now().plusSeconds(tokenLifeCycleBySecond);
+		Date lifeCycle = new Date(test.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
 		return Jwts.builder()
 				.setSubject(authentication.getName())
 				.claim(AUTHORITIES_KEY, authorities)
 				.signWith(key, SignatureAlgorithm.HS512)
-				.setExpiration(validity)
+				.setExpiration(lifeCycle)
 				.compact();
 	}
 
 	public Authentication getAuthentication(String token) {
-		Claims claims = Jwts.parser()
+		Claims claims = Jwts.parserBuilder()
 				.setSigningKey(key)
+				.build()
 				.parseClaimsJws(token)
 				.getBody();
 
-		Collection<? extends GrantedAuthority> authorities =
-				Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-						.map(SimpleGrantedAuthority::new)
-						.collect(Collectors.toList());
+		Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString()
+				.split(","))
+				.map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
 
-		User principal = new User(claims.getSubject(), "", authorities);
+		User user = new User(claims.getSubject(), "", authorities);
 
-		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+		return new UsernamePasswordAuthenticationToken(user, token, authorities);
 	}
 
 	public boolean validateToken(String authToken) {
 		try {
-			Jwts.parser().setSigningKey(key).parseClaimsJws(authToken);
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
 			return true;
 		} catch (SecurityException | MalformedJwtException e) {
 			log.info("Invalid JWT signature.");
