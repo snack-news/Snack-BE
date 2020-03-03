@@ -36,7 +36,7 @@ public class AuthControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("token")));
 	}
-	
+
 	public MockMvc getMockMvc() {
 		return mockMvc;
 	}
