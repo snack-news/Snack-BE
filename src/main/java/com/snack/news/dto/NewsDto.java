@@ -19,11 +19,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class NewsDto {
+
+	public interface CreateNews{
+	}
+
 	private Long id;
 	private String title;
 	private String content;
 	private String link;
-	@NotNull(message = "Category ID")
+	@NotNull(message = "Category ID", groups = CreateNews.class)
 	private Long categoryId;
 	private List<String> topicNames;
 	private List<Long> tagIds;

@@ -18,14 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.Objects;
 
 import static com.snack.news.controller.ApiUrl.Domain.NEWS;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,21 +42,9 @@ public class NewsControllerTest extends NewsFixture {
 	@BeforeEach
 	void setup() {
 		mockMvc = MockMvcBuilders.standaloneSetup(newsController)
-				.setHandlerExceptionResolvers(createExceptionResolver())
+				.setControllerAdvice(new ControllerExceptionHandler())
 				.build();
 	}
-
-	private ExceptionHandlerExceptionResolver createExceptionResolver() {
-		ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
-			protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
-				Method method = new ExceptionHandlerMethodResolver(ControllerExceptionHandler.class).resolveMethod(exception);
-				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), Objects.requireNonNull(method));
-			}
-		};
-		exceptionResolver.afterPropertiesSet();
-		return exceptionResolver;
-	}
-
 
 	@Test
 	@DisplayName("뉴스 조회 요청이 정상적으로 이루어진다")
@@ -77,7 +59,7 @@ public class NewsControllerTest extends NewsFixture {
 	void requestCreateNewsTestWithInvalidNewsId() throws Exception {
 		when(newsService.getNews(anyLong())).thenThrow(NewsNotFoundException.class);
 
-		mockMvc.perform(get(ApiUrl.builder().get(NEWS).id(anyLong()).build())
+		mockMvc.perform(get(ApiUrl.builder().get(NEWS).id((anyLong())).build())
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}

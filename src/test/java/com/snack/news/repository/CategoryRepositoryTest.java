@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -24,7 +25,7 @@ class CategoryRepositoryTest extends NewsFixture {
 	@DisplayName("ID에 해당하는 Category를 가져올 수 있다")
 	@Transactional
 	void getCategoryById() {
-		Category category = categoryRepository.findById(1L).orElseThrow(CategoryNotFoundException::new);
+		Category category = categoryRepository.findById(1L).orElseThrow(() -> new CategoryNotFoundException(anyLong()));
 
 		assertThat(category.getTitle()).isEqualTo("IT");
 	}

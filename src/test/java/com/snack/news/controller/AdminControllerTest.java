@@ -19,14 +19,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
+import org.springframework.validation.annotation.Validated;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.Objects;
 
 import static com.snack.news.controller.ApiUrl.Domain.NEWS;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
+@Validated(NewsDto.CreateNews.class)
 class AdminControllerTest extends NewsFixture {
 
 	@InjectMocks
@@ -50,19 +46,8 @@ class AdminControllerTest extends NewsFixture {
 	@BeforeEach
 	void setup() {
 		mockMvc = MockMvcBuilders.standaloneSetup(adminController)
-				.setHandlerExceptionResolvers(createExceptionResolver())
+				.setControllerAdvice(new ControllerExceptionHandler())
 				.build();
-	}
-
-	private ExceptionHandlerExceptionResolver createExceptionResolver() {
-		ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
-			protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
-				Method method = new ExceptionHandlerMethodResolver(ControllerExceptionHandler.class).resolveMethod(exception);
-				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), Objects.requireNonNull(method));
-			}
-		};
-		exceptionResolver.afterPropertiesSet();
-		return exceptionResolver;
 	}
 
 	@Test
@@ -81,21 +66,6 @@ class AdminControllerTest extends NewsFixture {
 		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
-	}
-
-	@Test
-	@DisplayName("뉴스 생성 요청시 카테고리ID를 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
-	void requestCreateNewsTestWithoutCategoryId() throws Exception {
-		NewsDto incorrectRequestNewsDtoForCreateNews = NewsDto.builder()
-				.title(TEST_TITLE)
-				.content(TEST_CONTENT)
-				.build();
-
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(Collections.singletonList(incorrectRequestNewsDtoForCreateNews));
-
-		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -145,7 +115,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 삭제 요청시 ID가 없으면 NOTFOUND 상태코드로 응답한다")
 	void requestDeleteNewsTestWithoutNewsId() throws Exception {
-		doThrow(new NewsNotFoundException()).when(adminService).deleteNews(anyLong());
+		doThrow(new NewsNotFoundException(1L)).when(adminService).deleteNews(anyLong());
 		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isNotFound());
 	}

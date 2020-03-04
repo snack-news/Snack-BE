@@ -54,7 +54,7 @@ public class AdminService {
 
 	@Transactional
 	public NewsDto updateNews(long newsId, NewsDto newsDto) {
-		News originNews = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
+		News originNews = newsRepository.findById(newsId).orElseThrow(() -> new NewsNotFoundException(newsId));
 		News updatedNews = updateNews(originNews, newsDto);
 
 		newsRepository.save(updatedNews);
@@ -68,7 +68,7 @@ public class AdminService {
 			newsRepository.deleteById(newsId);
 		} catch (IllegalArgumentException e) {
 			log.error("Invalid News Id in DeleteNews : {}", newsId, e);
-			throw new NewsNotFoundException();
+			throw new NewsNotFoundException(newsId);
 		}
 	}
 
