@@ -15,14 +15,14 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@Validated(NewsDto.CreateNews.class)
+@Validated
 @RequestMapping("/admin/api")
 public class AdminController {
 
 	private final AdminService adminService;
 
 	@PostMapping("/news")
-	public WrappedResponse<List<NewsDto>> createNews(@RequestBody @Valid List<NewsDto> newsDto) {
+	public WrappedResponse<List<NewsDto>> createNews(@RequestBody List<@Valid NewsDto> newsDto) {
 		return WrappedResponse.ok(Wrapper.valueOf(adminService.createNews(newsDto)));
 	}
 

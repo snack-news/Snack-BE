@@ -12,7 +12,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @ControllerAdvice("com.snack.news.controller")
 public class ControllerExceptionHandler {
