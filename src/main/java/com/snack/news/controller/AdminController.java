@@ -42,7 +42,6 @@ public class AdminController {
 	}
 
 	@PutMapping("/news/{id}")
-	@Validated(NewsDto.class)
 	public WrappedResponse<NewsDto> updateNews(@PathVariable long id, @Valid @RequestBody NewsDto newsDto) {
 		return WrappedResponse.ok(Wrapper.valueOf(adminService.updateNews(id, newsDto)));
 	}
