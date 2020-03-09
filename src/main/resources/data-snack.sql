@@ -208,3 +208,13 @@ insert into pick(id, link, publish_at) values (11, '픽스 링크 - K', '2020-01
 insert into pick_topic(pick_id, topic_id) values (1, 1);
 insert into pick_topic(pick_id, topic_id) values (1, 2);
 insert into pick_topic(pick_id, topic_id) values (2, 2);
+
+INSERT INTO USER (ID, USERNAME, PASSWORD, EMAIL, ACTIVATED) VALUES (1, 'admin', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'admin@admin.com', 1);
+INSERT INTO USER (ID, USERNAME, PASSWORD, EMAIL, ACTIVATED) VALUES (2, 'user', '$2a$10$JKpEgVnESNX7F2p7dhKZB.0F05ZNNlYbMJVcnUge0KpkjHEPWu66a', 'enabled@user.com', 1);
+
+INSERT INTO AUTHORITY (NAME) VALUES ('ROLE_USER');
+INSERT INTO AUTHORITY (NAME) VALUES ('ROLE_ADMIN');
+
+INSERT INTO USER_AUTHORITY (USER_ID, AUTHORITY_NAME) VALUES (1, 'ROLE_USER');
+INSERT INTO USER_AUTHORITY (USER_ID, AUTHORITY_NAME) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO USER_AUTHORITY (USER_ID, AUTHORITY_NAME) VALUES (2, 'ROLE_USER');

@@ -6,10 +6,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
-jwt:
-  secret-key: 7ZeI7Iq5LOq2jOyYgeyerCzsnbTsg4Htm4gs67CV7LKg7ZiELOq5gOuPmeyYgSzquYDsi5zrgrQs6rmA7JiB7ZuILOyYpOycpOyEoA==
-  token-lifecycle: 3600
-
 # local
 ---
 spring:
@@ -28,6 +24,10 @@ spring:
   h2:
     console:
       enabled: true
+
+jwt:
+  secret-key: 7ZeI7Iq5LOq2jOyYgeyerCzsnbTsg4Htm4gs67CV7LKg7ZiELOq5gOuPmeyYgSzquYDsi5zrgrQs6rmA7JiB7ZuILOyYpOycpOyEoA==
+  token-lifecycle: 3600
 
 
 # production

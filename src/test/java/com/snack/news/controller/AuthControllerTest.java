@@ -32,7 +32,7 @@ public class AuthControllerTest {
 	public void successfulAuthenticationWithUser() throws Exception {
 		getMockMvc().perform(post("/api/auth")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"password\": \"password\", \"username\": \"user\"}"))
+				.content("{\"password\": \"user\", \"username\": \"user\"}"))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("token")));
 	}
