@@ -1,4 +1,4 @@
-package com.snack.news.config;
+package com.snack.news.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
