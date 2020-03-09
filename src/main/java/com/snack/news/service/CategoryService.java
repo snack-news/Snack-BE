@@ -2,6 +2,7 @@ package com.snack.news.service;
 
 import com.snack.news.domain.category.Category;
 import com.snack.news.dto.CategoryDto;
+import com.snack.news.exception.CategoryBadRequestException;
 import com.snack.news.exception.CategoryNotFoundException;
 import com.snack.news.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
@@ -24,10 +25,9 @@ public class CategoryService {
 
 	public Category getCategory(Long id) {
 		return categoryRepository.findById(
-				Optional.ofNullable(id).orElseThrow(CategoryNotFoundException::new)
-		).orElseThrow(CategoryNotFoundException::new);
+				Optional.ofNullable(id).orElseThrow(CategoryBadRequestException::new)
+		).orElseThrow(() -> new CategoryNotFoundException(id));
 	}
-
 
 	@Transactional(readOnly = true)
 	public List<Category> getCategoryList() {
@@ -37,7 +37,7 @@ public class CategoryService {
 	@Transactional
 	public Category updateCategory(CategoryDto categoryDto) {
 		if (!categoryRepository.existsById(categoryDto.getId())) {
-			throw new CategoryNotFoundException();
+			throw new CategoryNotFoundException(categoryDto.getId());
 		}
 		return categoryRepository.save(categoryDto.getUpdateEntity());
 	}

@@ -1,7 +1,7 @@
 package com.snack.news.fixture;
 
 import com.snack.news.domain.news.News;
-import com.snack.news.dto.AdminNewsDto;
+import com.snack.news.dto.NewsDto;
 import com.snack.news.dto.ListCursorResult;
 import com.snack.news.dto.RequestQueryDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,15 +22,14 @@ public abstract class NewsFixture {
 	protected static final int TEST_LIMIT_SIZE = 9;
 
 	protected News mockNews;
-	protected AdminNewsDto mockNewsDto;
 	protected RequestQueryDto mockRequestQueryDto;
-	protected AdminNewsDto mockAdminNewsDto;
+	protected NewsDto mockNewsDto;
 	protected List<News> mockNewsList;
 	protected ListCursorResult<News> mockNewsResult;
 
 	@BeforeEach
 	public void setUp() {
-		mockNewsDto = AdminNewsDto.builder()
+		mockNewsDto = NewsDto.builder()
 				.id(TEST_SOME_ID_LONG)
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
@@ -45,7 +44,7 @@ public abstract class NewsFixture {
 				.limitSize(100)
 				.build();
 
-		mockAdminNewsDto = AdminNewsDto.builder()
+		mockNewsDto = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.link(TEST_LINK)
