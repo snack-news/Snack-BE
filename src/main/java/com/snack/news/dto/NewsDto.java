@@ -21,18 +21,15 @@ import java.util.List;
 public class NewsDto {
 
 	private Long id;
-	@NotNull(message = "News title")
 	private String title;
 	private String content;
 	private String link;
 	@NotNull(message = "Category ID")
 	private Long categoryId;
-	private List<Long> topicIds;
+	private List<String> topicNames;
 	private List<Long> tagIds;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime startDateTime;
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private LocalDateTime endDateTime;
+	private LocalDateTime createAt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime publishAt;
 

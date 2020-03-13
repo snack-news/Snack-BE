@@ -3,16 +3,19 @@ package com.snack.news.exception.advice;
 import com.snack.news.dto.ErrorResponse;
 import com.snack.news.exception.TopicBadRequestException;
 import com.snack.news.exception.base.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @ControllerAdvice("com.snack.news.controller")
 public class ControllerExceptionHandler {
@@ -20,18 +23,13 @@ public class ControllerExceptionHandler {
 	 * @param e DTO에서 설정된 validation 예외
 	 * @return 누락된 필수 인자를 포함한 ResponseEntity 객체
 	 */
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<String> handleMethodArgumentNotValidException(ConstraintViolationException e) {
 		List<String> badParamNames = new ArrayList<>();
-		e.getBindingResult().getAllErrors()
-				.stream()
-				.map(ObjectError::getDefaultMessage)
-				.forEach(badParamNames::add);
+		Set<ConstraintViolation<?>> set = e.getConstraintViolations();
+		set.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).forEach(badParamNames::add);
 
-		StringBuilder result = new StringBuilder();
-		badParamNames.forEach(v -> result.append("[").append(v).append("] "));
-
-		return ResponseEntity.badRequest().body(String.format("%s값이 필요합니다.", result));
+		return ResponseEntity.badRequest().body(String.format("Argument Error: %s", badParamNames));
 	}
 
 	/**
@@ -51,6 +49,6 @@ public class ControllerExceptionHandler {
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NotFoundException e) {
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
 	}
 }

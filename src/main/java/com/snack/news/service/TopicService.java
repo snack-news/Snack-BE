@@ -31,7 +31,7 @@ public class TopicService {
 		try {
 			topicRepository.save(topic);
 		} catch (DataIntegrityViolationException e) {
-			throw new TopicNotFoundException(); // 토픽 이름이 중복. todo: 예외 관리하기
+			throw new TopicNotFoundException(topic.getId()); // 토픽 이름이 중복. todo: 예외 관리하기
 		}
 
 		return topic; // todo : Success Response
@@ -72,7 +72,7 @@ public class TopicService {
 	@Transactional
 	public Topic updateTopic(TopicDto topicDto) {
 		Topic topic = topicDto.getTopicUpdateEntity();
-		topicRepository.findById(topic.getId()).orElseThrow(TopicNotFoundException::new);
+		topicRepository.findById(topic.getId()).orElseThrow(() -> new TopicNotFoundException(topic.getId()));
 
 		return topicRepository.save(topic);
 	}

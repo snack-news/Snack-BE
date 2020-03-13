@@ -1,7 +1,5 @@
 package com.snack.news.controller;
 
-import static com.snack.news.controller.ApiUrl.Domain.TOPIC;
-
 public class ApiUrl {
 
 	private final static String ADMIN = "/admin";
@@ -80,9 +78,5 @@ public class ApiUrl {
 		Domain(String value) {
 			this.value = value;
 		}
-	}
-
-	public static void main(String[] args) {
-		System.out.println(ApiUrl.builder().create(TOPIC).build());
 	}
 }

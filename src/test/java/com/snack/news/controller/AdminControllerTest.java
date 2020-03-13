@@ -1,8 +1,7 @@
 package com.snack.news.controller;
 
 import com.snack.news.domain.news.News;
-import com.snack.news.dto.AdminNewsDto;
-import com.snack.news.dto.PickDto;
+import com.snack.news.dto.NewsDto;
 import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.fixture.NewsFixture;
@@ -20,18 +19,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 import static com.snack.news.controller.ApiUrl.Domain.NEWS;
-import static com.snack.news.controller.ApiUrl.Domain.PICKS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
@@ -53,82 +44,26 @@ class AdminControllerTest extends NewsFixture {
 	@BeforeEach
 	void setup() {
 		mockMvc = MockMvcBuilders.standaloneSetup(adminController)
-				.setHandlerExceptionResolvers(createExceptionResolver())
+				.setControllerAdvice(new ControllerExceptionHandler())
 				.build();
-	}
-
-	private ExceptionHandlerExceptionResolver createExceptionResolver() {
-		ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
-			protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
-				Method method = new ExceptionHandlerMethodResolver(ControllerExceptionHandler.class).resolveMethod(exception);
-				return new ServletInvocableHandlerMethod(new ControllerExceptionHandler(), Objects.requireNonNull(method));
-			}
-		};
-		exceptionResolver.afterPropertiesSet();
-		return exceptionResolver;
 	}
 
 	@Test
 	@DisplayName("뉴스 생성 요청이 정상적으로 이루어진다")
 	void requestCreateNewsTest() throws Exception {
-		AdminNewsDto correctRequestNewsDtoForCreate = AdminNewsDto.builder()
+		NewsDto correctRequestNewsDtoForCreate = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
 				.build();
 
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
+		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(Collections.singletonList(correctRequestNewsDtoForCreate));
 
-		when(adminService.createNews(any(AdminNewsDto.class))).thenReturn(mockNewsDto);
+		when(adminService.createNews(any())).thenReturn(Collections.singletonList(mockNewsDto));
 
 		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
 				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
 				.andExpect(status().isOk());
-	}
-
-	@Test
-	@DisplayName("뉴스 생성 요청시 제목을 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
-	void requestCreateNewsTestWithoutTitle() throws Exception {
-		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
-				.content(TEST_CONTENT)
-				.categoryId(TEST_SOME_ID_LONG)
-				.build();
-
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
-
-		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	@DisplayName("뉴스 생성 요청시 내용을 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
-	void requestCreateNewsWithoutContent() throws Exception {
-		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
-				.title(TEST_TITLE)
-				.categoryId(TEST_SOME_ID_LONG)
-				.build();
-
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
-
-		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	@DisplayName("뉴스 생성 요청시 카테고리ID를 입력하지 않으면 BADREQUEST 상태코드로 응답한다")
-	void requestCreateNewsTestWithoutCategoryId() throws Exception {
-		AdminNewsDto incorrectRequestNewsDtoForCreateNews = AdminNewsDto.builder()
-				.title(TEST_TITLE)
-				.content(TEST_CONTENT)
-				.build();
-
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(incorrectRequestNewsDtoForCreateNews);
-
-		mockMvc.perform(post(ApiUrl.builder().create(NEWS).build())
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -154,7 +89,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 수정 요청이 정상적으로 이루어진다")
 	void requestNewsListTest() throws Exception {
-		AdminNewsDto correctRequestNewsDtoForUpdate = AdminNewsDto.builder()
+		NewsDto correctRequestNewsDtoForUpdate = NewsDto.builder()
 				.title(TEST_TITLE)
 				.content(TEST_CONTENT)
 				.categoryId(TEST_SOME_ID_LONG)
@@ -178,20 +113,8 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 삭제 요청시 ID가 없으면 NOTFOUND 상태코드로 응답한다")
 	void requestDeleteNewsTestWithoutNewsId() throws Exception {
-		doThrow(new NewsNotFoundException()).when(adminService).deleteNews(anyLong());
+		doThrow(new NewsNotFoundException(1L)).when(adminService).deleteNews(anyLong());
 		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isNotFound());
-	}
-
-	@Test
-	@DisplayName("Pick 생성 요청이 정상적으로 이루어진다")
-	void requestCreatePickTest() throws Exception {
-		List<PickDto> correctRequestNewsDtoForCreate = Collections.singletonList(PickDto.builder().build());
-
-		String requestJsonBody = SnackObjectMapper.mapper.writeValueAsString(correctRequestNewsDtoForCreate);
-
-		mockMvc.perform(post(ApiUrl.builder().create(PICKS).build())
-				.contentType(MediaType.APPLICATION_JSON).content(requestJsonBody))
-				.andExpect(status().isOk());
 	}
 }
