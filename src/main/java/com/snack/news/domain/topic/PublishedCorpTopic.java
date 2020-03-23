@@ -9,7 +9,9 @@ public enum PublishedCorpTopic {
 	COUPANG("쿠팡"),
 	YANOLJA("야놀자"),
 	TMON("티몬"),
-	TADA("타다");
+	TADA("타다"),
+	TREND("시장동향"),
+	STARTUP("스타트업");
 
 	private String name;
 
