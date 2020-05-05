@@ -39,6 +39,8 @@ dependencies {
     testCompile("org.assertj:assertj-core:3.14.0")
     testCompile group: 'org.exparity', name: 'hamcrest-date', version: '2.0.7'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compile('org.springframework.boot:spring-boot-configuration-processor')
 }
 
 jacocoTestReport {
