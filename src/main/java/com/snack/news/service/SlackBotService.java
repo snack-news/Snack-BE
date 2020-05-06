@@ -39,7 +39,6 @@ public class SlackBotService {
 
 	public SlackAuthResponse authorize(String code) throws JsonProcessingException {
 		String jsonResponse = SlackAuthHttpClient.postRequest(SLACK_AUTH_URL, generateAuthBody(code));
-		System.out.println(jsonResponse);
 		return new SlackAuthResponse(jsonResponse);
 	}
 
@@ -54,12 +53,15 @@ public class SlackBotService {
 		body.put("client_id", clientId);
 		body.put("client_secret", clientSecret);
 		body.put("code", code);
-		System.out.println(body);
+
 		return body;
 	}
 
 	public static class SlackAuthResponse {
 		private Map<String, Object> map;
+
+		private final String CLIENT_ID = "client_id";
+		private final String CLIENT_SECRET = "client_secret";
 
 		public SlackAuthResponse(String jsonString) throws JsonProcessingException {
 			ObjectMapper objectMapper = new ObjectMapper();
