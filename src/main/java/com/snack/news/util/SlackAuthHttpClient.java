@@ -1,79 +1,61 @@
 package com.snack.news.util;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snack.news.domain.slack.SlackChannel;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Set;
 
 public class SlackAuthHttpClient {
 
-	public static String postRequest(String urlStr, Map<String, String> parms) {
+	private final static int READ_TIMEOUT = 5000;
+	private final static int CONNECT_TIMEOUT = 3000;
 
-		try {
-			URL url = new URL(urlStr);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	private static HttpComponentsClientHttpRequestFactory factory;
 
-			setHeader(connection);
-
-			String body = generateBody(parms);
-			sendRequest(connection, body);
-
-			return receiveResponse(connection);
-
-		} catch (IOException e) {
-			throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	static {
+		factory = new HttpComponentsClientHttpRequestFactory();
+		factory.setReadTimeout(READ_TIMEOUT);
+		factory.setConnectTimeout(CONNECT_TIMEOUT);
 	}
 
-	private static void setHeader(HttpURLConnection http) throws ProtocolException {
-		http.setDefaultUseCaches(false);
-		http.setDoInput(true);
-		http.setDoOutput(true);
-		http.setRequestMethod("POST");
+	public static String postRequest(String urlStr, MultiValueMap<String, String> parms) {
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		factory.setHttpClient(httpClient);
+		RestTemplate restTemplate = new RestTemplate(factory);
 
-		http.setRequestProperty("content-type", "application/x-www-form-urlencoded");
+		return restTemplate.postForObject(urlStr, parms, String.class);
 	}
 
-	private static String generateBody(Map<String, String> map) {
-		StringBuilder buffer = new StringBuilder();
+	public static class Response {
+		private Map<String, Object> map;
 
-		if (map != null) {
-
-			Set<String> key = map.keySet();
-
-			for (String o : key) {
-				String valueName = map.get(o);
-				buffer.append(o).append("=").append(valueName).append("&");
-			}
+		public Response(String jsonString) throws JsonProcessingException {
+			ObjectMapper objectMapper = new ObjectMapper();
+			map = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
 		}
 
-		return buffer.toString();
-	}
-
-	private static String receiveResponse(HttpURLConnection connection) throws IOException {
-		InputStreamReader tmp = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
-		BufferedReader reader = new BufferedReader(tmp);
-		StringBuilder builder = new StringBuilder();
-
-		String str;
-		while ((str = reader.readLine()) != null) {
-			builder.append(str).append("\n");
+		public boolean isOk() {
+			return map.get("ok").equals(true);
 		}
 
-		return builder.toString();
-	}
-
-	private static void sendRequest(HttpURLConnection connection, String body) throws IOException {
-		OutputStreamWriter outStream = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
-		PrintWriter writer = new PrintWriter(outStream);
-		writer.write(body);
-		writer.flush();
+		public SlackChannel toEntity() {
+			return SlackChannel.builder()
+					.accessToken(map.get("access_token").toString())
+					.authedUserId(((Map) map.get("authed_user")).get("id").toString())
+					.botUserId(map.get("bot_user_id").toString())
+					.teamId(((Map) map.get("team")).get("id").toString())
+					.teamName(((Map) map.get("team")).get("name").toString())
+					.channelId(((Map) map.get("incoming_webhook")).get("channel_id").toString())
+					.webhookUrl(((Map) map.get("incoming_webhook")).get("url").toString())
+					.configurationUrl(((Map) map.get("incoming_webhook")).get("configuration_url").toString())
+					.build();
+		}
 	}
 }

@@ -2,6 +2,7 @@ package com.snack.news.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.snack.news.service.SlackBotService;
+import com.snack.news.util.SlackAuthHttpClient;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -22,22 +23,17 @@ public class SlackBotController {
 
 	@GetMapping("/auth")
 	public ResponseEntity<String> installAuth(@RequestParam Map<String, String> body) {
-		SlackBotService.SlackAuthResponse response;
-
 		try {
-			response = slackBotService.authorize(body.get("code"));
+			SlackAuthHttpClient.Response response = slackBotService.authorize(body.get("code"));
 			if (!response.isOk()) {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Slack authorization error");
 			}
 			slackBotService.save(response.toEntity());
+			return ResponseEntity.ok().build();
 
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Slack authorization response mapping error");
 		}
-
-		slackBotService.save(response.toEntity());
-
-		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/webhook-list")
