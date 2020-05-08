@@ -52,7 +52,6 @@ public class SlackBotService {
 		body.put("client_id", Collections.singletonList(clientId));
 		body.put("client_secret", Collections.singletonList(clientSecret));
 		body.put("code", Collections.singletonList(code));
-
 		return body;
 	}
 }

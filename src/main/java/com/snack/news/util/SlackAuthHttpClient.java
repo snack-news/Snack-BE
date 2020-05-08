@@ -12,37 +12,45 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+
 public class SlackAuthHttpClient {
 
 	private final static int READ_TIMEOUT = 5000;
 	private final static int CONNECT_TIMEOUT = 3000;
 
-	private static HttpComponentsClientHttpRequestFactory factory;
+	private static RestTemplate restTemplate;
 
 	static {
-		factory = new HttpComponentsClientHttpRequestFactory();
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 		factory.setReadTimeout(READ_TIMEOUT);
 		factory.setConnectTimeout(CONNECT_TIMEOUT);
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		factory.setHttpClient(httpClient);
+		restTemplate = new RestTemplate(factory);
 	}
 
 	public static String postRequest(String urlStr, MultiValueMap<String, String> parms) {
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		factory.setHttpClient(httpClient);
-		RestTemplate restTemplate = new RestTemplate(factory);
-
 		return restTemplate.postForObject(urlStr, parms, String.class);
 	}
 
 	public static class Response {
 		private Map<String, Object> map;
+		private static ObjectMapper objectMapper = new ObjectMapper();
 
 		public Response(String jsonString) throws JsonProcessingException {
-			ObjectMapper objectMapper = new ObjectMapper();
 			map = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
 		}
 
 		public boolean isOk() {
 			return map.get("ok").equals(true);
+		}
+
+		public String getErrorMessage() throws IllegalAccessException {
+			if(isOk()) {
+				throw new IllegalAccessException();
+			}
+			return map.get("error").toString();
 		}
 
 		public SlackChannel toEntity() {

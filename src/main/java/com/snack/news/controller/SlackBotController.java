@@ -26,13 +26,13 @@ public class SlackBotController {
 		try {
 			SlackAuthHttpClient.Response response = slackBotService.authorize(body.get("code"));
 			if (!response.isOk()) {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Slack authorization error");
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Slack authorization error: " + response.getErrorMessage());
 			}
 			slackBotService.save(response.toEntity());
 			return ResponseEntity.ok().build();
 
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Slack authorization response mapping error");
+		} catch (JsonProcessingException | IllegalAccessException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error during authorization");
 		}
 	}
 
