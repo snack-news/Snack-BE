@@ -4,34 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snack.news.domain.slack.SlackChannel;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-
+@Component
 public class SlackAuthHttpClient {
 
-	private final static int READ_TIMEOUT = 5000;
-	private final static int CONNECT_TIMEOUT = 3000;
+	private static RestTemplate slackHttpClient;
 
-	private static RestTemplate restTemplate;
-
-	static {
-		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-		factory.setReadTimeout(READ_TIMEOUT);
-		factory.setConnectTimeout(CONNECT_TIMEOUT);
-
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		factory.setHttpClient(httpClient);
-		restTemplate = new RestTemplate(factory);
+	public SlackAuthHttpClient(RestTemplate slackHttpClient) {
+		SlackAuthHttpClient.slackHttpClient = slackHttpClient;
 	}
 
 	public static String postRequest(String urlStr, MultiValueMap<String, String> parms) {
-		return restTemplate.postForObject(urlStr, parms, String.class);
+		return slackHttpClient.postForObject(urlStr, parms, String.class);
 	}
 
 	public static class Response {
@@ -39,7 +28,8 @@ public class SlackAuthHttpClient {
 		private static ObjectMapper objectMapper = new ObjectMapper();
 
 		public Response(String jsonString) throws JsonProcessingException {
-			map = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+			map = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {
+			});
 		}
 
 		public boolean isOk() {
@@ -47,7 +37,7 @@ public class SlackAuthHttpClient {
 		}
 
 		public String getErrorMessage() throws IllegalAccessException {
-			if(isOk()) {
+			if (isOk()) {
 				throw new IllegalAccessException();
 			}
 			return map.get("error").toString();
