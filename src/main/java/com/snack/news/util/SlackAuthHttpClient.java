@@ -25,11 +25,10 @@ public class SlackAuthHttpClient {
 
 	public static class Response {
 		private Map<String, Object> map;
-		private static ObjectMapper objectMapper = new ObjectMapper();
+		private final static ObjectMapper objectMapper = new ObjectMapper();
 
 		public Response(String jsonString) throws JsonProcessingException {
-			map = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {
-			});
+			map = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
 		}
 
 		public boolean isOk() {
@@ -38,19 +37,20 @@ public class SlackAuthHttpClient {
 
 		public String getErrorMessage() throws IllegalAccessException {
 			if (isOk()) {
-				throw new IllegalAccessException();
+				throw new IllegalAccessException("Authorization response mapping error");
 			}
 			return map.get("error").toString();
 		}
 
+		@SuppressWarnings("rawtypes")
 		public SlackChannel toEntity() {
 			return SlackChannel.builder()
+					.channelId(((Map) map.get("incoming_webhook")).get("channel_id").toString())
+					.teamId(((Map) map.get("team")).get("id").toString())
+					.teamName(((Map) map.get("team")).get("name").toString())
 					.accessToken(map.get("access_token").toString())
 					.authedUserId(((Map) map.get("authed_user")).get("id").toString())
 					.botUserId(map.get("bot_user_id").toString())
-					.teamId(((Map) map.get("team")).get("id").toString())
-					.teamName(((Map) map.get("team")).get("name").toString())
-					.channelId(((Map) map.get("incoming_webhook")).get("channel_id").toString())
 					.webhookUrl(((Map) map.get("incoming_webhook")).get("url").toString())
 					.configurationUrl(((Map) map.get("incoming_webhook")).get("configuration_url").toString())
 					.build();

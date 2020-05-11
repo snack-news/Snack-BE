@@ -1,6 +1,8 @@
 package com.snack.news.exception.advice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.snack.news.dto.ErrorResponse;
+import com.snack.news.exception.SlackAuthorizationException;
 import com.snack.news.exception.TopicBadRequestException;
 import com.snack.news.exception.base.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -50,5 +52,15 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NotFoundException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+	}
+
+	@ExceptionHandler(JsonProcessingException.class)
+	public ResponseEntity<ErrorResponse> handleJsonProcessingExceptionException() {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("AUTHORIZATION_ERROR", "Authorization server response mapping error"));
+	}
+
+	@ExceptionHandler(SlackAuthorizationException.class)
+	public ResponseEntity<ErrorResponse> handleJsonProcessingExceptionException(SlackAuthorizationException e) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
 	}
 }
