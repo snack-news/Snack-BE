@@ -60,7 +60,7 @@ public class ControllerExceptionHandler {
 	}
 
 	@ExceptionHandler(SlackAuthorizationException.class)
-	public ResponseEntity<ErrorResponse> handleJsonProcessingExceptionException(SlackAuthorizationException e) {
+	public ResponseEntity<ErrorResponse> handleSlackAuthorizeException(SlackAuthorizationException e) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
 	}
 }
