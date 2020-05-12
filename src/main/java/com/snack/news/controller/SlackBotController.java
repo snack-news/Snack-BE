@@ -18,10 +18,10 @@ public class SlackBotController {
 	private final SlackBotService slackBotService;
 
 	@GetMapping("/auth")
-	public ResponseEntity<String> installAuth(@RequestParam String code) throws JsonProcessingException {
+	public ResponseEntity<String> installAuth(@RequestParam String code) throws JsonProcessingException, IllegalAccessException {
 		SlackAuthHttpClient.Response response = slackBotService.authorize(code);
 		if (!response.isOk()) {
-			throw new SlackAuthorizationException();
+			throw new SlackAuthorizationException(response.getErrorMessage());
 		}
 
 		slackBotService.save(response.toEntity());

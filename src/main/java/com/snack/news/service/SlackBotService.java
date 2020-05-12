@@ -21,14 +21,16 @@ import java.util.stream.Collectors;
 @Setter
 public class SlackBotService {
 	private final SlackBotRepository slackBotRepository;
+	private final SlackAuthHttpClient slackAuthHttpClient;
+
+	public SlackBotService(SlackBotRepository slackBotRepository, SlackAuthHttpClient slackAuthHttpClient) {
+		this.slackBotRepository = slackBotRepository;
+		this.slackAuthHttpClient = slackAuthHttpClient;
+	}
 
 	private String slackAuthUrl;
 	private String clientId;
 	private String clientSecret;
-
-	public SlackBotService(SlackBotRepository slackBotRepository) {
-		this.slackBotRepository = slackBotRepository;
-	}
 
 	public List<String> getSlackChannelWebhookUrlList() {
 		return slackBotRepository.findAll().stream()
@@ -37,7 +39,7 @@ public class SlackBotService {
 	}
 
 	public SlackAuthHttpClient.Response authorize(String code) throws JsonProcessingException {
-		String jsonResponse = SlackAuthHttpClient.postRequest(slackAuthUrl, generateAuthBody(code));
+		String jsonResponse = slackAuthHttpClient.requestAuthorization(slackAuthUrl, generateAuthRequestBody(code));
 		return new SlackAuthHttpClient.Response(jsonResponse);
 	}
 
@@ -46,7 +48,7 @@ public class SlackBotService {
 		slackBotRepository.save(channelInfo);
 	}
 
-	private MultiValueMap<String, String> generateAuthBody(String code) {
+	private MultiValueMap<String, String> generateAuthRequestBody(String code) {
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
 		body.put("client_id", Collections.singletonList(clientId));
