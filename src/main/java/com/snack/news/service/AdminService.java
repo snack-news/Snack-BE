@@ -39,12 +39,10 @@ public class AdminService {
 
 		newsRepository.saveAll(newsList);
 
-		List<NewsDto> response = newsList.stream()
+		return newsList.stream()
 				.map(News::getId)
 				.map(id -> NewsDto.builder().id(id).build())
 				.collect(Collectors.toList());
-
-		return response;
 	}
 
 	public Page<News> getNewsList(long page) {
@@ -54,7 +52,7 @@ public class AdminService {
 
 	@Transactional
 	public NewsDto updateNews(long newsId, NewsDto newsDto) {
-		News originNews = newsRepository.findById(newsId).orElseThrow(() -> new NewsNotFoundException(newsId));
+		News originNews = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
 		News updatedNews = updateNews(originNews, newsDto);
 
 		newsRepository.save(updatedNews);
@@ -68,7 +66,7 @@ public class AdminService {
 			newsRepository.deleteById(newsId);
 		} catch (IllegalArgumentException e) {
 			log.error("Invalid News Id in DeleteNews : {}", newsId, e);
-			throw new NewsNotFoundException(newsId);
+			throw new NewsNotFoundException();
 		}
 	}
 

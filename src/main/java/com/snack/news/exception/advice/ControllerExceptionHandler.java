@@ -26,12 +26,16 @@ public class ControllerExceptionHandler {
 	 * @return 누락된 필수 인자를 포함한 ResponseEntity 객체
 	 */
 	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<String> handleMethodArgumentNotValidException(ConstraintViolationException e) {
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(ConstraintViolationException e) {
 		List<String> badParamNames = new ArrayList<>();
 		Set<ConstraintViolation<?>> set = e.getConstraintViolations();
 		set.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).forEach(badParamNames::add);
 
-		return ResponseEntity.badRequest().body(String.format("Argument Error: %s", badParamNames));
+		return ResponseEntity.badRequest().body(ErrorResponse.builder()
+				.exceptionCode(NotFoundException.ERROR_CODE)
+				.exceptionMessage("부적절한 요청")
+				.detailMessage(String.format("Argument Error: %s", badParamNames))
+				.build());
 	}
 
 	/**
@@ -40,27 +44,43 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-		TopicBadRequestException topicBadRequestException = new TopicBadRequestException();
-
 		String badParamName = e.getParameter().getParameterName();
 		String badValue = Objects.requireNonNull(e.getValue()).toString();
-		ErrorResponse response = new ErrorResponse(topicBadRequestException.getErrorCode(), topicBadRequestException.getMessage(badParamName, badValue));
+
+		TopicBadRequestException topicBadRequestException = new TopicBadRequestException(badParamName, badValue);
+		ErrorResponse response = ErrorResponse.builder()
+				.exceptionCode(topicBadRequestException.getErrorCode())
+				.exceptionMessage(topicBadRequestException.getMessage())
+				.detailMessage(topicBadRequestException.getDetailMessage())
+				.build();
 
 		return ResponseEntity.badRequest().body(response);
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NotFoundException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder()
+				.exceptionCode(e.getErrorCode())
+				.exceptionMessage(e.getMessage())
+				.detailMessage("")
+				.build());
 	}
 
 	@ExceptionHandler(JsonProcessingException.class)
 	public ResponseEntity<ErrorResponse> handleJsonProcessingExceptionException() {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("AUTHORIZATION_ERROR", "Authorization server response mapping error"));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.builder()
+				.exceptionCode("AUTHORIZATION_ERROR")
+				.detailMessage("Authorization server error")
+				.detailMessage("Response json mapping failed")
+				.build());
 	}
 
 	@ExceptionHandler(SlackAuthorizationException.class)
 	public ResponseEntity<ErrorResponse> handleSlackAuthorizeException(SlackAuthorizationException e) {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.builder()
+				.exceptionCode(e.getErrorCode())
+				.exceptionMessage(e.getMessage())
+				.detailMessage(e.getDetailMessage())
+				.build());
 	}
 }

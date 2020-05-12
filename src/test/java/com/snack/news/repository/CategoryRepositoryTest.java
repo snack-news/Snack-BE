@@ -25,7 +25,7 @@ class CategoryRepositoryTest extends NewsFixture {
 	@DisplayName("ID에 해당하는 Category를 가져올 수 있다")
 	@Transactional
 	void getCategoryById() {
-		Category category = categoryRepository.findById(1L).orElseThrow(() -> new CategoryNotFoundException(anyLong()));
+		Category category = categoryRepository.findById(1L).orElseThrow(CategoryNotFoundException::new);
 
 		assertThat(category.getTitle()).isEqualTo("IT");
 	}

@@ -25,7 +25,7 @@ public class TagService {
 		try {
 			tagRepository.save(tag);
 		} catch (DataIntegrityViolationException e) {
-			throw new TagNotFoundException(tag.getId());
+			throw new TagNotFoundException();
 		}
 
 		return tag;
@@ -48,7 +48,7 @@ public class TagService {
 	@Transactional
 	public Tag updateTag(TagDto tagDto) {
 		Tag tag = tagDto.getUpdateEntity();
-		tagRepository.findById(tag.getId()).orElseThrow(() -> new TagNotFoundException(tag.getId()));
+		tagRepository.findById(tag.getId()).orElseThrow(TagNotFoundException::new);
 
 		return tagRepository.save(tag);
 	}
