@@ -7,6 +7,7 @@ public class ApiUrl {
 
 	private String url;
 	private boolean hasDomain;
+	private boolean parameterFlag = true;
 
 	private ApiUrl() {
 	}
@@ -71,8 +72,17 @@ public class ApiUrl {
 		return url;
 	}
 
+	public ApiUrl parm(String key, String value) {
+		if(parameterFlag) {
+			url += "?";
+			parameterFlag = false;
+		}
+		url += (key + "=" + value + "&");
+		return this;
+	}
+
 	enum Domain {
-		NEWS("/news"), PICKS("/picks"), CATEGORY("/category"), TOPIC("/topic"), TAG("/tag");
+		NEWS("/news"), PICKS("/picks"), CATEGORY("/category"), TOPIC("/topic"), TAG("/tag"), SLACK_AUTHORIZE("/slackbot/auth");
 		String value;
 
 		Domain(String value) {

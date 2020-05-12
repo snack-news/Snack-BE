@@ -12,7 +12,7 @@ class SlackAuthHttpClientTest {
 
 	@Test
 	void responseMappingTest() throws JsonProcessingException {
-		String response = "{\"ok\":true,\"app_id\":\"abc\",\"authed_user\":{\"def\":\"abc\"},\"scope\":\"incoming-webhook\",\"token_type\":\"bot\",\"access_token\":\"ghi\",\"bot_user_id\":\"jkl\",\"team\":{\"id\":\"mno\",\"name\":\"LRR\"},\"enterprise\":null,\"incoming_webhook\":{\"channel\":\"#snak-test\",\"channel_id\":\"stu\",\"configuration_url\":\"pqr\",\"url\":\"vwx\"}}";
+		String response = "{\"ok\":true,\"app_id\":\"abc\",\"authed_user\":{\"id\":\"abc\"},\"scope\":\"incoming-webhook\",\"token_type\":\"bot\",\"access_token\":\"ghi\",\"bot_user_id\":\"jkl\",\"team\":{\"id\":\"mno\",\"name\":\"LRR\"},\"enterprise\":null,\"incoming_webhook\":{\"channel\":\"#snak-test\",\"channel_id\":\"stu\",\"configuration_url\":\"pqr\",\"url\":\"vwx\"}}";
 		SlackAuthHttpClient.Response rp = new SlackAuthHttpClient.Response(response);
 		assertDoesNotThrow(rp::toEntity);
 	}
