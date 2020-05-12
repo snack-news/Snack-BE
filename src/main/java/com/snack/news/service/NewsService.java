@@ -23,7 +23,7 @@ public class NewsService {
 		new Period(newsDto.getStartDateTime(), newsDto.getEndDateTime()).validationCheck();
 
 		if (Objects.nonNull(newsDto.getLastId())) {
-			newsDto.setEndDateTime(newsRepository.findById(newsDto.getLastId()).orElseThrow(() -> new NewsNotFoundException(newsDto.getLastId())).getPublishAt());
+			newsDto.setEndDateTime(newsRepository.findById(newsDto.getLastId()).orElseThrow(NewsNotFoundException::new).getPublishAt());
 		}
 
 		List<News> newsList = newsRepository.findByNewsDto(newsDto);
@@ -38,6 +38,6 @@ public class NewsService {
 	}
 
 	public News getNews(Long newsId) {
-		return newsRepository.findById(newsId).orElseThrow(() -> new NewsNotFoundException(newsId));
+		return newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
 	}
 }

@@ -1,10 +1,16 @@
 package com.snack.news.exception;
 
 import com.snack.news.exception.base.BadRequestException;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class CategoryBadRequestException extends BadRequestException {
 	private final static String BASIC_ERROR_MESSAGE = "잘못된 요청입니다.";
 	private final static String CUSTOM_ERROR_MESSAGE = "%s값이 필요합니다.";
+
+	public CategoryBadRequestException(String detailMessage) {
+		super(detailMessage);
+	}
 
 	@Override
 	public String getMessage() {

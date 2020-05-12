@@ -26,7 +26,7 @@ public class CategoryService {
 	public Category getCategory(Long id) {
 		return categoryRepository.findById(
 				Optional.ofNullable(id).orElseThrow(CategoryBadRequestException::new)
-		).orElseThrow(() -> new CategoryNotFoundException(id));
+		).orElseThrow(CategoryNotFoundException::new);
 	}
 
 	@Transactional(readOnly = true)
@@ -37,7 +37,7 @@ public class CategoryService {
 	@Transactional
 	public Category updateCategory(CategoryDto categoryDto) {
 		if (!categoryRepository.existsById(categoryDto.getId())) {
-			throw new CategoryNotFoundException(categoryDto.getId());
+			throw new CategoryNotFoundException();
 		}
 		return categoryRepository.save(categoryDto.getUpdateEntity());
 	}

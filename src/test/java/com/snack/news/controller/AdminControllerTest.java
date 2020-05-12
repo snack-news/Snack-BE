@@ -113,7 +113,7 @@ class AdminControllerTest extends NewsFixture {
 	@Test
 	@DisplayName("뉴스 삭제 요청시 ID가 없으면 NOTFOUND 상태코드로 응답한다")
 	void requestDeleteNewsTestWithoutNewsId() throws Exception {
-		doThrow(new NewsNotFoundException(1L)).when(adminService).deleteNews(anyLong());
+		doThrow(new NewsNotFoundException()).when(adminService).deleteNews(anyLong());
 		mockMvc.perform(delete(ApiUrl.builder().delete(NEWS).id(anyLong()).build()))
 				.andExpect(status().isNotFound());
 	}
