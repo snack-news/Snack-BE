@@ -1,8 +1,6 @@
 package com.snack.news.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.snack.news.domain.slack.SlackChannel;
-import com.snack.news.exception.NewsNotFoundException;
 import com.snack.news.exception.SlackAuthorizationException;
 import com.snack.news.exception.advice.ControllerExceptionHandler;
 import com.snack.news.service.SlackBotService;

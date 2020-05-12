@@ -28,11 +28,8 @@ class TopicControllerTest extends TopicFixture {
 
 	@InjectMocks
 	private TopicController topicController;
-	@Mock
-	private TopicService topicService;
 
 	private MockMvc mockMvc;
-
 
 	@BeforeEach
 	void setup() {
