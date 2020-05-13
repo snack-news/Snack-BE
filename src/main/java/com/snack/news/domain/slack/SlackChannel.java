@@ -13,6 +13,7 @@ import javax.persistence.Id;
 public class SlackChannel {
 	@Id
 	private String channelId;
+	private String channelName;
 	private String configurationUrl;
 	private String webhookUrl;
 
@@ -24,8 +25,9 @@ public class SlackChannel {
 	private String botUserId;
 
 	@Builder
-	public SlackChannel(String channelId, String configurationUrl, String webhookUrl, String teamId, String teamName, String authedUserId, String accessToken, String botUserId) {
+	public SlackChannel(String channelId, String channelName, String configurationUrl, String webhookUrl, String teamId, String teamName, String authedUserId, String accessToken, String botUserId) {
 		this.channelId = channelId;
+		this.channelName = channelName;
 		this.configurationUrl = configurationUrl;
 		this.webhookUrl = webhookUrl;
 		this.teamId = teamId;

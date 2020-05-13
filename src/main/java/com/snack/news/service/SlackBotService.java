@@ -56,4 +56,12 @@ public class SlackBotService {
 		body.put("code", Collections.singletonList(code));
 		return body;
 	}
+
+	public void deleteSlackChannelByChannelId(String id)  {
+		slackBotRepository.deleteByChannelId(id);
+	}
+
+	public void deleteSlackChannelByTeamId(String id)  {
+		slackBotRepository.deleteByTeamId(id);
+	}
 }
