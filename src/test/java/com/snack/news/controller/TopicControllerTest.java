@@ -29,6 +29,9 @@ class TopicControllerTest extends TopicFixture {
 	@InjectMocks
 	private TopicController topicController;
 
+	@Mock
+	private TopicService topicService;
+
 	private MockMvc mockMvc;
 
 	@BeforeEach
@@ -53,21 +56,21 @@ class TopicControllerTest extends TopicFixture {
 	@Test
 	@DisplayName("원하는 타입의 토픽 리스트를 가져온다")
 	void requestTopicListAsTopicType() throws Exception {
-		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("/CORP").build()))
+		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("CORP").build()))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("원하는 타입의 토픽 리스트를 ID순으로 가져온다")
 	void requestTopicListAsTopicTypeInOrderOfId() throws Exception {
-		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("/CORP" + "?sort=ID").build()))
+		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("CORP" + "?sort=ID").build()))
 				.andExpect(status().isOk());
 	}
 
 	@Test
 	@DisplayName("원하는 타입의 토픽 리스트를 이름순으로 가져온다")
 	void requestTopicListAsTopicTypeInOrderOfName() throws Exception {
-		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("/CORP" + "?sort=NAME").build()))
+		mockMvc.perform(get(ApiUrl.builder().get(TOPIC).list().query("CORP" + "?sort=NAME").build()))
 				.andExpect(status().isOk());
 	}
 }
