@@ -9,10 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.UnexpectedException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -36,21 +34,13 @@ public class SlackBotController {
 		return slackBotService.getSlackChannelWebhookUrlList();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@PostMapping("/event")
-	public void handleEvent(@RequestBody Map<String, Object> body) throws UnexpectedException {
-		Map eventInfo = (Map) Optional.ofNullable(body.get("event")).orElse(body);
-		String type = eventInfo.get("type").toString();
+	public void handleEvent(@RequestBody Map<String, Object> body) {
+		slackBotService.deleteSlackChannelByTeamId(body.get("team_id").toString());
+	}
 
-		switch (type) {
-			case "app_uninstalled":
-				slackBotService.deleteSlackChannelByTeamId(body.get("team_id").toString());
-				break;
-			case "channel_deleted":
-				slackBotService.deleteSlackChannelByChannelId(body.get("channel").toString());
-				break;
-		}
-
-		throw new UnexpectedException("Error occurred");
+	@DeleteMapping
+	public void deleteChannel(List<String> webhookUrlList) {
+		slackBotService.deleteInvalidSlackChannel(webhookUrlList);
 	}
 }

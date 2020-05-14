@@ -57,11 +57,15 @@ public class SlackBotService {
 		return body;
 	}
 
-	public void deleteSlackChannelByChannelId(String id)  {
-		slackBotRepository.deleteByChannelId(id);
+	@Transactional
+	public void deleteSlackChannelByTeamId(String id) {
+		slackBotRepository.deleteByTeamId(id);
 	}
 
-	public void deleteSlackChannelByTeamId(String id)  {
-		slackBotRepository.deleteByTeamId(id);
+	@Transactional
+	public void deleteInvalidSlackChannel(List<String> webhookUrlList) {
+		for (String webhookUrl : webhookUrlList) {
+			slackBotRepository.deleteInBatchByWebhookUrl(webhookUrl);
+		}
 	}
 }
