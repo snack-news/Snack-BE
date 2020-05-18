@@ -64,8 +64,6 @@ public class SlackBotService {
 
 	@Transactional
 	public void deleteInvalidSlackChannel(List<String> webhookUrlList) {
-		for (String webhookUrl : webhookUrlList) {
-			slackBotRepository.deleteInBatchByWebhookUrl(webhookUrl);
-		}
+		slackBotRepository.deleteAllByWebhookUrl(webhookUrlList);
 	}
 }

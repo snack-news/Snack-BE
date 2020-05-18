@@ -35,8 +35,12 @@ public class SlackBotController {
 	}
 
 	@PostMapping("/event")
-	public void handleEvent(@RequestBody Map<String, Object> body) {
-		slackBotService.deleteSlackChannelByTeamId(body.get("team_id").toString());
+	public void handleEvent(@RequestBody Map<String, Object> body) throws IllegalAccessException {
+		try {
+			slackBotService.deleteSlackChannelByTeamId(body.get("team_id").toString());
+		} catch (NullPointerException e) {
+			throw new IllegalAccessException("Slack event subscribe body mapping error");
+		}
 	}
 
 	@DeleteMapping
