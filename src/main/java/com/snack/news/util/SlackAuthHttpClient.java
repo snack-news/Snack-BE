@@ -57,6 +57,7 @@ public class SlackAuthHttpClient {
 		public SlackChannel toEntity() {
 			return SlackChannel.builder()
 					.channelId(((Map) map.get("incoming_webhook")).get("channel_id").toString())
+					.channelName(((Map) map.get("incoming_webhook")).get("channel").toString())
 					.teamId(((Map) map.get("team")).get("id").toString())
 					.teamName(((Map) map.get("team")).get("name").toString())
 					.accessToken(map.get("access_token").toString())

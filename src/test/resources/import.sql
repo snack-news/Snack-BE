@@ -195,3 +195,8 @@ insert into news_tag(news_id, tag_id) values (46, 1);
 insert into news_tag(news_id, tag_id) values (47, 2);
 insert into news_tag(news_id, tag_id) values (48, 1);
 insert into news_tag(news_id, tag_id) values (48, 2);
+
+-- Slack Channel
+insert into slack_channel(channel_id, webhook_url) values ('channel-1', 'https://web.hook1.url');
+insert into slack_channel(channel_id, webhook_url) values ('channel-2', 'https://web.hook2.url');
+insert into slack_channel(channel_id, webhook_url) values ('channel-3', 'https://web.hook3.url');

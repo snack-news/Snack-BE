@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -31,5 +32,19 @@ public class SlackBotController {
 	@GetMapping("/webhook-list")
 	public List<String> getSlackChannelWebhookUrlList() {
 		return slackBotService.getSlackChannelWebhookUrlList();
+	}
+
+	@PostMapping("/event")
+	public void handleEvent(@RequestBody Map<String, Object> body) throws IllegalAccessException {
+		try {
+			slackBotService.deleteSlackChannelByTeamId(body.get("team_id").toString());
+		} catch (NullPointerException e) {
+			throw new IllegalAccessException("Slack event subscribe body mapping error");
+		}
+	}
+
+	@DeleteMapping
+	public void deleteChannel(List<String> webhookUrlList) {
+		slackBotService.deleteInvalidSlackChannel(webhookUrlList);
 	}
 }
